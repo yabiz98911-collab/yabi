@@ -30,7 +30,7 @@ getgenv().Depart = {
         EnableAirShotPrediction = true,
         MultipleHitParts = {"HumanoidRootPart", "Head", "UpperTorso"},
         Fov = {
-            Visible = truee,
+            Visible = true,
             Color = Color3.new(1, 1, 1),
             Radius = 1000,
             Transparency = 0.1
@@ -52,7 +52,7 @@ getgenv().Depart = {
             Enabled = true,
             FOV = {
                 Radius = 9999, --// Large so center-screen always picks targets
-                Visible = false,
+                Visible = true,
             },
             KOCheck = true,
         }
