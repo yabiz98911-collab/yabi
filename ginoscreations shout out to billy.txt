@@ -19,7 +19,7 @@ getgenv().Depart = {
             Visible = true,
             Color = Color3.new(1, 1, 1),
             Radius = 1000,
-            Transparency = 0
+            Transparency = 0.9
         }
     },
 
@@ -33,7 +33,7 @@ getgenv().Depart = {
             Visible = true,
             Color = Color3.new(1, 1, 1),
             Radius = 1000,
-            Transparency = 0
+            Transparency = 0.9
         }
     },
 
