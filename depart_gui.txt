@@ -16,7 +16,7 @@ getgenv().Depart = {
         Prediction = 0.256688,
         Smoothness = 1,
         FoV = {
-            Visible = false,
+            Visible = true,
             Color = Color3.new(1, 1, 1),
             Radius = 1000,
             Transparency = 0.1
@@ -30,7 +30,7 @@ getgenv().Depart = {
         EnableAirShotPrediction = false,
         MultipleHitParts = {"HumanoidRootPart", "Head", "UpperTorso"},
         Fov = {
-            Visible = false,
+            Visible = true,
             Color = Color3.new(1, 1, 1),
             Radius = 1000,
             Transparency = 0.1
@@ -52,7 +52,7 @@ getgenv().Depart = {
             Enabled = true,
             FOV = {
                 Radius = 100,
-                Visible = false,
+                Visible = true,
             },
             KOCheck = true,
         }
@@ -366,7 +366,7 @@ titleLabel.Parent = mainFrame
 --// Toggle button
 local toggleBtn = Instance.new("TextButton")
 toggleBtn.Name = "CamlockToggle"
-toggleBtn.Size = UDim2.new(1, -16, 0, 22)
+toggleBtn.Size = UDim2.new(10, -20, 20, 22)
 toggleBtn.Position = UDim2.new(0, 8, 0, 22)
 toggleBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 toggleBtn.BorderSizePixel = 0
