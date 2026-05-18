@@ -1,0 +1,110 @@
+getgenv().stile = {
+    script_key = {
+        script_key = "yes",
+    },
+    hitbox_expander = {
+        Enabled = true,
+        Size = 12,
+        Color = Color3.fromRGB(209, 206, 255),
+        Transparency = 0.7,
+    },
+    Visuals = {
+        Self = {
+            Enabled = false,
+            ForceField_Chams = true,
+            Color = Color3.fromRGB(209, 206, 255),
+            Held_ForceField_Chams = true,
+            Held_Color = Color3.fromRGB(209, 206, 255),
+        },
+    },
+    Watermark = {
+        Enabled = false,
+        Text = "Stile Modded",
+        TextSize = 14,
+        Font = Enum.Font.GothamBold,
+        OutlineTransparency = 0,
+        TextTransparency = 0.4,
+    },
+    Cam = {
+        Enabled = true,
+        Prediction = 0.017,
+        Part = "Head",
+        Keybind = "c",
+        UseShake = false,
+        ShakeMultiplyer = 1,
+        ShakeValue = 40,
+        UseSmoothing = true,
+        SmoothingAmount = 0.02,
+        EasingStyle = Enum.EasingStyle.Linear,
+        EasingDirection = Enum.EasingDirection.In,
+        Resolver = false,
+        ResolverTune = 0.13,
+        UseCircleRadius = false,
+        UnlockOnTargetDeath = false,
+        UnlockOnOwnDeath = false,
+        FieldOfView = {
+            Visible = false,
+            Filled = false,
+            Color = Color3.fromRGB(255, 255, 144),
+            Transparency = 1,
+            Radius = 30,
+        },
+    },
+    Both = {
+        Notifications = false,
+        Duration = 3,
+        VisibleCheck = false,
+        FriendCheck = false,
+        CrewCheck = false,
+        TeamCheck = false,
+    },
+    Cframe = {
+        CFrameSpeed = false,
+        SpeedValue = 2,
+        CFrameSpeedKey = "v",
+    },
+    RapidFire = { 
+        Enabled = true,
+        FireRate = 0, 
+    }
+}
+
+--// Services
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+local Lighting = game:GetService("Lighting")
+local localPlayer = Players.LocalPlayer
+local playerGui = localPlayer:WaitForChild("PlayerGui")
+
+--// Blur and text appear at the exact same time
+local blurEffect = Instance.new("BlurEffect")
+blurEffect.Size = 24
+blurEffect.Parent = Lighting
+
+local loadingGui = Instance.new("ScreenGui")
+loadingGui.Name = "StileLoading"
+loadingGui.ResetOnSpawn = false
+loadingGui.Parent = playerGui
+
+local loadingLabel = Instance.new("TextLabel")
+loadingLabel.Size = UDim2.new(1, 0, 0, 100)
+loadingLabel.Position = UDim2.new(0, 0, 0.4, 0)
+loadingLabel.BackgroundTransparency = 1
+loadingLabel.Text = "GET BEAMMED KID"
+loadingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+loadingLabel.TextSize = 52
+loadingLabel.Font = Enum.Font.GothamBold
+loadingLabel.TextStrokeTransparency = 0.2
+loadingLabel.TextStrokeColor3 = Color3.fromRGB(180, 0, 255)
+loadingLabel.Parent = loadingGui
+
+--// After 3 seconds fade everything out then load the script
+task.delay(3, function()
+    TweenService:Create(blurEffect, TweenInfo.new(0.5), {Size = 0}):Play()
+    TweenService:Create(loadingLabel, TweenInfo.new(0.5), {TextTransparency = 1}):Play()
+    task.delay(0.6, function()
+        loadingGui:Destroy()
+        blurEffect:Destroy()
+        loadstring(game:HttpGet(('https://raw.githubusercontent.com/triqzesfanboy/Stile-Modded-V1.0.4/refs/heads/main/v1.0.4')))()
+    end)
+end)
