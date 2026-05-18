@@ -1,0 +1,83 @@
+--// Da Hood - Big Reload Button (Fixed Position)
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local localPlayer = Players.LocalPlayer
+local playerGui = localPlayer:WaitForChild("PlayerGui")
+
+local BUTTON_SIZE = 130
+
+local MainGameEvent = ReplicatedStorage:WaitForChild("GameRemotes"):WaitForChild("MainGameEvent")
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "BigReloadButton"
+screenGui.ResetOnSpawn = false
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.Parent = playerGui
+
+local reloadBtn = Instance.new("TextButton")
+reloadBtn.Size = UDim2.new(0, BUTTON_SIZE, 0, BUTTON_SIZE)
+reloadBtn.Position = UDim2.new(0.65, 0, -0.03, 0)
+reloadBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+reloadBtn.BorderSizePixel = 0
+reloadBtn.Text = "R"
+reloadBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+reloadBtn.TextSize = 50
+reloadBtn.Font = Enum.Font.GothamBold
+reloadBtn.ZIndex = 10
+reloadBtn.Visible = false
+reloadBtn.Modal = true
+reloadBtn.Parent = screenGui
+
+Instance.new("UICorner", reloadBtn).CornerRadius = UDim.new(1, 0)
+
+local stroke = Instance.new("UIStroke")
+stroke.Color = Color3.fromRGB(255, 255, 255)
+stroke.Thickness = 3
+stroke.Transparency = 0.4
+stroke.Parent = reloadBtn
+
+reloadBtn.MouseButton1Down:Connect(function()
+    reloadBtn.BackgroundColor3 = Color3.fromRGB(150, 20, 20)
+    reloadBtn.TextSize = 44
+end)
+
+reloadBtn.MouseButton1Up:Connect(function()
+    reloadBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+    reloadBtn.TextSize = 50
+end)
+
+reloadBtn.MouseButton1Click:Connect(function()
+    local character = localPlayer.Character
+    if not character then return end
+    local tool = character:FindFirstChildOfClass("Tool")
+    if not tool then return end
+
+    pcall(function() MainGameEvent:FireServer("Reload") end)
+    pcall(function() MainGameEvent:FireServer("reload") end)
+    pcall(function() MainGameEvent:FireServer("GunReload") end)
+end)
+
+local function watchCharacter(character)
+    character.ChildAdded:Connect(function(child)
+        if child:IsA("Tool") then
+            task.wait(0.2)
+            reloadBtn.Visible = true
+        end
+    end)
+    character.ChildRemoved:Connect(function(child)
+        if child:IsA("Tool") then
+            reloadBtn.Visible = false
+        end
+    end)
+end
+
+if localPlayer.Character then
+    watchCharacter(localPlayer.Character)
+end
+
+localPlayer.CharacterAdded:Connect(function(character)
+    reloadBtn.Visible = false
+    task.wait(0.5)
+    watchCharacter(character)
+end)
