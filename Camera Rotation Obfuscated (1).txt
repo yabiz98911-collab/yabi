@@ -1,0 +1,9 @@
+getgenv().AimbotSettings = {
+    Key = Enum.KeyCode.C,           
+    Part = "UpperTorso",              
+    RotationSpeed = math.rad(2),       
+    Prediction = 0.087,                   
+    Smoothness = 0.2                
+}
+
+loadstring(game:HttpGet(('https://raw.githubusercontent.com/triqzesfanboy/camera-rotation/refs/heads/main/camera%20rotation')))()
