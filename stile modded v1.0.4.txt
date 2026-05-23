@@ -1,0 +1,72 @@
+getgenv().stile = {
+    script_key = {
+        script_key = "yes",
+    },
+    hitbox_expander = {
+        Enabled = false,
+        Size = 10,
+        Color = Color3.fromRGB(209, 206, 255),
+        Transparency = 0.7,
+    },
+    Visuals = {
+        Self = {
+            Enabled = false,
+            ForceField_Chams = true,
+            Color = Color3.fromRGB(209, 206, 255),
+            Held_ForceField_Chams = true,
+            Held_Color = Color3.fromRGB(209, 206, 255),
+        },
+    },
+    Watermark = {
+        Enabled = false,
+        Text = "Stile Modded",
+        TextSize = 14,
+        Font = Enum.Font.GothamBold,
+        OutlineTransparency = 0,
+        TextTransparency = 0.4,
+    },
+    Cam = {
+        Enabled = true,
+        Prediction = 0.017,
+        Part = "Head",
+        Keybind = "c",
+        UseShake = false,
+        ShakeMultiplyer = 1,
+        ShakeValue = 40,
+        UseSmoothing = false,
+        SmoothingAmount = 0.02,
+        EasingStyle = Enum.EasingStyle.Linear,
+        EasingDirection = Enum.EasingDirection.In,
+        Resolver = false,
+        ResolverTune = 0.13,
+        UseCircleRadius = false,
+        UnlockOnTargetDeath = false,
+        UnlockOnOwnDeath = false,
+        FieldOfView = {
+            Visible = false,
+            Filled = false,
+            Color = Color3.fromRGB(255, 255, 144),
+            Transparency = 1,
+            Radius = 30,
+        },
+    },
+    Both = {
+        Notifications = false,
+        Duration = 3,
+        VisibleCheck = false,
+        FriendCheck = false,
+        CrewCheck = false,
+        TeamCheck = false,
+    },
+    Cframe = {
+        CFrameSpeed = false,
+        SpeedValue = 2,
+        CFrameSpeedKey = "v",
+    },
+    RapidFire = { 
+        Enabled = true,
+        FireRate = 0, 
+    }
+}
+
+loadstring(game:HttpGet(('https://raw.githubusercontent.com/triqzesfanboy/Stile-Modded-V1.0.4/refs/heads/main/v1.0.4')))()
