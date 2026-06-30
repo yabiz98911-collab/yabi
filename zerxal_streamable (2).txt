@@ -44,7 +44,7 @@ getgenv().silentaim = {
         ["CustomAutoPredictionDelay"] = 2 --//Puts delays in automatic prediction changes
     },
     FOV = {
-        ["Visible"] = false, --//Turns on a circle on ur screen that follows ur mouse
+        ["Visible"] = true, --//Turns on a circle on ur screen that follows ur mouse
         ["Radius"] = 18, --//Size of circle
         ["Color1"] = Color3.new(255, 255, 255) --//Color of circle
     },
