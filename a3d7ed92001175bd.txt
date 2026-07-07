@@ -13,7 +13,7 @@ getgenv().Haunts = {
     }, 
     Camlock = {
         Enabled = true,
-        Keybind = "X",
+        Keybind = "C",
         UsePrediction = false,
         Prediction = 0.1267,
         SmoothnessValue = 0.0181,
