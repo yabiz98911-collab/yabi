@@ -1,0 +1,1936 @@
+getgenv().gloryv3beta = {
+    ["global"] = {
+        ["mod detector"] = true, -- Automatically kicks if a moderator joins the game
+    },
+    ["binds"] = {
+        ['select'] = "C", -- Key to select/deselect target player
+        ['camera aimbot'] = "C", -- Key to toggle/hold camera lock
+        ['triggerbot'] = "C", -- Key to toggle/hold auto-fire
+        ['speed'] = "X", -- Key to toggle speed modifications
+        ['esp'] = "P", -- Key to toggle player ESP (name tags)
+        ['sort'] = "B" -- Key to sort inventory based on slot configuration
+    },
+    ['targeting'] = {
+        ['target mode'] = 'Select' -- 'Select' = manual target selection, 'Automatic' = closest target to crosshair
+    },
+    ['select only features'] = {
+        ['force hit'] = true, -- When true in Select mode: always hits head, ignores FOV
+        ['force trigger'] = true -- When true in Select mode: triggerbot ignores FOV/distance checks
+    },
+    ["checks"] = {
+        ['visible check'] = true, -- Only target players you can see (no wallbangs)
+        ['knock check'] = true, -- Skip knocked/downed players
+        ['ko check'] = true, -- Skip KO'd players
+        ['crew check'] = true, -- Don't target crew members
+        ['self knock check'] = true, -- Disable features when you're knocked
+        ['forcefield check'] = false -- Skip players with forcefields/spawn protection
+    },
+    ['esp'] = {
+        ['enabled'] = true, -- Show player names on screen
+        ['position'] = 'Bottom', -- 'Top' = above head, 'Bottom' = below feet
+        ['size'] = 1.1, -- Text size multiplier
+        ['normal color'] = Color3.fromRGB(255, 255, 255), -- Color for non-targeted players (white)
+        ['target color'] = Color3.fromRGB(0, 255, 0) -- Color for your current target (green)
+    },
+    ['silent aimbot'] = {
+        ['enabled'] = true, -- Auto-aim when firing without moving camera
+        ['hitpart'] = "Closest Point", -- Body part to aim at: "Head", "UpperTorso", "LowerTorso", or "Closest Point"
+        ['closest point'] = {
+            ['mode'] = 'Advanced', -- 'Basic' = fast center-mass, 'Advanced' = precise point scanning
+            ['scale'] = 1, -- How much of the hitbox to scan (0-1, higher = larger area)
+            ['density'] = 4 -- Grid density for point scanning (1-4, higher = more accurate but slower)
+        },
+        ['fov'] = {
+            ['type'] = '3D', -- '2D' = circular screen FOV, '3D' = box around player
+            ['show fov'] = true, -- Draw FOV circle/box on screen
+            ['radius'] = 75, -- Radius in pixels for 2D FOV
+            -- 3D FOV box dimensions (in studs):
+            ["x left"] = 4.2,
+            ["x right"] = 4.2,
+            ["y upper"] = 4.2,
+            ["y lower"] = 4.2,
+            ["z left"] = 4.2,
+            ["z right"] = 4.2
+        }
+    },
+    ['camera aimbot'] = {
+        ['enabled'] = false, -- Smoothly moves camera to target
+        ['mode'] = "Toggle", -- "Toggle" = press to lock on/off, "Hold" = hold to lock
+        ['hitpart'] = "Closest Point", -- Body part to track: "Head", "UpperTorso", "LowerTorso", or "Closest Point"
+        ['closest point'] = {
+            ['mode'] = 'Advanced', -- 'Basic' = fast center-mass, 'Advanced' = precise point scanning
+            ['scale'] = 0.09, -- How much of the hitbox to scan (0-1)
+            ['density'] = 4 -- Grid density for point scanning (1-4)
+        },
+        ['smoothing'] = {
+            ['enabled'] = true, -- Smooth camera movement (looks more legit)
+            ['x'] = 0.06, -- Horizontal smoothing (0-1, lower = smoother/slower)
+            ['y'] = 0.06 -- Vertical smoothing (0-1, lower = smoother/slower)
+        },
+        ['easing'] = "Linear", -- Camera movement curve: "Linear", "Sine", "Quad", etc.
+        ['humanize'] = {
+            ['bezier'] = true, -- Use bezier curves for more human-like movement
+            ['enabled'] = false, -- Add slight randomness to movement
+            ['scale'] = 0.25 -- Amount of randomness (0-1)
+        },
+        ['fov'] = {
+            ['type'] = '2D', -- '2D' = circular screen FOV, '3D' = box around player
+            ['radius'] = 750, -- Radius in pixels for 2D FOV (larger = longer range)
+            ['show fov'] = false -- Draw FOV circle on screen
+        }
+    },
+    ['trigger bot'] = {
+        ['enabled'] = true, -- Auto-fire when crosshair is on target
+        ['distance'] = 750, -- Maximum range in studs
+        ['settings'] = {
+            ['mode'] = "Hold", -- "Always" = constant, "Toggle" = toggle on/off, "Hold" = hold key
+            ['type'] = "FOV" -- "FOV" = fire in FOV area, "Hitbox" = fire only on player model
+        },
+        ['delay settings'] = {
+            ['delay toggle'] = true, -- Enable delay between shots
+            ['delay'] = 0 -- Seconds between shots (lower = faster, 0 = instant)
+        },
+        ['fov'] = {
+            ['type'] = '2D', -- '2D' = circular screen FOV, '3D' = box around player
+            ['show fov'] = false, -- Draw FOV circle/box on screen
+            ['radius'] = 150, -- Radius in pixels for 2D FOV
+            ['size'] = { -- 3D FOV box dimensions (in studs):
+                ["x left"] = 1,
+                ["x right"] = 2,
+                ["y upper"] = 1,
+                ["y lower"] = 1,
+                ["z left"] = 2,
+                ["z right"] = 1
+            }
+        }
+    },
+    ['spread modifications'] = {
+        ['enabled'] = true, -- Modify shotgun spread patterns
+        ['mode'] = "Fixed", -- "Fixed" = constant spread, "Randomized" = varies between min/max
+        -- Spread multipliers per weapon (0 = no spread, 1 = normal spread):
+        ['Double-Barrel SG'] = { ['fixed'] = 0., ['min'] = 0, ['max'] = 0 },
+        ['TacticalShotgun'] = { ['fixed'] = 0., ['min'] = 0, ['max'] = 0 },
+        ['Shotgun'] = { ['fixed'] = 0, ['min'] = 0, ['max'] = 0 },
+        ['DrumShotgun'] = { ['fixed'] = 0, ['min'] = 0, ['max'] = 0 }
+    },
+    ['speed modifications'] = {
+        ['enabled'] = true, -- Modify walk speed
+        ['normal'] = { ['multiplier'] = 45 }, -- Normal speed multiplier (default = 16, so 40x = 640 speed)
+        ['low health'] = {
+            ['health threshold'] = 35, -- Switch to low health speed when HP drops below this
+            ['multiplier'] = 45 -- Low health speed multiplier
+        }
+    },
+    ['anti fall'] = {
+        ['enabled'] = true -- Prevent ragdolling when falling/getting knocked down
+    },
+    ['spiderman'] = {
+        ['enabled'] = true, -- Wall jump ability
+        ['jump power'] = 50, -- Jump strength when wall jumping
+        ['knife jump power'] = 65 -- Jump strength when holding knife
+    },
+    ['inventory sorter'] = {
+        ['enabled'] = true, -- Auto-sort inventory into specific slots
+        ['slots'] = { -- Assign weapons to hotbar slots (1-0 keys):
+            [1] = "[Double-Barrel SG]",
+            [2] = "[Revolver]",
+            [3] = "[TacticalShotgun]",
+            [4] = "[Knife]",
+            [5] = "[Silencer]", -- Empty slot
+            [6] = "",
+            [7] = "",
+            [8] = "",
+            [9] = "",
+            [10] = ""
+        }
+    },
+
+    -- https://pastebin.com/raw/99Ma5A0A
+    ['skins'] = { -- Apply custom skins to weapons (leave empty "" for default skin)
+        ['[Knife]'] = "", 
+        ['[Bat]'] = "",
+        ['[Double-Barrel SG]'] = "Galexy",
+        ['[TacticalShotgun]'] = "Galexy",
+        ['[Shotgun]'] = "Galexy",
+        ['[Revolver]'] = "",
+        ['[Silencer]'] = "",
+        ['[Rifle]'] = ""
+    }
+}
+local players = game:GetService("Players")
+local runservice = game:GetService("RunService")
+local userinputservice = game:GetService("UserInputService")
+local workspace = game:GetService("Workspace")
+local replicatedstorage = game:GetService("ReplicatedStorage")
+local localplayer = players.LocalPlayer
+local camera = workspace.CurrentCamera
+local mouse = localplayer:GetMouse()
+
+local triggerbotactive = false
+local triggerhold = false
+local currenttargetplayer = nil
+local leftctrlheld = false
+local targetplayer = nil
+local camlockactive = false
+local camlockhold = false
+local camlocktarget = nil
+local camlockpart = nil
+local rightclickheld = false
+local haswalljumped = false
+local walljumpconnection = nil
+local knifedata = {}
+local cachedclosestpoint = nil
+local cachedclosestpointtime = 0
+local closestpointcacherate = 1/30
+local speedactive = false
+
+local shotgunnames = { ["Double-Barrel SG"]=true, ["TacticalShotgun"]=true, ["Shotgun"]=true, ["DrumShotgun"]=true }
+local pistolnames = { ["Revolver"]=true, ["Silencer"]=true, ["Glock"]=true }
+local automaticnames = { ["AK-47"]=true, ["AR"]=true, ["Silencer AR"]=true, ["Drum Gun"]=true }
+local riflenames = { ["AUG"]=true, ["P90"]=true, ["Rifle"]=true }
+
+local knifeskins = {
+    ["Golden Age Tanto"] = {soundid = "rbxassetid://5917819099", animationid = "rbxassetid://13473404819", positionoffset = Vector3.new(0, -0.20, -1.2), rotationoffset = Vector3.new(90, 263.7, 180)},
+    ["GPO-Knife"] = {soundid = "rbxassetid://4604390759", animationid = "rbxassetid://14014278925", positionoffset = Vector3.new(0.00, -0.32, -1.07), rotationoffset = Vector3.new(90, -97.4, 90)},
+    ["GPO-Knife Prestige"] = {soundid = "rbxassetid://4604390759", animationid = "rbxassetid://14014278925", positionoffset = Vector3.new(0.00, -0.32, -1.07), rotationoffset = Vector3.new(90, -97.4, 90)},
+    ["Heaven"] = {soundid = "rbxassetid://14489860007", animationid = "rbxassetid://14500266726", positionoffset = Vector3.new(-0.02, -0.82, 0.20), rotationoffset = Vector3.new(64.42, 3.79, 0.00)},
+    ["Love Kukri"] = {soundid = "", animationid = "", positionoffset = Vector3.new(-0.14, 0.14, -1.62), rotationoffset = Vector3.new(-90.00, 180.00, -4.97), particle = true, textureid = "rbxassetid://12124159284"},
+    ["Purple Dagger"] = {soundid = "rbxassetid://17822743153", animationid = "rbxassetid://17824999722", positionoffset = Vector3.new(-0.13, -0.24, -1.80), rotationoffset = Vector3.new(89.05, 96.63, 180.00)},
+    ["Blue Dagger"] = {soundid = "rbxassetid://17822737046", animationid = "rbxassetid://17824995184", positionoffset = Vector3.new(-0.13, -0.24, -1.80), rotationoffset = Vector3.new(89.05, 96.63, 180.00)},
+    ["Green Dagger"] = {soundid = "rbxassetid://17822741762", animationid = "rbxassetid://17825004320", positionoffset = Vector3.new(-0.13, -0.24, -1.07), rotationoffset = Vector3.new(89.05, 96.63, 180.00)},
+    ["Red Dagger"] = {soundid = "rbxassetid://17822952417", animationid = "rbxassetid://17825008844", positionoffset = Vector3.new(-0.13, -0.24, -1.07), rotationoffset = Vector3.new(89.05, 96.63, 180.00)},
+    ["Portal"] = {soundid = "rbxassetid://16058846352", animationid = "rbxassetid://16058633881", positionoffset = Vector3.new(-0.13, -0.35, -0.57), rotationoffset = Vector3.new(89.05, 96.63, 180.00)},
+    ["Emerald Butterfly"] = {soundid = "rbxassetid://14931902491", animationid = "rbxassetid://14918231706", positionoffset = Vector3.new(-0.02, -0.30, -0.65), rotationoffset = Vector3.new(180.00, 90.95, 180.00)},
+    ["Boy"] = {soundid = "rbxassetid://18765078331", animationid = "rbxassetid://18789158908", positionoffset = Vector3.new(-0.02, -0.09, -0.73), rotationoffset = Vector3.new(89.05, -88.11, 180.00)},
+    ["Girl"] = {soundid = "rbxassetid://18765078331", animationid = "rbxassetid://18789162944", positionoffset = Vector3.new(-0.02, -0.16, -0.73), rotationoffset = Vector3.new(89.05, -88.11, 180.00)},
+    ["Dragon"] = {soundid = "rbxassetid://14217789230", animationid = "rbxassetid://14217804400", positionoffset = Vector3.new(-0.02, -0.32, -0.98), rotationoffset = Vector3.new(89.05, 90.95, 180.00)},
+    ["Void"] = {soundid = "rbxassetid://14756591763", animationid = "rbxassetid://14774699952", positionoffset = Vector3.new(-0.02, -0.22, -0.85), rotationoffset = Vector3.new(180.00, 90.95, 180.00)},
+    ["Wild West"] = {soundid = "rbxassetid://16058689026", animationid = "rbxassetid://16058148839", positionoffset = Vector3.new(-0.02, -0.24, -1.15), rotationoffset = Vector3.new(-91.89, 90.95, 180.00)},
+    ["Iced Out"] = {soundid = "rbxassetid://14924261405", animationid = "rbxassetid://18465353361", positionoffset = Vector3.new(0.02, -0.08, 0.99), rotationoffset = Vector3.new(180.00, -90.95, -180.00)},
+    ["Reptile"] = {soundid = "rbxassetid://18765103349", animationid = "rbxassetid://18788955930", positionoffset = Vector3.new(-0.03, -0.06, -0.92), rotationoffset = Vector3.new(168.63, 90.00, -180.00)},
+    ["Emerald"] = {soundid = "", animationid = "", positionoffset = Vector3.new(-0.03, -0.06, -0.92), rotationoffset = Vector3.new(168.63, 90.00, 108.00)},
+    ["Ribbon"] = {soundid = "rbxassetid://130974579277249", animationid = "rbxassetid://124102609796063", positionoffset = Vector3.new(0.02, -0.25, -0.05), rotationoffset = Vector3.new(90.00, 0.00, 180.00)},
+}
+
+local targetcache = {
+    player = nil, root = nil, hitbox = nil, box = nil,
+    trigger = nil, triggerbox = nil,
+    silentfov = {}, triggerfov = {}
+}
+
+local r15parts = {
+    "Head", "UpperTorso", "LowerTorso",
+    "LeftUpperArm", "LeftLowerArm", "LeftHand",
+    "RightUpperArm", "RightLowerArm", "RightHand",
+    "LeftUpperLeg", "LeftLowerLeg", "LeftFoot",
+    "RightUpperLeg", "RightLowerLeg", "RightFoot"
+}
+
+local priorityparts = {"Head", "UpperTorso", "LowerTorso"}
+
+local espcache = {}
+local playercache = {}
+local lastplayercacheupdate = 0
+
+local silentfov2d = nil
+local triggerfov2d = nil
+local camfov2d = nil
+
+local function getequippedshotgun()
+    local char = localplayer.Character
+    if not char then return nil end
+    local tool = char:FindFirstChildOfClass("Tool")
+    if not tool then return nil end
+    local toolname = tool.Name:gsub("%[", ""):gsub("%]", "")
+    if shotgunnames[toolname] then
+        return toolname
+    end
+    return nil
+end
+
+local function createespdrawings()
+    local text = Drawing.new("Text")
+
+    text.Center = true
+    text.Visible = false
+    text.Font = 2 -- UI font (closest match)
+    text.Size = 14
+    text.Color = Color3.fromRGB(220, 220, 220) -- light gray
+
+    return {
+        name = text
+    }
+end
+
+
+local function removeesp(player)
+    if espcache[player] then
+        for _, drawing in pairs(espcache[player]) do
+            if drawing and drawing.Remove then
+                drawing:Remove()
+            end
+        end
+        espcache[player] = nil
+    end
+    playercache[player] = nil
+end
+
+local function updateesp()
+    local espcfg = getgenv().gloryv3beta['esp']
+    if not espcfg['enabled'] then
+        for player, drawings in pairs(espcache) do
+            for _, drawing in pairs(drawings) do
+                if drawing then drawing.Visible = false end
+            end
+        end
+        return
+    end
+    for _, player in ipairs(players:GetPlayers()) do
+        if player == localplayer then continue end
+        if not espcache[player] then
+            espcache[player] = createespdrawings()
+        end
+        local drawings = espcache[player]
+        local character = player.Character
+        if not character then
+            drawings.name.Visible = false
+            continue
+        end
+        local root = character:FindFirstChild("HumanoidRootPart")
+        local head = character:FindFirstChild("Head")
+        if not root or not head then
+            drawings.name.Visible = false
+            continue
+        end
+        local rootpos, onscreen = camera:WorldToViewportPoint(root.Position)
+        if not onscreen or rootpos.Z <= 0 then
+            drawings.name.Visible = false
+            continue
+        end
+        local istarget = (player == targetplayer)
+        local espcolor = istarget and espcfg['target color'] or espcfg['normal color']
+        local espposition = espcfg['position'] or 'Top'
+        local ypos
+        if espposition == 'Top' then
+            local headpos = camera:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
+            ypos = headpos.Y - (15 * espcfg['size'])
+        else
+            local feetpos = camera:WorldToViewportPoint(root.Position - Vector3.new(0, 3, 0))
+            ypos = feetpos.Y + (5 * espcfg['size'])
+        end
+        drawings.name.Text = player.DisplayName
+        drawings.name.Size = 14 * espcfg['size']
+        drawings.name.Position = Vector2.new(rootpos.X, ypos)
+        drawings.name.Color = espcolor
+        drawings.name.Outline = true
+drawings.name.OutlineColor = Color3.fromRGB(0, 0, 0)  -- black outline
+
+drawings.name.Visible = true
+    end
+end
+
+local function antifall()
+    if not getgenv().gloryv3beta['anti fall']['enabled'] then return end
+    local char = localplayer.Character
+    if not char then return end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if not hum then return end
+    local state = hum:GetState()
+    if state == Enum.HumanoidStateType.FallingDown or state == Enum.HumanoidStateType.Ragdoll or state == Enum.HumanoidStateType.PlatformStanding then
+        hum:ChangeState(Enum.HumanoidStateType.GettingUp)
+    end
+end
+
+local function touchingwall()
+    local char = localplayer.Character
+    if not char then return false end
+    local hrp = char:FindFirstChild("HumanoidRootPart")
+    if not hrp then return false end
+    local params = RaycastParams.new()
+    params.FilterDescendantsInstances = {char}
+    params.FilterType = Enum.RaycastFilterType.Exclude
+    local dirs = {hrp.CFrame.LookVector, -hrp.CFrame.LookVector, hrp.CFrame.RightVector, -hrp.CFrame.RightVector}
+    for _, d in pairs(dirs) do
+        local ray = workspace:Raycast(hrp.Position, d * 2.5, params)
+        if ray then return true end
+    end
+    return false
+end
+
+local function getspidermanjumppower()
+    local char = localplayer.Character
+    if not char then return getgenv().gloryv3beta['spiderman']['jump power'] end
+    local tool = char:FindFirstChildOfClass("Tool")
+    if tool and tool.Name == "[Knife]" then
+        return getgenv().gloryv3beta['spiderman']['knife jump power']
+    end
+    return getgenv().gloryv3beta['spiderman']['jump power']
+end
+
+local function setupwalljumpreset()
+    if walljumpconnection then
+        walljumpconnection:Disconnect()
+        walljumpconnection = nil
+    end
+    haswalljumped = false
+    local char = localplayer.Character
+    if not char then return end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if not hum then 
+        task.wait(0.5)
+        hum = char:FindFirstChildOfClass("Humanoid")
+        if not hum then return end
+    end
+    walljumpconnection = hum.StateChanged:Connect(function(old, new)
+        if new == Enum.HumanoidStateType.Landed or new == Enum.HumanoidStateType.Running or new == Enum.HumanoidStateType.RunningNoPhysics or new == Enum.HumanoidStateType.Jumping then
+            haswalljumped = false
+        end
+    end)
+    char.ChildAdded:Connect(function(child)
+        if child:IsA("Humanoid") then
+            task.wait(0.1)
+            setupwalljumpreset()
+        end
+    end)
+end
+
+local function sortinventory()
+    local cfg = getgenv().gloryv3beta['inventory sorter']
+    if not cfg['enabled'] then return end
+    local backpack = localplayer:FindFirstChildOfClass("Backpack")
+    if not backpack then return end
+    local fakefolder = Instance.new("Folder")
+    fakefolder.Name = "GlorySortFolder"
+    fakefolder.Parent = workspace
+    local children = backpack:GetChildren()
+    for i = 1, #children do
+        local tool = children[i]
+        if tool:IsA("Tool") then
+            tool.Parent = fakefolder
+        end
+    end
+    local placeholders = {}
+    for i = 1, 10 do
+        local gunname = cfg['slots'][i]
+        if gunname and gunname ~= "" then
+            local gun = fakefolder:FindFirstChild(gunname)
+            if gun then
+                gun.Parent = backpack
+                task.wait(0.05)
+            else
+                local placeholder = Instance.new("Tool")
+                placeholder.Name = ""
+                placeholder.RequiresHandle = false
+                placeholder.Parent = backpack
+                table.insert(placeholders, placeholder)
+                task.wait(0.05)
+            end
+        else
+            local placeholder = Instance.new("Tool")
+            placeholder.Name = ""
+            placeholder.RequiresHandle = false
+            placeholder.Parent = backpack
+            table.insert(placeholders, placeholder)
+            task.wait(0.05)
+        end
+    end
+    local remaining = fakefolder:GetChildren()
+    for i = 1, #remaining do
+        local tool = remaining[i]
+        if tool:IsA("Tool") then
+            tool.Parent = backpack
+            task.wait(0.05)
+        end
+    end
+    for i = 1, #placeholders do
+        placeholders[i]:Destroy()
+    end
+    fakefolder:Destroy()
+end
+
+local function clearmesh(tool, exclude)
+    local children = tool:GetChildren()
+    for i = 1, #children do
+        local v = children[i]
+        if v:IsA("MeshPart") and v ~= exclude then
+            v:Destroy()
+        end
+    end
+end
+
+local function applybat(tool, name)
+    local mesh = nil
+    local descendants = tool:GetDescendants()
+    for i = 1, #descendants do
+        local v = descendants[i]
+        if v:IsA("MeshPart") and v.Transparency == 0 then
+            mesh = v
+            break
+        end
+    end
+    if not mesh then return end
+    local batskins = replicatedstorage:FindFirstChild("SkinModules")
+    if not batskins then return end
+    batskins = batskins:FindFirstChild("Bats")
+    if not batskins then return end
+    local skin = batskins:FindFirstChild(name)
+    if not skin then return end
+    local clone = skin:Clone()
+    clone.Parent = tool
+    clone.CFrame = mesh.CFrame
+    clone.Name = "CurrentSkin"
+    local w = Instance.new("Weld")
+    w.Part0 = clone
+    w.Part1 = mesh
+    w.Parent = clone
+    mesh.Transparency = 1
+end
+
+local function applygun(tool, name)
+    local orig = tool:FindFirstChildOfClass("MeshPart")
+    if not orig then return end
+    local skinmodules = replicatedstorage:FindFirstChild("SkinModules")
+    if not skinmodules then return end
+    local success, skinmodulesreq = pcall(function()
+        return require(skinmodules)
+    end)
+    if not success or not skinmodulesreq then return end
+    local info = skinmodulesreq[tool.Name] and skinmodulesreq[tool.Name][name]
+    if not info then return end
+    clearmesh(tool, orig)
+    local skinpart = info.TextureID
+    if typeof(skinpart) == "Instance" then
+        local clone = skinpart:Clone()
+        clone.Parent = tool
+        clone.CFrame = orig.CFrame
+        clone.Name = "CurrentSkin"
+        local w = Instance.new("Weld")
+        w.Part0 = clone
+        w.Part1 = orig
+        w.C0 = info.CFrame:Inverse()
+        w.Parent = clone
+        orig.Transparency = 1
+    else
+        orig.TextureID = skinpart
+        orig.Transparency = 0
+    end
+    local handle = tool:FindFirstChild("Handle")
+    if not handle then return end
+    local shoot = handle:FindFirstChild("ShootSound")
+    if shoot then
+        local skinassets = replicatedstorage:FindFirstChild("SkinAssets")
+        if skinassets then
+            local gunsounds = skinassets:FindFirstChild("GunShootSounds")
+            if gunsounds then
+                local sounds = gunsounds:FindFirstChild(tool.Name)
+                local obj = sounds and sounds:FindFirstChild(name)
+                if obj then
+                    shoot.SoundId = obj.Value
+                end
+            end
+        end
+    end
+    local skinassets = replicatedstorage:FindFirstChild("SkinAssets")
+    if skinassets then
+        local particlefolder = skinassets:FindFirstChild("GunHandleParticle")
+        if particlefolder then
+            local particlesource = particlefolder:FindFirstChild(name)
+            if particlesource then
+                local pe = particlesource:FindFirstChild("ParticleEmitter")
+                if pe then
+                    for _, existing in ipairs(handle:GetChildren()) do
+                        if existing:IsA("ParticleEmitter") then
+                            existing:Destroy()
+                        end
+                    end
+                    pe:Clone().Parent = handle
+                end
+            end
+        end
+    end
+    handle:SetAttribute("SkinName", name)
+end
+
+local function cleanknife(tool, keepanimation)
+    local data = knifedata[tool]
+    if data then
+        if data.track then
+            data.track:Stop()
+            data.track:Destroy()
+            data.track = nil
+        end
+        if data.welds then
+            for _, w in ipairs(data.welds) do
+                if w then w:Destroy() end
+            end
+        end
+        if data.sounds then
+            for _, s in ipairs(data.sounds) do
+                if s and s.Parent then s:Destroy() end
+            end
+        end
+    end
+    local mesh = tool:FindFirstChild("Default")
+    if mesh then
+        local children = mesh:GetChildren()
+        for i = 1, #children do
+            local v = children[i]
+            if v.Name == "Handle.R" or v:IsA("Model") or (v:IsA("BasePart") and v.Name ~= "Default") then
+                v:Destroy()
+            end
+        end
+        mesh.Transparency = 0
+    end
+    knifedata[tool] = nil
+end
+
+local function applyknife(char, tool, skin)
+    local cfg = knifeskins[skin]
+    if not cfg then return end
+    local hum = char:FindFirstChild("Humanoid")
+    local rhand = char:FindFirstChild("RightHand")
+    if not hum or not rhand then return end
+    cleanknife(tool)
+    knifedata[tool] = {track = nil, welds = {}, sounds = {}}
+    local data = knifedata[tool]
+    local mesh = tool:FindFirstChild("Default")
+    if not mesh then return end
+    mesh.Transparency = 1
+    local skinmodules = replicatedstorage:FindFirstChild("SkinModules")
+    if not skinmodules then return end
+    local knives = skinmodules:FindFirstChild("Knives")
+    if not knives then return end
+    local skinmodel = knives:FindFirstChild(skin)
+    if not skinmodel then return end
+    local clone = skinmodel:Clone()
+    clone.Name = skin
+    
+    local handr = Instance.new("Part")
+    handr.Name = "Handle.R"
+    handr.Transparency = 1
+    handr.CanCollide = false
+    handr.Anchored = false
+    handr.Size = Vector3.new(0.001, 0.001, 0.001)
+    handr.Massless = true
+    handr.Parent = mesh
+    
+    local m6d = Instance.new("Motor6D")
+    m6d.Name = "Handle.R"
+    m6d.Part0 = rhand
+    m6d.Part1 = handr
+    m6d.Parent = handr
+    
+    local offset = CFrame.new(cfg.positionoffset) * CFrame.Angles(math.rad(cfg.rotationoffset.X), math.rad(cfg.rotationoffset.Y), math.rad(cfg.rotationoffset.Z))
+    
+    if clone:IsA("Model") then
+        if not clone.PrimaryPart then
+            local children = clone:GetChildren()
+            for i = 1, #children do
+                local c = children[i]
+                if c:IsA("BasePart") then
+                    clone.PrimaryPart = c
+                    break
+                end
+            end
+        end
+        if clone.PrimaryPart then
+            local descendants = clone:GetDescendants()
+            for i = 1, #descendants do
+                local p = descendants[i]
+                if p:IsA("BasePart") then
+                    p.CanCollide = false
+                    p.Massless = true
+                    p.Anchored = false
+                    local w = Instance.new("Weld")
+                    w.Part0 = handr
+                    w.Part1 = p
+                    w.C0 = offset
+                    w.C1 = p.CFrame:ToObjectSpace(clone.PrimaryPart.CFrame)
+                    w.Parent = p
+                    table.insert(data.welds, w)
+                end
+            end
+        end
+        clone.Parent = mesh
+    elseif clone:IsA("BasePart") then
+        clone.CanCollide = false
+        clone.Massless = true
+        clone.Anchored = false
+        
+        if clone:IsA("MeshPart") and cfg.textureid then
+            clone.TextureID = cfg.textureid
+        end
+        
+        if cfg.particle then
+            local skinassets = replicatedstorage:FindFirstChild("SkinAssets")
+            if skinassets then
+                local particlefolder = skinassets:FindFirstChild("GunHandleParticle")
+                if particlefolder then
+                    local particlesource = particlefolder:FindFirstChild(skin)
+                    if particlesource then
+                        local pe = particlesource:FindFirstChild("ParticleEmitter")
+                        if pe then
+                            pe:Clone().Parent = clone
+                        end
+                    end
+                end
+            end
+        end
+        
+        clone.Parent = mesh
+        local w = Instance.new("Weld")
+        w.Part0 = handr
+        w.Part1 = clone
+        w.C0 = offset
+        w.Parent = clone
+        table.insert(data.welds, w)
+    end
+    
+    local animator = hum:FindFirstChildOfClass("Animator")
+    if not animator then
+        animator = Instance.new("Animator")
+        animator.Parent = hum
+    end
+    if cfg.animationid and cfg.animationid ~= "" then
+        local anim = Instance.new("Animation")
+        anim.AnimationId = cfg.animationid
+        local track = animator:LoadAnimation(anim)
+        track.Looped = false
+        track:Play()
+        data.track = track
+        anim:Destroy()
+        track.Ended:Once(function()
+            if data.track == track then
+                data.track = nil
+            end
+            track:Destroy()
+        end)
+    end
+    if cfg.soundid and cfg.soundid ~= "" then
+        local snd = Instance.new("Sound")
+        snd.SoundId = cfg.soundid
+        snd.Parent = workspace
+        snd:Play()
+        table.insert(data.sounds, snd)
+        snd.Ended:Connect(function()
+            snd:Destroy()
+        end)
+    end
+    tool:SetAttribute("CurrentKnifeSkin", skin)
+end
+
+local function setuptool(tool)
+    if not tool:IsA("Tool") then return end
+    if tool:GetAttribute("GlorySetup") then return end
+    tool:SetAttribute("GlorySetup", true)
+    tool.Equipped:Connect(function()
+        local char = tool.Parent
+        if char ~= localplayer.Character then return end
+        local skin = getgenv().gloryv3beta['skins'][tool.Name]
+        if not skin or skin == "" then return end
+        if tool.Name == "[Knife]" then
+            applyknife(char, tool, skin)
+        elseif tool.Name == "[Bat]" then
+            applybat(tool, skin)
+        else
+            applygun(tool, skin)
+        end
+    end)
+    tool.Unequipped:Connect(function()
+        if tool.Name == "[Knife]" then
+            local data = knifedata[tool]
+            if not data then return end
+            if data.welds then
+                for _, w in ipairs(data.welds) do
+                    if w then w:Destroy() end
+                end
+                data.welds = {}
+            end
+            if data.sounds then
+                for _, s in ipairs(data.sounds) do
+                    if s and s.Parent then s:Destroy() end
+                end
+                data.sounds = {}
+            end
+            local mesh = tool:FindFirstChild("Default")
+            if mesh then
+                local children = mesh:GetChildren()
+                for i = 1, #children do
+                    local v = children[i]
+                    if v.Name == "Handle.R" or v:IsA("Model") or (v:IsA("MeshPart") and v.Name ~= "Default") then
+                        v:Destroy()
+                    end
+                end
+                mesh.Transparency = 0
+            end
+        end
+    end)
+    if tool.Parent == localplayer.Character then
+        local skin = getgenv().gloryv3beta['skins'][tool.Name]
+        if skin and skin ~= "" then
+            if tool.Name == "[Knife]" then
+                task.spawn(function()
+                    applyknife(localplayer.Character, tool, skin)
+                end)
+            elseif tool.Name == "[Bat]" then
+                task.spawn(function()
+                    applybat(tool, skin)
+                end)
+            else
+                task.spawn(function()
+                    applygun(tool, skin)
+                end)
+            end
+        end
+    end
+end
+
+local function watchcharacter(char)
+    if not char then return end
+    local children = char:GetChildren()
+    for i = 1, #children do
+        local v = children[i]
+        if v:IsA("Tool") then
+            setuptool(v)
+        end
+    end
+    char.ChildAdded:Connect(function(v)
+        if v:IsA("Tool") then
+            setuptool(v)
+        end
+    end)
+end
+
+players.PlayerRemoving:Connect(function(player)
+    removeesp(player)
+end)
+
+task.spawn(function()
+    local communityid = 17215700
+    local function checkmod(player)
+        if getgenv().gloryv3beta and getgenv().gloryv3beta["global"] and getgenv().gloryv3beta["global"]["mod detector"] then
+            if player ~= localplayer and player:IsInGroup(communityid) then
+                localplayer:Kick("daddy wtf")
+                return true
+            end
+        end
+        return false
+    end
+    for _, player in ipairs(players:GetPlayers()) do
+        if checkmod(player) then break end
+    end
+    players.PlayerAdded:Connect(function(player)
+        task.wait()
+        checkmod(player)
+    end)
+end)
+
+local function getcamerasmoothness()
+    return getgenv().gloryv3beta['camera aimbot']['smoothing']['x'], getgenv().gloryv3beta['camera aimbot']['smoothing']['y']
+end
+
+local function getsplitfov(section)
+    local fovdata = getgenv().gloryv3beta[section]['fov']
+    local size = fovdata['size'] or fovdata
+    -- silent aim 3D fov fix (number support, minimal)
+    if section == 'silent aimbot' and typeof(size) == "number" then
+        return {
+            xleft = size,
+            xright = size,
+            yupper = size,
+            ylower = size,
+            zleft = size,
+            zright = size
+        }
+    end
+
+    return {
+        xleft = size["x right"] or size["X Right"] or 12,
+        xright = size["x left"] or size["X Left"] or 12,
+        yupper = size["y upper"] or size["Y Upper"] or 12,
+        ylower = size["y lower"] or size["Y Lower"] or 12,
+        zleft = size["z right"] or size["Z Right"] or 12,
+        zright = size["z left"] or size["Z Left"] or 12
+    }
+end
+
+local function istargetin2dfov(radius)
+    if not targetplayer or not targetplayer.Character then return false end
+    local root = targetplayer.Character:FindFirstChild("HumanoidRootPart")
+    if not root then return false end
+    local screenpos, onscreen = camera:WorldToViewportPoint(root.Position)
+    if not onscreen or screenpos.Z <= 0 then return false end
+    local mousepos = userinputservice:GetMouseLocation()
+    local dist = (Vector2.new(screenpos.X, screenpos.Y) - mousepos).Magnitude
+    return dist <= radius
+end
+
+local function ismouseinboxfov(hitbox)
+    if not hitbox or not hitbox.Parent then return false end
+    local mousepos = userinputservice:GetMouseLocation()
+    local ray = camera:ViewportPointToRay(mousepos.X, mousepos.Y)
+    local localorigin = hitbox.CFrame:PointToObjectSpace(ray.Origin)
+    local localdir = hitbox.CFrame:VectorToObjectSpace(ray.Direction).Unit
+    local size = hitbox.Size / 2
+    local function axis(o, d, minb, maxb)
+        if math.abs(d) < 1e-6 then return -math.huge, math.huge end
+        local t1 = (minb - o) / d
+        local t2 = (maxb - o) / d
+        return math.min(t1, t2), math.max(t1, t2)
+    end
+    local txmin, txmax = axis(localorigin.X, localdir.X, -size.X, size.X)
+    local tymin, tymax = axis(localorigin.Y, localdir.Y, -size.Y, size.Y)
+    local tzmin, tzmax = axis(localorigin.Z, localdir.Z, -size.Z, size.Z)
+    local tmin = math.max(math.max(txmin, tymin), tzmin)
+    local tmax = math.min(math.min(txmax, tymax), tzmax)
+    return tmax >= math.max(tmin, 0)
+end
+
+local function ismouseinsilentfov()
+    local fovtype = getgenv().gloryv3beta['silent aimbot']['fov']['type'] or '3D'
+    if fovtype == '2D' then
+        local radius = getgenv().gloryv3beta['silent aimbot']['fov']['radius'] or 150
+        return istargetin2dfov(radius)
+    else
+        if not getgenv().gloryv3beta['silent aimbot']['fov']['show fov'] then return true end
+        return targetcache.hitbox and ismouseinboxfov(targetcache.hitbox)
+    end
+end
+
+local function isvisible(origin, targetpart, targetcharacter)
+    if not getgenv().gloryv3beta["checks"]['visible check'] then return true end
+    if not targetpart then return false end
+    if not (targetpart:IsA("BasePart")) then return false end
+    local targetpos = targetpart.Position
+    local direction = targetpos - origin
+    local distance = direction.Magnitude
+    if distance <= 0 then return true end
+    local rayparams = RaycastParams.new()
+    rayparams.FilterType = Enum.RaycastFilterType.Exclude
+    rayparams.FilterDescendantsInstances = { localplayer.Character, targetcharacter, camera }
+    rayparams.IgnoreWater = true
+    local result = workspace:Raycast(origin, direction, rayparams)
+    if not result then return true end
+    return false
+end
+
+local function isvisibleadvanced(origin, targetcharacter)
+    if not getgenv().gloryv3beta["checks"]['visible check'] then return true end
+    if not targetcharacter then return false end
+    local partstocheck = {"Head", "UpperTorso", "HumanoidRootPart"}
+    for _, partname in ipairs(partstocheck) do
+        local part = targetcharacter:FindFirstChild(partname)
+        if part and part:IsA("BasePart") then
+            if isvisible(origin, part, targetcharacter) then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+local function issamecrew(target)
+    if not getgenv().gloryv3beta["checks"]['crew check'] then return false end
+    local localcrew = localplayer:GetAttribute("CrewID")
+    local targetcrew = target:GetAttribute("CrewID")
+    return localcrew and targetcrew and localcrew == targetcrew
+end
+
+local function istargetknocked(target)
+    if not target or not target.Character then return false end
+    local bodyeffects = target.Character:FindFirstChild("BodyEffects")
+    local ko = bodyeffects and bodyeffects:FindFirstChild("K.O")
+    return ko and ko.Value
+end
+
+local function isselfknocked()
+    local bodyeffects = localplayer.Character and localplayer.Character:FindFirstChild("BodyEffects")
+    local ko = bodyeffects and bodyeffects:FindFirstChild("K.O")
+    return ko and ko.Value
+end
+
+local function istargetpaused()
+    if not targetplayer or not targetplayer.Character then return true end
+    local char = targetplayer.Character
+    local be = char:FindFirstChild("BodyEffects")
+    local ko = be and be:FindFirstChild("K.O")
+    local ff = char:FindFirstChildOfClass("ForceField")
+    if getgenv().gloryv3beta["checks"]['ko check'] and ko and ko.Value then
+        return true
+    end
+    if getgenv().gloryv3beta["checks"]['forcefield check'] and ff then
+        return true
+    end
+    return false
+end
+
+local function getdistancetotarget()
+    if not targetplayer or not targetplayer.Character then return math.huge end
+    local targetroot = targetplayer.Character:FindFirstChild("HumanoidRootPart")
+    if not targetroot then return math.huge end
+    local localchar = localplayer.Character
+    if not localchar then return math.huge end
+    local localroot = localchar:FindFirstChild("HumanoidRootPart")
+    if not localroot then return math.huge end
+    return (targetroot.Position - localroot.Position).Magnitude
+end
+
+local function getclosestpointfast(character, iscamlock)
+    if not (character and character.Parent) then return nil end
+    local mousepos = userinputservice:GetMouseLocation()
+    local mousex, mousey = mousepos.X, mousepos.Y
+    local cam = camera
+    local bestdist = 1e9
+    local bestpart, bestpos
+    for _, name in ipairs(priorityparts) do
+        local part = character:FindFirstChild(name)
+        if part and part:IsA("BasePart") then
+            local pos = part.Position
+            local s = cam:WorldToViewportPoint(pos)
+            if s.Z > 0 then
+                local dist = (s.X - mousex)^2 + (s.Y - mousey)^2
+                if dist < bestdist then
+                    bestdist = dist
+                    bestpart = part
+                    bestpos = pos
+                end
+            end
+        end
+    end
+    if bestpart then return { part = bestpart, position = bestpos } end
+    local root = character:FindFirstChild("HumanoidRootPart")
+    return root and { part = root, position = root.Position }
+end
+
+local function getclosestpoint(character, iscamlock)
+    if not (character and character.Parent) then return nil end
+    local now = tick()
+    if cachedclosestpoint and cachedclosestpoint.character == character and (now - cachedclosestpointtime) < closestpointcacherate then
+        return cachedclosestpoint.result
+    end
+    local mousepos = userinputservice:GetMouseLocation()
+    local mousex, mousey = mousepos.X, mousepos.Y
+    local cam = camera
+    local cfg = iscamlock and getgenv().gloryv3beta['camera aimbot']['closest point'] or getgenv().gloryv3beta['silent aimbot']['closest point']
+    local mode = cfg['mode'] or "Advanced"
+    local scale = cfg['scale'] or 0.17
+    local density = math.min(cfg['density'] or 4, 3)
+    local scalefactor = math.clamp(scale, 0, 1)
+    local bestdist = 1e9
+    local bestpart, bestpos
+    if mode == "Basic" then
+        for _, name in ipairs(priorityparts) do
+            local part = character:FindFirstChild(name)
+            if part and part:IsA("BasePart") then
+                local pos = part.Position
+                local s = cam:WorldToViewportPoint(pos)
+                if s.Z > 0 then
+                    local dist = (s.X - mousex)^2 + (s.Y - mousey)^2
+                    if dist < bestdist then
+                        bestdist = dist
+                        bestpart = part
+                        bestpos = pos
+                    end
+                end
+            end
+        end
+    else
+        local step = 1 / math.max(density - 1, 1)
+        for _, name in ipairs(priorityparts) do
+            local part = character:FindFirstChild(name)
+            if part and part:IsA("BasePart") then
+                local size = part.Size
+                local half = size * 0.5
+                local cframe = part.CFrame
+                local scaledhalf = half * (1 - scalefactor)
+                for z = 0, density - 1 do
+                    local localz = -half.Z + z * step * size.Z
+                    local clampedz = math.clamp(localz, -scaledhalf.Z, scaledhalf.Z)
+                    for y = 0, density - 1 do
+                        local localy = -half.Y + y * step * size.Y
+                        local clampedy = math.clamp(localy, -scaledhalf.Y, scaledhalf.Y)
+                        for x = 0, density - 1 do
+                            local localx = -half.X + x * step * size.X
+                            local clampedx = math.clamp(localx, -scaledhalf.X, scaledhalf.X)
+                            local worldpos = cframe:PointToWorldSpace(Vector3.new(clampedx, clampedy, clampedz))
+                            local s = cam:WorldToViewportPoint(worldpos)
+                            if s.Z > 0 then
+                                local dist = (s.X - mousex)^2 + (s.Y - mousey)^2
+                                if dist < bestdist then
+                                    bestdist = dist
+                                    bestpart = part
+                                    bestpos = worldpos
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+    end
+    local result
+    if bestpart then
+        result = { part = bestpart, position = bestpos }
+    else
+        local root = character:FindFirstChild("HumanoidRootPart")
+        result = root and { part = root, position = root.Position }
+    end
+    cachedclosestpoint = { character = character, result = result }
+    cachedclosestpointtime = now
+    return result
+end
+
+local function getclosestbodypart(character)
+    if not character then return nil end
+    if getgenv().gloryv3beta['silent aimbot']['hitpart'] == "Closest Point" then
+        return getclosestpoint(character, false)
+    end
+    local part = character:FindFirstChild(getgenv().gloryv3beta['silent aimbot']['hitpart'])
+    if part and part:IsA("BasePart") then
+        return { part = part, position = part.Position }
+    end
+    return getclosestpointfast(character, false)
+end
+
+local function getcamlockbodypart(character)
+    if not character then return nil end
+    if getgenv().gloryv3beta['camera aimbot']['hitpart'] == "Closest Point" then
+        return getclosestpoint(character, true)
+    end
+    local part = character:FindFirstChild(getgenv().gloryv3beta['camera aimbot']['hitpart'])
+    if part and part:IsA("BasePart") then
+        return { part = part, position = part.Position }
+    end
+    return getclosestpointfast(character, true)
+end
+
+local function getbesttarget()
+    local closestplayer, closestdist = nil, math.huge
+    local mousepos = userinputservice:GetMouseLocation()
+    local cam = workspace.CurrentCamera
+    local camerapos = camera.CFrame.Position
+    local visiblecheck = getgenv().gloryv3beta["checks"]['visible check']
+    local playerlist = players:GetPlayers()
+    for i = 1, #playerlist do
+        local player = playerlist[i]
+        if player == localplayer then continue end
+        local char = player.Character
+        if not char then continue end
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not root then continue end
+        local be = char:FindFirstChild("BodyEffects")
+        local ko = be and be:FindFirstChild("K.O")
+        local ff = char:FindFirstChildOfClass("ForceField")
+        if getgenv().gloryv3beta["checks"]['knock check'] and ko and ko.Value then continue end
+        if getgenv().gloryv3beta["checks"]['forcefield check'] and ff then continue end
+        if getgenv().gloryv3beta["checks"]['crew check'] and issamecrew(player) then continue end
+        if visiblecheck then
+            local canSee = isvisibleadvanced(camerapos, char)
+            if not canSee then continue end
+        end
+        local screenpos, onscreen = cam:WorldToViewportPoint(root.Position)
+        if not onscreen or screenpos.Z <= 0 then continue end
+        local dist2d = (Vector2.new(screenpos.X, screenpos.Y) - mousepos).Magnitude
+        if dist2d < closestdist then
+            closestdist = dist2d
+            closestplayer = player
+        end
+    end
+    return closestplayer
+end
+
+local function cleartargetifinvalid()
+    if not targetplayer or not targetplayer.Character then
+        targetplayer = nil
+        camlocktarget = nil
+        camlockpart = nil
+        camlockactive = false
+        pcall(function()
+            if targetcache.hitbox then targetcache.hitbox:Destroy() end
+            if targetcache.box then targetcache.box:Destroy() end
+            if targetcache.trigger then targetcache.trigger:Destroy() end
+            if targetcache.triggerbox then targetcache.triggerbox:Destroy() end
+        end)
+        return true
+    end
+    local char = targetplayer.Character
+    local root = char:FindFirstChild("HumanoidRootPart")
+    local be = char:FindFirstChild("BodyEffects")
+    local ko = be and be:FindFirstChild("K.O")
+    local ff = char:FindFirstChildOfClass("ForceField")
+    if getgenv().gloryv3beta["checks"]['ko check'] and ko and ko.Value then
+        return false
+    end
+    if getgenv().gloryv3beta["checks"]['forcefield check'] and ff then
+        return false
+    end
+    local invalid = not root or (getgenv().gloryv3beta["checks"]['knock check'] and ko and ko.Value) or (getgenv().gloryv3beta["checks"]['crew check'] and issamecrew(targetplayer))
+    if invalid then
+        targetplayer = nil
+        camlocktarget = nil
+        camlockpart = nil
+        camlockactive = false
+        pcall(function()
+            if targetcache.hitbox then targetcache.hitbox:Destroy() end
+            if targetcache.box then targetcache.box:Destroy() end
+            if targetcache.trigger then targetcache.trigger:Destroy() end
+            if targetcache.triggerbox then targetcache.triggerbox:Destroy() end
+        end)
+        return true
+    end
+    return false
+end
+
+local function applyspeed()
+    local cfg = getgenv().gloryv3beta["speed modifications"]
+    if not cfg or not cfg['enabled'] or not speedactive then
+        return
+    end
+    local hum = localplayer.Character and localplayer.Character:FindFirstChildOfClass("Humanoid")
+    if not hum then return end
+    local health = hum.Health
+    local speed = 16
+    if cfg["low health"] and health <= cfg["low health"]["health threshold"] then
+        speed = speed * cfg["low health"]["multiplier"]
+    else
+        speed = speed * cfg["normal"]["multiplier"]
+    end
+    hum.WalkSpeed = speed
+end
+
+local function resetspeed()
+    local hum = localplayer.Character and localplayer.Character:FindFirstChildOfClass("Humanoid")
+    if hum then
+        hum.WalkSpeed = 16
+    end
+end
+
+local function hookhumanoid(humanoid)
+    humanoid:GetPropertyChangedSignal("WalkSpeed"):Connect(function()
+        if getgenv().gloryv3beta["speed modifications"]['enabled'] and speedactive then
+            applyspeed()
+        end
+    end)
+    humanoid.HealthChanged:Connect(function()
+        if speedactive then
+            applyspeed()
+        end
+    end)
+end
+
+local function setupcharacter(char)
+    if not char then return end
+    haswalljumped = false
+    local hum = char:WaitForChild("Humanoid", 10)
+    if hum then
+        hookhumanoid(hum)
+        setupwalljumpreset()
+    end
+    watchcharacter(char)
+end
+
+task.spawn(function()
+    while task.wait(1) do
+        if localplayer.Character then
+            local hum = localplayer.Character:FindFirstChildOfClass("Humanoid")
+            if hum and not walljumpconnection then
+                setupwalljumpreset()
+            end
+        end
+    end
+end)
+
+localplayer.CharacterAdded:Connect(setupcharacter)
+
+if localplayer.Character then
+    setupcharacter(localplayer.Character)
+end
+
+local backpacktools = localplayer.Backpack:GetChildren()
+for i = 1, #backpacktools do
+    local v = backpacktools[i]
+    if v:IsA("Tool") then
+        setuptool(v)
+    end
+end
+
+localplayer.Backpack.ChildAdded:Connect(function(v)
+    if v:IsA("Tool") then
+        setuptool(v)
+    end
+end)
+
+local function gettriggerfovsize()
+    local fovdata = getgenv().gloryv3beta['trigger bot']['fov']['size']
+    return {
+        xleft = fovdata["x left"] or 12,
+        xright = fovdata["x right"] or 12,
+        yupper = fovdata["y upper"] or 12,
+        ylower = fovdata["y lower"] or 12,
+        zleft = fovdata["z left"] or 12,
+        zright = fovdata["z right"] or 12
+    }
+end
+
+local function ismouseintriggerfov2d()
+    if not targetplayer or not targetplayer.Character then return false end
+    local root = targetplayer.Character:FindFirstChild("HumanoidRootPart")
+    if not root then return false end
+    local screenpos, onscreen = camera:WorldToViewportPoint(root.Position)
+    if not onscreen or screenpos.Z <= 0 then return false end
+    local mousepos = userinputservice:GetMouseLocation()
+    local radius = getgenv().gloryv3beta['trigger bot']['fov']['radius'] or 150
+    local dist = (Vector2.new(screenpos.X, screenpos.Y) - mousepos).Magnitude
+    return dist <= radius
+end
+
+local function ismouseintriggerfovbox()
+    if not targetplayer then return false end
+    local char = targetplayer.Character
+    if not char then return false end
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not root then return false end
+    local uppertorso = char:FindFirstChild("UpperTorso")
+    local basepos = uppertorso and uppertorso.Position or root.Position
+    local fov = gettriggerfovsize()
+    local size = Vector3.new(fov.xleft + fov.xright, fov.yupper + fov.ylower, fov.zleft + fov.zright)
+    local offset = Vector3.new((fov.xright - fov.xleft) / 2, (fov.yupper - fov.ylower) / 2, (fov.zright - fov.zleft) / 2)
+    local look = root.CFrame.LookVector
+    local facing = CFrame.lookAt(Vector3.zero, Vector3.new(look.X, 0, look.Z))
+    local worldoffset = facing:VectorToWorldSpace(offset)
+    local boxcf = CFrame.new(basepos + worldoffset) * facing
+    local mousepos = userinputservice:GetMouseLocation()
+    local ray = camera:ViewportPointToRay(mousepos.X, mousepos.Y)
+    local localorigin = boxcf:PointToObjectSpace(ray.Origin)
+    local localdir = boxcf:VectorToObjectSpace(ray.Direction).Unit
+    local half = size / 2
+    local function slabtest(o, d, mn, mx)
+        if math.abs(d) < 1e-9 then
+            if o < mn or o > mx then return -math.huge, -math.huge end
+            return -math.huge, math.huge
+        end
+        local t1, t2 = (mn - o) / d, (mx - o) / d
+        if t1 > t2 then t1, t2 = t2, t1 end
+        return t1, t2
+    end
+    local txmn, txmx = slabtest(localorigin.X, localdir.X, -half.X, half.X)
+    local tymn, tymx = slabtest(localorigin.Y, localdir.Y, -half.Y, half.Y)
+    local tzmn, tzmx = slabtest(localorigin.Z, localdir.Z, -half.Z, half.Z)
+    local tmin = math.max(txmn, tymn, tzmn)
+    local tmax = math.min(txmx, tymx, tzmx)
+    return tmax >= 0 and tmax >= tmin
+end
+
+local function ismouseonplayerhitbox()
+    if not targetplayer then return false end
+    local char = targetplayer.Character
+    if not char then return false end
+    local mousepos = userinputservice:GetMouseLocation()
+    local unitray = camera:ViewportPointToRay(mousepos.X, mousepos.Y)
+    local params = RaycastParams.new()
+    params.FilterType = Enum.RaycastFilterType.Include
+    params.FilterDescendantsInstances = {char}
+    params.IgnoreWater = true
+    local result = workspace:Raycast(unitray.Origin, unitray.Direction * 2000, params)
+    if result and result.Instance then
+        local hit = result.Instance
+        if hit:IsDescendantOf(char) or hit.Parent == char then
+            return true
+        end
+    end
+    return false
+end
+
+local function gettriggerbotstate()
+    local mode = getgenv().gloryv3beta['trigger bot']['settings']['mode']
+    if mode == "Always" then
+        return true
+    elseif mode == "Toggle" then
+        return triggerbotactive
+    elseif mode == "Hold" then
+        return triggerhold
+    end
+    return false
+end
+
+local function checktriggerinrange()
+    local trigtype = getgenv().gloryv3beta['trigger bot']['settings']['type']
+    local fovtype = getgenv().gloryv3beta['trigger bot']['fov']['type'] or '3D'
+    if trigtype == "FOV" then
+        if fovtype == '2D' then
+            return ismouseintriggerfov2d()
+        else
+            return ismouseintriggerfovbox()
+        end
+    elseif trigtype == "Hitbox" then
+        return ismouseonplayerhitbox()
+    end
+    return false
+end
+
+local function istargetvalid()
+    if not targetplayer then return false end
+    local char = targetplayer.Character
+    if not char then return false end
+    local root = char:FindFirstChild("HumanoidRootPart")
+    if not root then return false end
+    local hum = char:FindFirstChildOfClass("Humanoid")
+    if not hum or hum.Health <= 0 then return false end
+    local be = char:FindFirstChild("BodyEffects")
+    local ko = be and be:FindFirstChild("K.O")
+    if getgenv().gloryv3beta["checks"]['ko check'] and ko and ko.Value then
+        return false
+    end
+    local ff = char:FindFirstChildOfClass("ForceField")
+    if getgenv().gloryv3beta["checks"]['forcefield check'] and ff then
+        return false
+    end
+    return true
+end
+
+local function canseepartfortrigger(part, char)
+    if not getgenv().gloryv3beta["checks"]['visible check'] then return true end
+    if not part then return false end
+    local origin = camera.CFrame.Position
+    local targetpos = part.Position
+    local dir = targetpos - origin
+    local params = RaycastParams.new()
+    params.FilterType = Enum.RaycastFilterType.Exclude
+    params.FilterDescendantsInstances = {localplayer.Character, char, camera}
+    params.IgnoreWater = true
+    local result = workspace:Raycast(origin, dir, params)
+    return result == nil
+end
+
+local function firetrigger()
+    local char = localplayer.Character
+    if not char then return end
+    local tool = char:FindFirstChildOfClass("Tool")
+    if not tool then return end
+    if tool.Name == "[Knife]" then return end
+    local handle = tool:FindFirstChild("Handle")
+    if not handle then return end
+    task.spawn(function() tool:Activate() end)
+    task.spawn(function() tool:Activate() end)
+    task.spawn(function() tool:Activate() end)
+end
+
+task.spawn(function()
+    while true do
+        local cfg = getgenv().gloryv3beta['trigger bot']
+        local fired = false
+        if cfg['enabled'] and not leftctrlheld then
+            if targetplayer and istargetvalid() then
+                local tmode = getgenv().gloryv3beta['targeting']['target mode']
+                local isselect = (tmode == "Select")
+                local forcetrig = isselect and getgenv().gloryv3beta['select only features']['force trigger']
+                local forcehit = isselect and getgenv().gloryv3beta['select only features']['force hit']
+                local stateok = forcetrig or gettriggerbotstate()
+                if stateok then
+                    local maxdist = cfg['distance'] or 150
+                    local curdist = getdistancetotarget()
+                    if curdist <= maxdist then
+                        local inrange = forcetrig or checktriggerinrange()
+                        if inrange then
+                            local tchar = targetplayer.Character
+                            local hitpart = nil
+                            if forcehit then
+                                hitpart = tchar:FindFirstChild("Head")
+                            else
+                                local closest = getclosestbodypart(tchar)
+                                if closest then hitpart = closest.part end
+                            end
+                            if hitpart then
+                                local cansee = canseepartfortrigger(hitpart, tchar)
+                                if cansee then
+                                    firetrigger()
+                                    fired = true
+                                end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        local delcfg = cfg['delay settings']
+        local dly = 0
+        if delcfg['delay toggle'] and delcfg['delay'] then
+            dly = delcfg['delay']
+        end
+        if dly > 0 and fired then
+            task.wait(dly)
+        else
+            task.wait(0.016)
+        end
+    end
+end)
+
+local selectpressed = false
+local campressed = false
+local triggerpressed = false
+local speedpressed = false
+local esppressed = false
+local sortpressed = false
+
+userinputservice.InputBegan:Connect(function(input, gameprocessed)
+    if gameprocessed then return end
+    local key = input.KeyCode
+    local selectbind = getgenv().gloryv3beta["binds"]["select"]
+    local cambind = getgenv().gloryv3beta["binds"]["camera aimbot"]
+    local triggerbind = getgenv().gloryv3beta["binds"]["triggerbot"]
+    local speedbind = getgenv().gloryv3beta["binds"]["speed"]
+    local espbind = getgenv().gloryv3beta["binds"]["esp"]
+    local sortbind = getgenv().gloryv3beta["binds"]["sort"]
+    local targetmode = getgenv().gloryv3beta['targeting']['target mode']
+    if key == Enum.KeyCode.LeftControl then leftctrlheld = true return end
+    if key == Enum.KeyCode[selectbind] and targetmode == 'Select' then
+        if not selectpressed then
+            selectpressed = true
+            if targetplayer then
+                targetplayer = nil
+                pcall(function()
+                    if targetcache.hitbox then targetcache.hitbox:Destroy() end
+                    if targetcache.box then targetcache.box:Destroy() end
+                    if targetcache.trigger then targetcache.trigger:Destroy() end
+                    if targetcache.triggerbox then targetcache.triggerbox:Destroy() end
+                end)
+            else
+                targetplayer = getbesttarget()
+            end
+        end
+    end
+    if key == Enum.KeyCode[cambind] then
+        if not campressed then
+            campressed = true
+            local mode = getgenv().gloryv3beta['camera aimbot']['mode']
+            if mode == "Toggle" then
+                camlockactive = not camlockactive
+                if camlockactive then
+                    camlocktarget = targetplayer
+                    if camlocktarget and camlocktarget.Character then
+                        camlockpart = getcamlockbodypart(camlocktarget.Character)
+                    end
+                else
+                    camlocktarget = nil
+                    camlockpart = nil
+                end
+            elseif mode == "Hold" then
+                camlockhold = true
+                camlockactive = true
+                camlocktarget = targetplayer
+                if camlocktarget and camlocktarget.Character then
+                    camlockpart = getcamlockbodypart(camlocktarget.Character)
+                end
+            end
+        end
+    end
+    if key == Enum.KeyCode[triggerbind] then
+        if not triggerpressed then
+            triggerpressed = true
+            local mode = getgenv().gloryv3beta['trigger bot']['settings']['mode']
+            if mode == "Toggle" then
+                triggerbotactive = not triggerbotactive
+            elseif mode == "Hold" then
+                triggerhold = true
+            end
+        end
+    end
+    if key == Enum.KeyCode[speedbind] then
+        if not speedpressed then
+            speedpressed = true
+            speedactive = not speedactive
+            if speedactive then
+                applyspeed()
+            else
+                resetspeed()
+            end
+        end
+    end
+    if key == Enum.KeyCode[espbind] then
+        if not esppressed then
+            esppressed = true
+            getgenv().gloryv3beta['esp']['enabled'] = not getgenv().gloryv3beta['esp']['enabled']
+        end
+    end
+    if key == Enum.KeyCode[sortbind] then
+        if not sortpressed then
+            sortpressed = true
+            sortinventory()
+        end
+    end
+    if key == Enum.KeyCode.Space then
+        if getgenv().gloryv3beta['spiderman']['enabled'] then
+            local char = localplayer.Character
+            if char then
+                local hum = char:FindFirstChild("Humanoid")
+                local hrp = char:FindFirstChild("HumanoidRootPart")
+                if hum and hrp then
+                    if hum:GetState() == Enum.HumanoidStateType.Freefall and touchingwall() and not haswalljumped then
+                        haswalljumped = true
+                        hrp.AssemblyLinearVelocity = Vector3.new(hrp.AssemblyLinearVelocity.X, getspidermanjumppower(), hrp.AssemblyLinearVelocity.Z)
+                    end
+                end
+            end
+        end
+    end
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        rightclickheld = true
+    end
+end)
+
+userinputservice.InputEnded:Connect(function(input)
+    if input.KeyCode == Enum.KeyCode.LeftControl then
+        leftctrlheld = false
+    end
+    if input.UserInputType == Enum.UserInputType.MouseButton2 then
+        rightclickheld = false
+    end
+    local cambind = getgenv().gloryv3beta["binds"]["camera aimbot"]
+    local mode = getgenv().gloryv3beta['camera aimbot']['mode']
+    if input.KeyCode == Enum.KeyCode[cambind] then
+        campressed = false
+        if mode == "Hold" then
+            camlockhold = false
+            camlockactive = false
+            camlocktarget = nil
+            camlockpart = nil
+        end
+    end
+    if input.KeyCode == Enum.KeyCode[getgenv().gloryv3beta["binds"]["triggerbot"]] then
+        if getgenv().gloryv3beta['trigger bot']['settings']['mode'] == "Hold" then
+            triggerhold = false
+        end
+        triggerpressed = false
+    end
+    if input.KeyCode == Enum.KeyCode[getgenv().gloryv3beta["binds"]["select"]] then
+        selectpressed = false
+    end
+    if input.KeyCode == Enum.KeyCode[getgenv().gloryv3beta["binds"]["speed"]] then
+        speedpressed = false
+    end
+    if input.KeyCode == Enum.KeyCode[getgenv().gloryv3beta["binds"]["esp"]] then
+        esppressed = false
+    end
+    if input.KeyCode == Enum.KeyCode[getgenv().gloryv3beta["binds"]["sort"]] then
+        sortpressed = false
+    end
+end)
+
+task.spawn(function()
+    while true do
+        task.wait(0.1)
+        local mode = getgenv().gloryv3beta['targeting']['target mode']
+        if mode == "Automatic" then
+            local best = getbesttarget()
+            if best ~= targetplayer then
+                targetplayer = best
+                currenttargetplayer = nil
+            end
+        end
+    end
+end)
+
+local function initializefovdrawings()
+    local silentcfg = getgenv().gloryv3beta['silent aimbot']['fov']
+    local triggercfg = getgenv().gloryv3beta['trigger bot']['fov']
+    local camcfg = getgenv().gloryv3beta['camera aimbot']['fov']
+    if silentcfg['show fov'] and silentcfg['type'] == '2D' then
+        if not silentfov2d then
+            silentfov2d = Drawing.new("Circle")
+            silentfov2d.Thickness = 1.5
+            silentfov2d.Filled = false
+            silentfov2d.Transparency = 1
+            silentfov2d.Color = Color3.new(1, 1, 1)
+            silentfov2d.Visible = true
+        end
+    end
+    if triggercfg['show fov'] and triggercfg['type'] == '2D' then
+        if not triggerfov2d then
+            triggerfov2d = Drawing.new("Circle")
+            triggerfov2d.Thickness = 1.5
+            triggerfov2d.Filled = false
+            triggerfov2d.Transparency = 1
+            triggerfov2d.Color = Color3.new(1, 1, 1)
+            triggerfov2d.Visible = true
+        end
+    end
+    if camcfg['show fov'] and camcfg['type'] == '2D' then
+        if not camfov2d then
+            camfov2d = Drawing.new("Circle")
+            camfov2d.Thickness = 1.5
+            camfov2d.Filled = false
+            camfov2d.Transparency = 1
+            camfov2d.Color = Color3.new(1, 1, 1)
+            camfov2d.Visible = true
+        end
+    end
+end
+
+initializefovdrawings()
+
+runservice.RenderStepped:Connect(function()
+    antifall()
+    updateesp()
+    local silentcfg = getgenv().gloryv3beta['silent aimbot']['fov']
+    local triggercfg = getgenv().gloryv3beta['trigger bot']['fov']
+    local camcfg = getgenv().gloryv3beta['camera aimbot']['fov']
+    local mousepos = userinputservice:GetMouseLocation()
+    if silentcfg['show fov'] and silentcfg['type'] == '2D' then
+        if not silentfov2d then
+            silentfov2d = Drawing.new("Circle")
+            silentfov2d.Thickness = 1.5
+            silentfov2d.Filled = false
+            silentfov2d.Transparency = 1
+            silentfov2d.Color = Color3.new(1, 1, 1)
+            silentfov2d.Visible = true
+        end
+        silentfov2d.Position = Vector2.new(mousepos.X, mousepos.Y)
+        silentfov2d.Radius = silentcfg['radius'] or 150
+        silentfov2d.Visible = true
+    else
+        if silentfov2d then
+            silentfov2d:Remove()
+            silentfov2d = nil
+        end
+    end
+    if triggercfg['show fov'] and triggercfg['type'] == '2D' then
+        if not triggerfov2d then
+            triggerfov2d = Drawing.new("Circle")
+            triggerfov2d.Thickness = 1.5
+            triggerfov2d.Filled = false
+            triggerfov2d.Transparency = 1
+            triggerfov2d.Color = Color3.new(1, 1, 1)
+            triggerfov2d.Visible = true
+        end
+        triggerfov2d.Position = Vector2.new(mousepos.X, mousepos.Y)
+        triggerfov2d.Radius = triggercfg['radius'] or 150
+        triggerfov2d.Visible = true
+    else
+        if triggerfov2d then
+            triggerfov2d:Remove()
+            triggerfov2d = nil
+        end
+    end
+    if camcfg['show fov'] and camcfg['type'] == '2D' then
+        if not camfov2d then
+            camfov2d = Drawing.new("Circle")
+            camfov2d.Thickness = 1.5
+            camfov2d.Filled = false
+            camfov2d.Transparency = 1
+            camfov2d.Color = Color3.new(1, 1, 1)
+            camfov2d.Visible = true
+        end
+        camfov2d.Position = Vector2.new(mousepos.X, mousepos.Y)
+        camfov2d.Radius = tonumber(camcfg['radius']) or 750
+        camfov2d.Visible = true
+    else
+        if camfov2d then
+            camfov2d:Remove()
+            camfov2d = nil
+        end
+    end
+    if cleartargetifinvalid() then
+        currenttargetplayer = nil
+        return
+    end
+    if istargetpaused() then
+        return
+    end
+    if targetplayer ~= currenttargetplayer then
+        currenttargetplayer = targetplayer
+        pcall(function()
+            if targetcache.hitbox then targetcache.hitbox:Destroy() targetcache.hitbox = nil end
+            if targetcache.box then targetcache.box:Destroy() targetcache.box = nil end
+            if targetcache.trigger then targetcache.trigger:Destroy() targetcache.trigger = nil end
+            if targetcache.triggerbox then targetcache.triggerbox:Destroy() targetcache.triggerbox = nil end
+        end)
+    end
+    if not targetplayer or not targetplayer.Character then return end
+    local root = targetplayer.Character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    local uppertorso = targetplayer.Character:FindFirstChild("UpperTorso")
+    local basepos = uppertorso and uppertorso.Position or root.Position
+    local look = root.CFrame.LookVector
+    local facing = CFrame.lookAt(Vector3.new(), Vector3.new(look.X, 0, look.Z))
+    local showsilent3d = silentcfg['show fov'] and silentcfg['type'] == '3D'
+    local showtrigger3d = triggercfg['show fov'] and triggercfg['type'] == '3D'
+    if showsilent3d then
+        local silentfov = getsplitfov('silent aimbot')
+        if not targetcache.hitbox then
+            targetcache.hitbox = Instance.new("Part")
+            targetcache.hitbox.Name = "SilentHitbox"
+            targetcache.hitbox.Anchored = true
+            targetcache.hitbox.CanCollide = false
+            targetcache.hitbox.Transparency = 1
+            targetcache.hitbox.CanQuery = false
+            targetcache.hitbox.Parent = workspace
+        end
+        local size = Vector3.new(silentfov.xleft + silentfov.xright, silentfov.yupper + silentfov.ylower, silentfov.zleft + silentfov.zright)
+        local offset = Vector3.new((silentfov.xright - silentfov.xleft)/2, (silentfov.yupper - silentfov.ylower)/2, (silentfov.zright - silentfov.zleft)/2)
+        local worldoffset = facing:VectorToWorldSpace(offset)
+        targetcache.hitbox.Size = size
+        targetcache.hitbox.CFrame = CFrame.new(basepos + worldoffset) * facing
+        if not targetcache.box then
+            targetcache.box = Instance.new("BoxHandleAdornment")
+            targetcache.box.Adornee = targetcache.hitbox
+            targetcache.box.AlwaysOnTop = true
+            targetcache.box.ZIndex = 10
+            targetcache.box.Transparency = 0.7
+            targetcache.box.Size = size
+            targetcache.box.Parent = targetcache.hitbox
+        end
+        targetcache.box.Color3 = Color3.new(1, 1, 1)
+    else
+        if targetcache.hitbox then targetcache.hitbox:Destroy() targetcache.hitbox = nil end
+        if targetcache.box then targetcache.box:Destroy() targetcache.box = nil end
+    end
+    if showtrigger3d then
+        local triggerfov = getsplitfov('trigger bot')
+        if not targetcache.trigger then
+            targetcache.trigger = Instance.new("Part")
+            targetcache.trigger.Name = "TriggerHitbox"
+            targetcache.trigger.Anchored = true
+            targetcache.trigger.CanCollide = false
+            targetcache.trigger.Transparency = 1
+            targetcache.trigger.CanQuery = false
+            targetcache.trigger.Parent = workspace
+        end
+        local size = Vector3.new(triggerfov.xleft + triggerfov.xright, triggerfov.yupper + triggerfov.ylower, triggerfov.zleft + triggerfov.zright)
+        local offset = Vector3.new((triggerfov.xright - triggerfov.xleft)/2, (triggerfov.yupper - triggerfov.ylower)/2, (triggerfov.zright - triggerfov.zleft)/2)
+        local worldoffset = facing:VectorToWorldSpace(offset)
+        local upperpos = uppertorso and uppertorso.Position or root.Position
+        targetcache.trigger.Size = size
+        targetcache.trigger.CFrame = CFrame.new(upperpos + worldoffset) * facing
+        if not targetcache.triggerbox then
+            targetcache.triggerbox = Instance.new("BoxHandleAdornment")
+            targetcache.triggerbox.Adornee = targetcache.trigger
+            targetcache.triggerbox.AlwaysOnTop = true
+            targetcache.triggerbox.ZIndex = 10
+            targetcache.triggerbox.Transparency = 0.7
+            targetcache.triggerbox.Size = size
+            targetcache.triggerbox.Parent = targetcache.trigger
+        end
+        targetcache.triggerbox.Color3 = Color3.new(1, 1, 1)
+    else
+        if targetcache.trigger then targetcache.trigger:Destroy() targetcache.trigger = nil end
+        if targetcache.triggerbox then targetcache.triggerbox:Destroy() targetcache.triggerbox = nil end
+    end
+end)
+
+runservice.RenderStepped:Connect(function(dt)
+    local camcfg = getgenv().gloryv3beta['camera aimbot']
+    if not (camcfg['enabled'] and camlockactive and camlocktarget and camlocktarget.Character) then 
+        return 
+    end
+    if cleartargetifinvalid() then return end
+    if istargetpaused() then return end
+    local root = camlocktarget.Character:FindFirstChild("HumanoidRootPart")
+    if not root then return end
+    if getgenv().gloryv3beta["checks"]["self knock check"] and isselfknocked() then return end
+    local newpart = getcamlockbodypart(camlocktarget.Character)
+    if not newpart then return end
+    local radius = tonumber(camcfg['fov']['radius']) or 750
+    local mousepos = userinputservice:GetMouseLocation()
+    local screenpos = camera:WorldToViewportPoint(newpart.position)
+    if screenpos.Z <= 0 or (Vector2.new(screenpos.X, screenpos.Y) - mousepos).Magnitude > radius then return end
+    local visible = isvisible(camera.CFrame.Position, newpart.part, camlocktarget.Character)
+    if not visible then return end
+    camlockpart = newpart
+    local targetpos = camlockpart.position
+    local smoothx, smoothy = getcamerasmoothness()
+    local targetcf = CFrame.new(camera.CFrame.Position, targetpos)
+    local alpha = math.clamp(smoothx * dt * 60, 0, 1)
+    camera.CFrame = camera.CFrame:Lerp(targetcf, alpha)
+end)
+
+local originalindex
+originalindex = hookmetamethod(game, "__index", function(t, k)
+    if not (getgenv().gloryv3beta['silent aimbot']['enabled'] and t == mouse and targetplayer and targetplayer.Character) then
+        return originalindex(t, k)
+    end
+    if istargetpaused() then
+        return originalindex(t, k)
+    end
+    local targetmode = getgenv().gloryv3beta['targeting']['target mode']
+    local isselectmode = targetmode == "Select"
+    local forcehit = isselectmode and getgenv().gloryv3beta['select only features']['force hit']
+    local shouldcheckfov = not forcehit
+    local infov = ismouseinsilentfov()
+    local alwayshit = forcehit or (shouldcheckfov and infov)
+    if not alwayshit then return originalindex(t, k) end
+    local hitdata
+    if forcehit then
+        local head = targetplayer.Character:FindFirstChild("Head")
+        if head and head:IsA("BasePart") then
+            hitdata = { part = head, position = head.Position }
+        end
+    else
+        hitdata = getclosestbodypart(targetplayer.Character)
+    end
+    if not hitdata or not hitdata.part then
+        return originalindex(t, k)
+    end
+    if not (forcehit or isvisible(camera.CFrame.Position, hitdata.part, targetplayer.Character)) then
+        return originalindex(t, k)
+    end
+    if k == "Hit" then
+        return CFrame.new(hitdata.position)
+    elseif k == "Target" then
+        return hitdata.part
+    end
+    return originalindex(t, k)
+end)
+
+local originalrandom
+originalrandom = hookfunction(math.random, function(...)
+    local args = { ... }
+    if checkcaller() then return originalrandom(...) end
+    
+    local spreadmods = getgenv().gloryv3beta and getgenv().gloryv3beta['spread modifications']
+    if not spreadmods or not spreadmods['enabled'] then return originalrandom(...) end
+    
+    local shotgun = getequippedshotgun()
+    if not shotgun then return originalrandom(...) end
+    
+    local weaponconfig = spreadmods[shotgun]
+    if not weaponconfig then return originalrandom(...) end
+    
+    local isspreadcall = false
+    if #args == 0 then
+        isspreadcall = true
+    elseif #args == 2 and type(args[1]) == "number" and type(args[2]) == "number" then
+        local a, b = args[1], args[2]
+        if (a == -0.1 and b == 0.05) or (a >= -0.15 and a <= -0.05 and b >= 0.03 and b <= 0.07) then
+            isspreadcall = true
+        end
+    elseif #args == 1 and type(args[1]) == "number" then
+        local a = args[1]
+        if a == -0.1 or a == -0.05 or (a >= -0.15 and a <= -0.03) then
+            isspreadcall = true
+        end
+    end
+    
+    if not isspreadcall then return originalrandom(...) end
+    
+    local multiplier = 1
+    if spreadmods['mode'] == "Randomized" then
+        local min = math.clamp(tonumber(weaponconfig['min']) or 0, 0, 1)
+        local max = math.clamp(tonumber(weaponconfig['max']) or 1, 0, 1)
+        if min > max then min, max = max, min end
+        local rand = originalrandom()
+        multiplier = min + (rand * (max - min))
+    else
+        multiplier = math.clamp(tonumber(weaponconfig['fixed']) or 1, 0, 1)
+    end
+    
+    local originalvalue = originalrandom(...)
+    return originalvalue * multiplier
+end)
+
+task.spawn(function()
+    while task.wait(0.48) do
+        if speedactive then
+            applyspeed()
+        end
+    end
+end)
