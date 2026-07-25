@@ -1,0 +1,1861 @@
+local GameInformation = loadstring(game:HttpGet("https://raw.githubusercontent.com/TheRealXORA/Roblox/refs/heads/Main/Scripts%20/Utilities%20/Fetch%20Game%20Information.luau", true))()
+
+-- Always run Adonis bypass in ANY game
+loadstring(game:HttpGet("https://raw.githubusercontent.com/TheRealXORA/Roblox/refs/heads/Main/Scripts%20/Anti-Cheats%20Bypassers%20/Adonis.luau", true))()
+
+-- Extra logic if in Zee Hood (optional, game-specific tweaks)
+if GameInformation.Name:find("Zee Hood") then
+    -- You can add Zee Hood–specific stuff here if needed
+end
+
+local OriginalNameCall
+OriginalNameCall = hookmetamethod(game, "__namecall", newcclosure(function(Object, ...)
+    local Arguments = {...}
+    local Method = getnamecallmethod()
+    if Method == "FireServer" and Object.Name == "MainRemoteEvent" and Arguments[1] == "Detection" then
+        return nil -- block instead of freezing
+    end
+    return OriginalNameCall(Object, ...)
+end))
+
+local NotificationHolder = loadstring(game:HttpGet('https://raw.githubusercontent.com/DozeIsOkLol/NotificationLibs/refs/heads/main/BocusLukeNotif/ModuleSource.lua'))()
+local Notification = loadstring(game:HttpGet('https://raw.githubusercontent.com/DozeIsOkLol/NotificationLibs/refs/heads/main/BocusLukeNotif/ClientSource.lua'))()
+
+local function GoonNotify(desc)
+    Notification:Notify(
+        {
+            Title = "Goonstah.CC",
+            Description = desc
+        },
+        {
+            OutlineColor = Color3.fromRGB(90, 0, 160), 
+            Time = 5,
+            Type = "default"
+        }
+    )
+end
+
+getgenv().Goonstah = {
+    Main = {
+        Enabled = false,
+        LockToolLoaded = false,
+        ButtonLoaded = false
+    },
+    Aim = {
+        TargetLockEnabled = false,
+        CameraLockEnabled = false,
+        SilentMode = false,
+        FOVShow = false,
+        FOVSize = 200,
+        HorizontalPrediction = 0,
+        VerticalPrediction = 0,
+        JumpOffset = 0,
+        PingBased = false,
+        AimPart = "Head",
+        AntiAimView = false,
+        SpectateEnabled = false,
+        LookAtEnabled = false,
+        UseIndexMousePos = false,
+        SilentAimHook = nil
+    },
+    TriggerBot = {
+        Enabled = false,
+        FOV = 10,
+        Delay = 0
+    },
+    CameraLock = {
+        EasingStyle = "Linear",
+        EasingDirection = "In",
+        Smoothness = 0.25,
+        Enabled = false,
+        Target = nil
+    },
+    TargetStrafe = {
+        Enabled = false,
+        Spoof = false,
+        Randomized = false,
+        Distance = 5,
+        Height = 5,
+        Speed = 30
+    },
+    Visuals = {
+        DotVisual = false,
+        ChamsVisual = false
+    },
+    Macro = {
+        Loaded = false,
+        Speed = 0.015
+    },
+    Configs = {},
+    MobileUI = {
+        Visible = true
+    }
+}
+
+local library = loadstring(game:HttpGet('https://raw.githubusercontent.com/fouejp/gg/refs/heads/main/goon.lua'))()
+
+local window = library.new('Goonstah.cc', 'nemv2')
+
+local tab = window.new_tab('rbxassetid://4483345998')
+local tab1 = window.new_tab('rbxassetid://7300535052')
+local tab2 = window.new_tab('rbxassetid://7300480952')
+local tab3 = window.new_tab('rbxassetid://7300486042')
+local tab4 = window.new_tab('rbxassetid://7300489566')
+
+local section = tab.new_section('Main')
+local section1 = tab.new_section('Visuals / Checks')
+local section3 = tab3.new_section('Misc')
+local configsSection = tab4.new_section('Configs')
+
+local sector = section.new_sector('Main', 'Left')
+local triggerSector = section.new_sector('Trigger Bot', 'Right')
+local cameraLockSector = section.new_sector('Camera Lock', 'Right')
+local targetLockSector = section.new_sector('Target Lock', 'Left')
+local targetStrafeSector = section.new_sector('Target Strafe', 'Right')
+
+local visualsSection = section1.new_sector('Visuals', 'Left')
+local checksSection = section1.new_sector('Checks', 'Right')
+
+local transportSector = section3.new_sector('Transportation', 'Left')
+
+csector.element('Toggle', 'Enabled', getgenv().Goonstah.Main.Enabled, function(v)
+    getgenv().Goonstah.Main.Enabled = v.Toggle
+    print("[Main] Enabled:", getgenv().Goonstah.Main.Enabled)
+    GoonNotify("Main Enabled: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+-- 🔧 Load Tool
+sector.element('Button', 'Load Tool', nil, function()
+    local main = getgenv().Goonstah.Main
+    local aim = getgenv().Goonstah.Aim
+
+    if main.LockToolLoaded then
+        return
+    end
+
+    main.LockToolLoaded = true
+
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    local Camera = workspace.CurrentCamera
+
+    -- function to get closest target to screen center
+    local function GetClosestToCenter()
+        local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+        local closest, minDist = nil, math.huge
+
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= player and plr.Character then
+                local root = plr.Character:FindFirstChild("HumanoidRootPart")
+                if root then
+                    local screenPos, onScreen = Camera:WorldToViewportPoint(root.Position)
+                    if onScreen then
+                        local dist = (Vector2.new(screenPos.X, screenPos.Y) - center).Magnitude
+                        if dist < minDist then
+                            closest = plr
+                            minDist = dist
+                        end
+                    end
+                end
+            end
+        end
+        return closest
+    end
+
+    -- clean toggle system
+    local function ToggleTargetLockSafe()
+        if not main.Enabled or not aim.TargetLockEnabled then
+            aim.CurrentTarget = nil
+            return
+        end
+
+        -- toggle on/off
+        if aim.CurrentTarget then
+            aim.CurrentTarget = nil
+        else
+            aim.CurrentTarget = GetClosestToCenter()
+        end
+    end
+
+    local LockTool = Instance.new("Tool")
+    LockTool.RequiresHandle = false
+    LockTool.Name = "Lock Tool"
+    LockTool.Parent = player:WaitForChild("Backpack")
+
+    LockTool.Activated:Connect(function()
+        if not main.Enabled then
+            aim.CurrentTarget = nil
+            if aim.CameraLockEnabled then aim.CameraLockEnabled = false end
+            return
+        end
+
+        if aim.CameraLockEnabled and ToggleCameraLock then
+            ToggleCameraLock()
+        end
+
+        if aim.TargetLockEnabled then
+            ToggleTargetLockSafe()
+        else
+            aim.CurrentTarget = nil
+        end
+    end)
+
+    -- stop locks if toggles off
+    task.spawn(function()
+        while task.wait(0.2) do
+            if not main.Enabled or not aim.TargetLockEnabled then
+                aim.CurrentTarget = nil
+            end
+        end
+    end)
+
+    -- persist tool
+    player.CharacterAdded:Connect(function()
+        task.wait(1)
+        if not LockTool.Parent or LockTool.Parent ~= player.Backpack then
+            LockTool.Parent = player.Backpack
+        end
+    end)
+end)
+
+-- 🖱️ Load Button Toggle (draggable UI button)
+sector.element('Button', 'Load Button Toggle', nil, function()
+    local main = getgenv().Goonstah.Main
+    local aim = getgenv().Goonstah.Aim
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    local Camera = workspace.CurrentCamera
+
+    if main.ButtonLoaded then
+        return
+    end
+    main.ButtonLoaded = true
+
+    local PlayerGui = player:WaitForChild("PlayerGui")
+    local HttpService = game:GetService("HttpService")
+    local saveFile = "button_pos_state.txt"
+
+    local ScreenGui = PlayerGui:FindFirstChild("StandaloneToggleGui") or Instance.new("ScreenGui")
+    ScreenGui.Name = "StandaloneToggleGui"
+    ScreenGui.ResetOnSpawn = false
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Parent = PlayerGui
+
+    local lastPos, lastToggled = nil, false
+    if isfile and isfile(saveFile) then
+        local data = HttpService:JSONDecode(readfile(saveFile))
+        lastPos, lastToggled = data.Position, data.Toggled
+    end
+
+    local Frame = Instance.new("Frame")
+    Frame.Name = "DraggableFrame"
+    Frame.Parent = ScreenGui
+    Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Frame.BackgroundTransparency = 0.5
+    Frame.Size = UDim2.new(0, 90, 0, 90)
+    Frame.Position = lastPos and UDim2.new(0, lastPos.X, 0, lastPos.Y) or UDim2.new(1, -96, 0, -32)
+    Frame.Draggable = true
+    Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 8)
+
+    local Button = Instance.new("ImageButton")
+    Button.Name = "ToggleButton"
+    Button.Parent = Frame
+    Button.BackgroundTransparency = 1
+    Button.Size = UDim2.new(0, 75, 0, 75)
+    Button.AnchorPoint = Vector2.new(0.5, 0.5)
+    Button.Position = UDim2.new(0.5, 0, 0.5, 0)
+    Button.Image = lastToggled and "rbxassetid://10723434711" or "rbxassetid://10747366027"
+    Instance.new("UITextSizeConstraint", Button).MaxTextSize = 30
+
+    local toggled = lastToggled
+    local defaultImage = "rbxassetid://10747366027"
+    local activeImage = "rbxassetid://10723434711"
+
+    -- automatic visual update
+    task.spawn(function()
+        while task.wait(0.2) do
+            if not main.Enabled then
+                Button.ImageColor3 = Color3.fromRGB(120, 120, 120)
+                Button.AutoButtonColor = false
+            else
+                Button.ImageColor3 = Color3.fromRGB(255, 255, 255)
+                Button.AutoButtonColor = true
+            end
+        end
+    end)
+
+    -- toggle target lock via button
+    local function ToggleTargetLockSafe()
+        if not main.Enabled or not aim.TargetLockEnabled then
+            aim.CurrentTarget = nil
+            return
+        end
+
+        if aim.CurrentTarget then
+            aim.CurrentTarget = nil
+        else
+            local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+            local closest, minDist = nil, math.huge
+            for _, plr in ipairs(Players:GetPlayers()) do
+                if plr ~= player and plr.Character then
+                    local root = plr.Character:FindFirstChild("HumanoidRootPart")
+                    if root then
+                        local screenPos, onScreen = Camera:WorldToViewportPoint(root.Position)
+                        if onScreen then
+                            local dist = (Vector2.new(screenPos.X, screenPos.Y) - center).Magnitude
+                            if dist < minDist then
+                                closest = plr
+                                minDist = dist
+                            end
+                        end
+                    end
+                end
+            end
+            aim.CurrentTarget = closest
+        end
+    end
+
+    Button.MouseButton1Down:Connect(function()
+        if not main.Enabled then
+            aim.CurrentTarget = nil
+            if aim.CameraLockEnabled then aim.CameraLockEnabled = false end
+            return
+        end
+
+        if aim.CameraLockEnabled and ToggleCameraLock then
+            ToggleCameraLock()
+        end
+
+        if aim.TargetLockEnabled then
+            ToggleTargetLockSafe()
+        else
+            aim.CurrentTarget = nil
+        end
+
+        toggled = (aim.CurrentTarget ~= nil)
+        Button.Image = toggled and activeImage or defaultImage
+
+        if writefile then
+            local pos = Frame.AbsolutePosition
+            local data = { Position = { X = pos.X, Y = pos.Y }, Toggled = toggled }
+            writefile(saveFile, HttpService:JSONEncode(data))
+        end
+    end)
+
+    -- 🧭 Drag logic
+    local UserInputService = game:GetService("UserInputService")
+    local dragging, dragInput, dragStart, startPos
+
+    local function update(input)
+        local delta = input.Position - dragStart
+        Frame.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+
+    Frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = Frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                    if writefile then
+                        local pos = Frame.AbsolutePosition
+                        local data = { Position = { X = pos.X, Y = pos.Y }, Toggled = (aim.CurrentTarget ~= nil) }
+                        writefile(saveFile, HttpService:JSONEncode(data))
+                    end
+                end
+            end)
+        end
+    end)
+
+    Frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+end)
+
+-----------------------------------------------------
+-- // 🎯 MAIN AIM SETTINGS (Using Goonstah Table) \\ --
+-----------------------------------------------------
+
+-- ✅ Target Lock
+sector.element('Toggle', 'Target Lock', getgenv().Goonstah.Aim.TargetLockEnabled, function(v)
+    getgenv().Goonstah.Aim.TargetLockEnabled = v.Toggle
+
+    -- Auto-unlock if Target Lock or Main is disabled
+    if not v.Toggle or not getgenv().Goonstah.Main.Enabled then
+        if getgenv().Goonstah.Aim.CurrentTarget then
+            getgenv().Goonstah.Aim.CurrentTarget = nil
+        end
+    end
+end)
+
+
+-- ✅ Camera Lock
+sector.element('Toggle', 'Camera Lock', getgenv().Goonstah.Aim.CameraLockEnabled, function(v)
+    getgenv().Goonstah.Aim.CameraLockEnabled = v.Toggle
+    GoonNotify("Camera Lock: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+-- ✅ Silent Mode
+sector.element('Toggle', 'Silent Mode', getgenv().Goonstah.Aim.SilentMode, function(v)
+    getgenv().Goonstah.Aim.SilentMode = v.Toggle
+    GoonNotify("Silent Mode: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+-- ✅ FOV Show
+sector.element('Toggle', 'FOV Show', getgenv().Goonstah.Aim.FOVShow, function(v)
+    getgenv().Goonstah.Aim.FOVShow = v.Toggle
+    GoonNotify("FOV Display: " .. (v.Toggle and "Visible" or "Hidden"))
+end)
+
+-- 🎯 FOV Size
+sector.element('TextBox', 'FOV Size', {default = ""}, function(v)
+    local num = tonumber(v.Text)
+    if num then
+        getgenv().Goonstah.Aim.FOVSize = num
+        print("[FOV] Size:", num)
+    else
+        warn("[FOV] Invalid size input")
+    end
+end)
+
+-- 🧮 Horizontal Prediction
+sector.element('TextBox', 'Horizontal Prediction', {default = ""}, function(v)
+    local num = tonumber(v.Text)
+    if num then
+        getgenv().Goonstah.Aim.HorizontalPrediction = num
+        print("[Prediction] Horizontal:", num)
+    else
+        warn("[Prediction] Invalid horizontal value")
+    end
+end)
+
+-- 🧮 Vertical Prediction
+sector.element('TextBox', 'Vertical Prediction', {default = ""}, function(v)
+    local num = tonumber(v.Text)
+    if num then
+        getgenv().Goonstah.Aim.VerticalPrediction = num
+        print("[Prediction] Vertical:", num)
+    else
+        warn("[Prediction] Invalid vertical value")
+    end
+end)
+
+-- 🦘 Jump Offset
+sector.element('TextBox', 'Jump Offset', {default = ""}, function(v)
+    local num = tonumber(v.Text)
+    if num then
+        getgenv().Goonstah.Aim.JumpOffset = num
+        print("[Jump Offset] Set to:", num)
+    else
+        warn("[Jump Offset] Invalid number")
+    end
+end)
+
+-- 📶 Ping Based
+sector.element('Toggle', 'Ping Based', getgenv().Goonstah.Aim.PingBased, function(v)
+    getgenv().Goonstah.Aim.PingBased = v.Toggle
+    GoonNotify("Ping-Based Prediction: " .. (v.Toggle and "On" or "Off"))
+end)
+
+-- 🎯 Aim Part Dropdown
+sector.element('Dropdown', 'Aim Part', {
+    options = {
+        'Head', 'UpperTorso', 'LowerTorso',
+        'HumanoidRootPart', 'LeftArm', 'RightArm',
+        'LeftHand', 'RightHand', 'LeftLeg', 'RightLeg',
+        'LeftFoot', 'RightFoot'
+    },
+    default = getgenv().Goonstah.Aim.AimPart or 'Head'
+}, function(v)
+    getgenv().Goonstah.Aim.AimPart = v.Dropdown
+    GoonNotify("Aim Part set to: " .. v.Dropdown)
+end)
+
+
+-----------------------------------------------------
+-- // 🔫 TRIGGER BOT SECTION (Using Goonstah Table) \\ --
+-----------------------------------------------------
+
+triggerSector.element('Toggle', 'Enabled', getgenv().Goonstah.TriggerBot.Enabled, function(v)
+    getgenv().Goonstah.TriggerBot.Enabled = v.Toggle
+    GoonNotify("Trigger Bot: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+-- 🎯 Trigger Bot FOV Size
+triggerSector.element('TextBox', 'FOV Size', {default = ""}, function(v)
+    local num = tonumber(v.Text)
+    if num then
+        getgenv().Goonstah.TriggerBot.FOV = num
+        print("[Trigger Bot] FOV:", num)
+    else
+        warn("[Trigger Bot] Invalid FOV input")
+    end
+end)
+
+-- ⏱️ Trigger Bot Delay
+triggerSector.element('TextBox', 'Delay', {default = ""}, function(v)
+    local num = tonumber(v.Text)
+    if num then
+        getgenv().Goonstah.TriggerBot.Delay = num
+        print("[Trigger Bot] Delay:", num)
+    else
+        warn("[Trigger Bot] Invalid delay value")
+    end
+end)
+
+
+-----------------------------------------------------
+-- // 🎥 CAMERA LOCK SECTION (Using Goonstah Table) \\ --
+-----------------------------------------------------
+
+cameraLockSector.element('Dropdown', 'Easing Style', {
+    options = {
+        'Linear', 'Sine', 'Quad', 'Cubic', 'Quart',
+        'Quint', 'Expo', 'Circ', 'Elastic', 'Back', 'Bounce'
+    },
+    default = getgenv().Goonstah.CameraLock.EasingStyle
+}, function(v)
+    getgenv().Goonstah.CameraLock.EasingStyle = v.Dropdown
+    print("[Camera Lock] Easing Style:", v.Dropdown)
+    GoonNotify("Easing Style set to " .. v.Dropdown)
+end)
+
+cameraLockSector.element('Dropdown', 'Easing Direction', {
+    options = { 'In', 'Out', 'InOut' },
+    default = getgenv().Goonstah.CameraLock.EasingDirection
+}, function(v)
+    getgenv().Goonstah.CameraLock.EasingDirection = v.Dropdown
+    print("[Camera Lock] Easing Direction:", v.Dropdown)
+    GoonNotify("Easing Direction set to " .. v.Dropdown)
+end)
+
+-- 🎥 Camera Lock Smoothness
+cameraLockSector.element('TextBox', 'Smoothness', { default = "" }, function(v)
+    local num = tonumber(v.Text)
+    if num then
+        getgenv().Goonstah.CameraLock.Smoothness = num
+        print("[Camera Lock] Smoothness:", num)
+    else
+        warn("[Camera Lock] Invalid smoothness input")
+    end
+end)
+
+
+-----------------------------------------------------
+-- // 🔒 TARGET LOCK SECTION (Using Goonstah Table) \\ --
+-----------------------------------------------------
+
+targetLockSector.element('Toggle', 'Anti Aim View', getgenv().Goonstah.Aim.AntiAimView, function(v)
+    getgenv().Goonstah.Aim.AntiAimView = v.Toggle
+    print("[Target Lock] Anti Aim View:", v.Toggle)
+    GoonNotify("Anti Aim View: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+targetLockSector.element('Toggle', 'Spectate', getgenv().Goonstah.Aim.SpectateEnabled, function(v)
+    getgenv().Goonstah.Aim.SpectateEnabled = v.Toggle
+    print("[Target Lock] Spectate:", v.Toggle)
+    GoonNotify("Spectate: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+targetLockSector.element('Toggle', 'Look At', getgenv().Goonstah.Aim.LookAtEnabled, function(v)
+    getgenv().Goonstah.Aim.LookAtEnabled = v.Toggle
+    print("[Target Lock] Look At:", v.Toggle)
+    GoonNotify("Look At: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+targetLockSector.element('Toggle', 'Use Index MousePos', getgenv().Goonstah.Aim.UseIndexMousePos, function(v)
+    getgenv().Goonstah.Aim.UseIndexMousePos = v.Toggle
+    print("[Target Lock] Use Index MousePos:", v.Toggle)
+    GoonNotify("Use Index MousePos: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+targetLockSector.element('Toggle', 'Use Namecall', getgenv().Goonstah.Aim.UseNamecall or false, function(v)
+    getgenv().Goonstah.Aim.UseNamecall = v.Toggle
+    print("[Target Lock] Use Namecall:", v.Toggle)
+    GoonNotify("Use Namecall: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+-----------------------------------------------------
+-- // 🔄 TARGET STRAFE SECTION (UI + Core: True Spoof Desync + Random + Idle Dummy)
+-----------------------------------------------------
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Goonstah = getgenv().Goonstah
+
+-----------------------------------------------------
+-- // UI setup
+-----------------------------------------------------
+targetStrafeSector.element('Toggle', 'Enabled', Goonstah.TargetStrafe.Enabled, function(v)
+	Goonstah.TargetStrafe.Enabled = v.Toggle
+	GoonNotify("Target Strafe: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+targetStrafeSector.element('Toggle', 'Spoof', Goonstah.TargetStrafe.Spoof, function(v)
+	Goonstah.TargetStrafe.Spoof = v.Toggle
+	GoonNotify("Target Strafe Spoof: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+targetStrafeSector.element('Toggle', 'Randomized', Goonstah.TargetStrafe.Randomized, function(v)
+	Goonstah.TargetStrafe.Randomized = v.Toggle
+	GoonNotify("Target Strafe Randomized: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+-- Distance (starts blank, only updates table when typed)
+targetStrafeSector.element('TextBox', 'Distance', {default = ""}, function(v)
+    local num = tonumber(v.Text)
+    if num then
+        getgenv().Goonstah.TargetStrafe.Distance = num
+        print("[Target Strafe] Distance:", num)
+    else
+        warn("[Target Strafe] Invalid distance input")
+    end
+end)
+
+-- Height (starts blank, only updates table when typed)
+targetStrafeSector.element('TextBox', 'Height', {default = ""}, function(v)
+    local num = tonumber(v.Text)
+    if num then
+        getgenv().Goonstah.TargetStrafe.Height = num
+        print("[Target Strafe] Height:", num)
+    else
+        warn("[Target Strafe] Invalid height input")
+    end
+end)
+
+-- Speed (starts blank, only updates table when typed)
+targetStrafeSector.element('TextBox', 'Speed', {default = ""}, function(v)
+    local num = tonumber(v.Text)
+    if num then
+        getgenv().Goonstah.TargetStrafe.Speed = num
+        print("[Target Strafe] Speed:", num)
+    else
+        warn("[Target Strafe] Invalid speed input")
+    end
+end)
+
+-----------------------------------------------------
+-- // Core: Visual Dummy + True CFrame Desync Spoof
+-----------------------------------------------------
+do
+	local Visuals, Desync = { Dummy = nil }, {}
+	local spin, rT, rLast, rNext, rRate = 0, 1, Vector3.new(), Vector3.new(), 2.25
+
+	-- Helper: random offset generator
+	local function nextRandom(distance, height)
+		return Vector3.new(
+			(math.random() * 2 - 1) * distance,
+			(math.random() * 2 - 1) * (height * 0.45),
+			(math.random() * 2 - 1) * distance
+		)
+	end
+
+	-- Dummy creation (white neon)
+	local function ensureDummy()
+		if Visuals.Dummy and Visuals.Dummy.Parent then return Visuals.Dummy end
+		local ok, obj = pcall(function() return game:GetObjects("rbxassetid://9474737816")[1] end)
+		if not ok or not obj then return nil end
+		Visuals.Dummy = obj
+		if Visuals.Dummy:FindFirstChild("Head") and Visuals.Dummy.Head:FindFirstChild("Face") then
+			Visuals.Dummy.Head.Face:Destroy()
+		end
+		for _, p in ipairs(Visuals.Dummy:GetChildren()) do
+			if p:IsA("BasePart") then
+				p.Size = p.Size * 1.35
+				p.Material = Enum.Material.Neon
+				p.Color = Color3.fromRGB(255, 255, 255)
+				p.Transparency = (p.Name == "HumanoidRootPart" and 1 or 0.25)
+				p.CanCollide = false
+				p.Anchored = false
+			end
+		end
+		local hrp = Visuals.Dummy:FindFirstChild("HumanoidRootPart") or Instance.new("Part")
+		hrp.Name, hrp.Transparency, hrp.Anchored, hrp.CanCollide = "HumanoidRootPart", 1, true, false
+		hrp.Size = Vector3.new(2,2,1)
+		hrp.Parent = Visuals.Dummy
+		Visuals.Dummy.PrimaryPart = hrp
+		Visuals.Dummy.Parent = workspace
+		return Visuals.Dummy
+	end
+
+	local function hideDummy()
+		if Visuals.Dummy and Visuals.Dummy.Parent then Visuals.Dummy.Parent = nil end
+	end
+
+	-- Get locked target
+	local function GetLockedTarget()
+		local aim = Goonstah.Aim
+		if aim and aim.CurrentTarget and aim.CurrentTarget.Character and aim.CurrentTarget.Character:FindFirstChild(aim.AimPart or "HumanoidRootPart") then
+			return aim.CurrentTarget
+		end
+	end
+
+	-----------------------------------------------------
+	-- // PostSimulation CFrame Desync Integration
+	-----------------------------------------------------
+	RunService.PostSimulation:Connect(function(dt)
+		local ts = Goonstah.TargetStrafe
+		if not (ts and ts.Enabled) then hideDummy() Desync[1] = nil return end
+
+		local char = LocalPlayer.Character
+		local myRoot = char and char:FindFirstChild("HumanoidRootPart")
+		if not myRoot then hideDummy() Desync[1] = nil return end
+
+		local target = GetLockedTarget()
+		local targetRoot = target and target.Character and target.Character:FindFirstChild(Goonstah.Aim.AimPart or "HumanoidRootPart")
+		local height = tonumber(ts.Height) or 5
+		local distance = tonumber(ts.Distance) or 10
+		local speed = tonumber(ts.Speed) or 20
+
+		local fakeCF
+		if targetRoot then
+			if ts.Randomized then
+				local speedFactor = math.clamp(speed / 20, 0.5, 3)
+				rT = math.min(1, rT + (dt * rRate * speedFactor))
+				if rT >= 1 then
+					rLast = rNext
+					rNext = nextRandom(distance, height)
+					rT = 0
+				end
+				local off = rLast:Lerp(rNext, rT)
+				fakeCF = CFrame.new(targetRoot.Position + Vector3.new(off.X, height + off.Y, off.Z))
+			else
+				spin = spin + (speed * 2)
+				fakeCF = targetRoot.CFrame * CFrame.Angles(0, math.rad(spin), 0) * CFrame.new(0, height, distance)
+			end
+		else
+			-- not locked: dummy sits on you
+			fakeCF = myRoot.CFrame
+		end
+
+		-- store real CF before spoof
+		Desync[1] = myRoot.CFrame
+
+		if ts.Spoof then
+			local dummy = ensureDummy()
+			if dummy and dummy.PrimaryPart then
+				pcall(function() dummy:SetPrimaryPartCFrame(fakeCF) end)
+			end
+
+			-- replicate fake CFrame (others see this)
+			pcall(function() myRoot.CFrame = fakeCF end)
+
+			-- revert instantly (you stay normal)
+			RunService.RenderStepped:Wait()
+			pcall(function() myRoot.CFrame = Desync[1] end)
+		else
+			pcall(function() myRoot.CFrame = fakeCF end)
+			hideDummy()
+		end
+	end)
+
+	-----------------------------------------------------
+	-- // Safe __index hook (stops visual pop)
+	-----------------------------------------------------
+	local oldIndex
+	oldIndex = hookmetamethod(game, "__index", newcclosure(function(self, key)
+		if not checkcaller() and key == "CFrame" and Desync[1]
+			and Goonstah.TargetStrafe
+			and Goonstah.TargetStrafe.Enabled
+			and Goonstah.TargetStrafe.Spoof
+			and LocalPlayer.Character
+			and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
+			and self == LocalPlayer.Character.HumanoidRootPart
+		then
+			return Desync[1]
+		end
+		return oldIndex(self, key)
+	end))
+end
+
+-----------------------------------------------------
+-- // 👀 VISUALS / CHECKS SECTION (Using Goonstah Table) \\ --
+-----------------------------------------------------
+
+visualsSection.element('Toggle', 'Dot', getgenv().Goonstah.Visuals.DotVisual, function(v)
+    getgenv().Goonstah.Visuals.DotVisual = v.Toggle
+    print("[Visuals] Dot Visual:", v.Toggle)
+    GoonNotify("Dot Visual: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+visualsSection.element('Toggle', 'Chams', getgenv().Goonstah.Visuals.ChamsVisual, function(v)
+    getgenv().Goonstah.Visuals.ChamsVisual = v.Toggle
+    print("[Visuals] Chams Visual:", v.Toggle)
+    GoonNotify("Chams: " .. (v.Toggle and "Enabled" or "Disabled"))
+end)
+
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+local Goonstah = getgenv().Goonstah
+
+-- Convert hex to Color3
+local function fromHex(hex)
+    hex = hex:gsub("#", "")
+    return Color3.fromRGB(
+        tonumber("0x" .. hex:sub(1, 2)),
+        tonumber("0x" .. hex:sub(3, 4)),
+        tonumber("0x" .. hex:sub(5, 6))
+    )
+end
+
+-- Colors
+local DOT_COLOR = fromHex("5741D9") -- dot and highlight color
+local OUTLINE_COLOR = Color3.fromRGB(0, 0, 0)
+
+-- DOT VISUAL
+local dot = Drawing.new("Circle")
+dot.Color = DOT_COLOR
+dot.Thickness = 2
+dot.NumSides = 24
+dot.Radius = 5
+dot.Filled = true
+dot.Visible = false
+
+-- Tight outline
+local dotOutline = Drawing.new("Circle")
+dotOutline.Color = OUTLINE_COLOR
+dotOutline.Thickness = 1.6
+dotOutline.NumSides = 24
+dotOutline.Radius = 5.8
+dotOutline.Filled = false
+dotOutline.Visible = false
+
+-- CHAMS
+local currentHighlight = nil
+local function applyHighlight(target)
+    if not target or not Goonstah.Visuals.ChamsVisual then return end
+    local char = target.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    if currentHighlight then
+        currentHighlight:Destroy()
+        currentHighlight = nil
+    end
+
+    local highlight = Instance.new("Highlight")
+    highlight.FillColor = DOT_COLOR           -- matches dot
+    highlight.OutlineColor = OUTLINE_COLOR    -- black outline
+    highlight.FillTransparency = 0.6          -- mostly transparent
+    highlight.OutlineTransparency = 0         -- fully visible outline
+    highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+    highlight.Parent = char
+    currentHighlight = highlight
+end
+
+local function clearVisuals()
+    dot.Visible = false
+    dotOutline.Visible = false
+    if currentHighlight then
+        currentHighlight:Destroy()
+        currentHighlight = nil
+    end
+end
+
+-- ===== MERGED RENDER LOOP =====
+RunService.RenderStepped:Connect(function()
+    local target = Goonstah.Aim.CurrentTarget
+    local targetChar = target and target.Character
+    local myChar = LocalPlayer.Character
+    if not myChar then return end
+
+    local myRoot = myChar:FindFirstChild("HumanoidRootPart")
+    local humanoid = myChar:FindFirstChildOfClass("Humanoid")
+
+    -- ===== Target Dot + Chams =====
+    if target and targetChar and targetChar:FindFirstChild("HumanoidRootPart") then
+        local hrp = targetChar.HumanoidRootPart
+        local screenPos, onScreen = Camera:WorldToViewportPoint(hrp.Position)
+
+        if Goonstah.Visuals.DotVisual and onScreen then
+            local pos = Vector2.new(screenPos.X, screenPos.Y)
+            dot.Radius = 5
+            dotOutline.Radius = 5.8
+            dot.Position = pos
+            dotOutline.Position = pos
+            dot.Visible = true
+            dotOutline.Visible = true
+        else
+            dot.Visible = false
+            dotOutline.Visible = false
+        end
+
+        if Goonstah.Visuals.ChamsVisual then
+            if not currentHighlight or currentHighlight.Parent ~= targetChar then
+                applyHighlight(target)
+            end
+        elseif currentHighlight then
+            currentHighlight:Destroy()
+            currentHighlight = nil
+        end
+    else
+        clearVisuals()
+    end
+
+    -- ===== LookAt =====
+    if Goonstah.Aim.LookAtEnabled and targetChar and myRoot and humanoid then
+        local targetPart = targetChar:FindFirstChild("HumanoidRootPart")
+                          or targetChar:FindFirstChild("UpperTorso")
+                          or targetChar:FindFirstChild("Head")
+        if targetPart then
+            local flatDir = (Vector3.new(targetPart.Position.X - myRoot.Position.X, 0, targetPart.Position.Z - myRoot.Position.Z)).Unit
+            myRoot.CFrame = CFrame.new(myRoot.Position, myRoot.Position + flatDir)
+            humanoid.AutoRotate = false
+        end
+    elseif humanoid then
+        humanoid.AutoRotate = true
+    end
+
+    -- ===== Spectate =====
+    if Goonstah.Aim.SpectateEnabled and targetChar then
+        local targetHum = targetChar:FindFirstChildOfClass("Humanoid")
+        if targetHum then
+            Camera.CameraSubject = targetHum
+        else
+            Camera.CameraSubject = humanoid
+        end
+    elseif humanoid then
+        Camera.CameraSubject = humanoid
+    end
+end)
+
+-----------------------------------------------------
+-- // 🚗 TRANSPORTATION SECTION (MISC TAB) \\ --
+-----------------------------------------------------
+
+transportSector.element('Button', 'Load Macro Button', nil, function()
+    print("[Macro] Load Macro Button clicked")
+
+    -- ✅ Prevent double-loads
+    if getgenv().MacroLoaded then
+        GoonNotify("You've already loaded the Macro Button!")
+        return
+    end
+    getgenv().MacroLoaded = true
+
+    --// Default settings
+    local Settings = { Misc = { Movement = { Macro = { Speed = tonumber(getgenv().MacroSpeed) or 0.015 }}}}
+
+    --// Services
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local UserInputService = game:GetService("UserInputService")
+    local Player = Players.LocalPlayer
+    local Camera = workspace.CurrentCamera
+
+    local MAX_LENGTH = 900000
+    local MCenabled = false
+    local active = nil
+    local rootPos = Vector3.new(0, 0, 0)
+
+    --// Core functions
+    local function UpdatePos()
+        local root = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
+        if root then rootPos = root.Position end
+    end
+
+    local function UpdateAutoRotate(state)
+        local hum = Player.Character and Player.Character:FindFirstChildOfClass("Humanoid")
+        if hum then hum.AutoRotate = state end
+    end
+
+    local function GetUpdatedCameraCFrame()
+        return CFrame.new(
+            rootPos,
+            Vector3.new(Camera.CFrame.LookVector.X * MAX_LENGTH, rootPos.Y, Camera.CFrame.LookVector.Z * MAX_LENGTH)
+        )
+    end
+
+    local function EnableShiftlock()
+        UpdatePos()
+        UpdateAutoRotate(false)
+        local root = Player.Character and Player.Character:FindFirstChild("HumanoidRootPart")
+        if root then
+            root.CFrame = GetUpdatedCameraCFrame()
+        end
+    end
+
+    local function DisableShiftlock()
+        UpdateAutoRotate(true)
+        if active then
+            active:Disconnect()
+            active = nil
+        end
+    end
+
+    --// UI Creation
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "MacroGUI"
+    ScreenGui.Parent = Player:WaitForChild("PlayerGui")
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.ResetOnSpawn = false
+
+    local Frame = Instance.new("Frame")
+    Frame.Parent = ScreenGui
+    Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Frame.BackgroundTransparency = 0.5
+    Frame.Position = UDim2.new(1, -128, 0, 0)
+    Frame.Size = UDim2.new(0, 90, 0, 32)
+    Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 8)
+
+    local Icon = Instance.new("ImageLabel")
+    Icon.Parent = Frame
+    Icon.BackgroundTransparency = 1
+    Icon.Size = UDim2.new(0, 26, 0, 26)
+    Icon.AnchorPoint = Vector2.new(0, 0.5)
+    Icon.Position = UDim2.new(0.05, 0, 0.5, 0)
+    Icon.Image = "rbxassetid://10734923214"
+
+    local TextButton = Instance.new("TextButton")
+    TextButton.Parent = Frame
+    TextButton.BackgroundTransparency = 1
+    TextButton.Size = UDim2.new(0, 52, 0, 26)
+    TextButton.AnchorPoint = Vector2.new(0.5, 0.5)
+    TextButton.Position = UDim2.new(0.65, 0, 0.5, 0)
+    TextButton.Font = Enum.Font.Arimo
+    TextButton.Text = "Macro"
+    TextButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TextButton.TextScaled = true
+    Instance.new("UITextSizeConstraint", TextButton).MaxTextSize = 30
+
+    --// Toggle Behavior
+    TextButton.MouseButton1Down:Connect(function()
+        MCenabled = not MCenabled
+        print("[Macro] Enabled:", MCenabled)
+
+        if MCenabled then
+            Icon.Image = "rbxassetid://10735024209"
+            GoonNotify("Macro: Enabled")
+        else
+            Icon.Image = "rbxassetid://10734923214"
+            DisableShiftlock()
+            GoonNotify("Macro: Disabled")
+        end
+    end)
+
+    --// Dragging system
+    local dragging, dragInput, dragStart, startPos
+    local function update(input)
+        local delta = input.Position - dragStart
+        Frame.Position = UDim2.new(
+            startPos.X.Scale,
+            startPos.X.Offset + delta.X,
+            startPos.Y.Scale,
+            startPos.Y.Offset + delta.Y
+        )
+    end
+
+    Frame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = Frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+
+    Frame.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and input == dragInput then
+            update(input)
+        end
+    end)
+
+    --// Macro loop
+    function ShiftLock()
+        if MCenabled then
+            if not active then
+                active = RunService.RenderStepped:Connect(function()
+                    EnableShiftlock()
+                end)
+            end
+        end
+    end
+
+    task.spawn(function()
+        while task.wait(Settings.Misc.Movement.Macro.Speed) do
+            ShiftLock()
+        end
+    end)
+
+    -- ✅ Notify first load
+    GoonNotify("Macro successfully loaded!")
+end)
+
+-- ✅ Macro Speed Textbox callback
+transportSector.element('TextBox', 'Macro Speed', {default = "0.015"}, function(v)
+    local speed = tonumber(v.Text)
+    if speed then
+        getgenv().MacroSpeed = speed
+        print("[Macro] Speed set to:", speed)
+        GoonNotify("Macro Speed set to " .. speed)
+    else
+        warn("[Macro] Invalid speed input.")
+        GoonNotify("⚠ Invalid speed input!")
+    end
+end)
+
+
+-----------------------------------------------------
+-- ⚙️ CONFIGS SECTION (Fully Working nemv2 Support)
+-----------------------------------------------------
+
+-- Make nemv2 folder if missing
+local configFolder = "nemv2"
+if not isfolder(configFolder) then
+	makefolder(configFolder)
+end
+
+-- Assign config path to window (not menu)
+window.cfg_location = configFolder .. "/"
+
+-- Create config UI sector
+local configsSec = configsSection.new_sector("Configs", "Left")
+
+-----------------------------------------------------
+-- Helper: Get Config List
+-----------------------------------------------------
+local function getConfigList()
+	local files = listfiles(window.cfg_location)
+	local configs = {}
+	for _, path in ipairs(files) do
+		local name = path:match("([^/\\]+)%.txt$")
+		if name then
+			table.insert(configs, name)
+		end
+	end
+	if #configs == 0 then
+		table.insert(configs, "none")
+	end
+	return configs
+end
+
+-----------------------------------------------------
+-- UI Elements
+-----------------------------------------------------
+local configText
+local configList = configsSec.element("Scroll", "Config List", {options = getConfigList()}, function(state)
+	if configText then
+		configText:set_value({Text = state.Scroll})
+	end
+end)
+
+configText = configsSec.element("TextBox", "Config Name", {default = ""}, function(v)
+	print("Selected config:", v.Text)
+end)
+
+-----------------------------------------------------
+-- Refresh Configs
+-----------------------------------------------------
+local function refreshConfigs()
+	local opts = getConfigList()
+	configList:set_value({options = opts})
+end
+
+-----------------------------------------------------
+-- 💾 Save Config
+-----------------------------------------------------
+configsSec.element("Button", "Save Config", nil, function()
+	local name = configText:get_value().Text
+	if not name or name == "" or name == "none" then
+		return GoonNotify("⚠️ Invalid config name.")
+	end
+
+	window.save_cfg(name)
+	GoonNotify("✅ Saved config: " .. name)
+	refreshConfigs()
+end)
+
+-----------------------------------------------------
+-- 📂 Load Config
+-----------------------------------------------------
+configsSec.element("Button", "Load Config", nil, function()
+	local name = configText:get_value().Text
+	if not name or name == "" or name == "none" then
+		return GoonNotify("⚠️ Invalid config name.")
+	end
+
+	window.load_cfg(name)
+	GoonNotify("📂 Loaded config: " .. name)
+end)
+
+-----------------------------------------------------
+-- 🔁 Refresh List
+-----------------------------------------------------
+configsSec.element("Button", "Refresh List", nil, function()
+	refreshConfigs()
+	GoonNotify("🔄 Config list refreshed.")
+end)
+
+-- Auto-refresh on init
+task.defer(refreshConfigs)
+
+-----------------------------------------------------
+-- // 📱 MOBILE/PC BOOKMARK-STYLE TOGGLE BUTTON \\ --
+-----------------------------------------------------
+task.wait(1)
+
+local UserInputService = game:GetService("UserInputService")
+local CoreGui = game:GetService("CoreGui")
+
+-- find the actual UI
+local ScreenGui = CoreGui:FindFirstChild("leadmarker") or CoreGui:FindFirstChildOfClass("ScreenGui")
+if ScreenGui then
+    local Holder = Instance.new("ScreenGui")
+    Holder.Name = "MobileToggle_Holder"
+    Holder.IgnoreGuiInset = true
+    Holder.ResetOnSpawn = false
+    Holder.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    Holder.Parent = CoreGui
+
+    -- 🖤 Sleek bookmark-style button
+    local MobileToggle = Instance.new("TextButton")
+    MobileToggle.Name = "MobileToggle"
+    MobileToggle.Size = UDim2.new(0, 40, 0, 40)
+    MobileToggle.AnchorPoint = Vector2.new(1, 0)
+    MobileToggle.Position = UDim2.new(1, -10, 0, 60)
+    MobileToggle.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+    MobileToggle.BackgroundTransparency = 0.2
+    MobileToggle.BorderSizePixel = 0
+    MobileToggle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    MobileToggle.TextSize = 20
+    MobileToggle.Font = Enum.Font.Ubuntu
+    MobileToggle.Text = "≡"
+    MobileToggle.AutoButtonColor = true
+    MobileToggle.Parent = Holder
+    MobileToggle.Visible = true
+    MobileToggle.ZIndex = 9999
+    MobileToggle.ClipsDescendants = false
+
+    -- 🕹️ Bookmark tail
+    local Tail = Instance.new("Frame")
+    Tail.Size = UDim2.new(0, 40, 0, 12)
+    Tail.Position = UDim2.new(0, 0, 1, -6)
+    Tail.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+    Tail.BorderSizePixel = 0
+    Tail.Parent = MobileToggle
+    Tail.Rotation = 180
+    Tail.ZIndex = 9998
+
+    -- ✨ Rounded corners
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 6)
+    Corner.Parent = MobileToggle
+
+    local uiVisible = true
+
+    local function toggleUI()
+        uiVisible = not uiVisible
+
+        if window and window.SetOpen then
+            window.SetOpen(uiVisible)
+        else
+            ScreenGui.Enabled = uiVisible
+        end
+
+        -- Small animation flash
+        MobileToggle.BackgroundTransparency = 0.1
+        task.wait(0.1)
+        MobileToggle.BackgroundTransparency = 0.2
+    end
+
+    MobileToggle.MouseButton1Click:Connect(toggleUI)
+end
+
+-----------------------------------------------------
+-- // 🎥 CAMERA LOCK FUNCTIONALITY (Updated: True Velocity Prediction) \\ --
+-----------------------------------------------------
+local TweenService = game:GetService("TweenService")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local Camera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+
+-- reference globals directly
+local Goonstah = getgenv().Goonstah
+
+-- 🔍 Find closest player to center
+local function GetClosestPlayer()
+    local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+    local closest, distance = nil, math.huge
+
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            local root = player.Character.HumanoidRootPart
+            local pos, onScreen = Camera:WorldToViewportPoint(root.Position)
+            if onScreen then
+                local diff = (Vector2.new(pos.X, pos.Y) - center).Magnitude
+                if diff < distance then
+                    closest = player
+                    distance = diff
+                end
+            end
+        end
+    end
+    return closest
+end
+
+-- 🎥 Smooth camera move
+local function MoveCameraToTarget(targetPos)
+    local settings = Goonstah.CameraLock
+    local smoothness = tonumber(settings.Smoothness) or 0.25
+    local easingStyle = Enum.EasingStyle[settings.EasingStyle or "Linear"]
+    local easingDir = Enum.EasingDirection[settings.EasingDirection or "In"]
+
+    if smoothness >= 1 then
+        Camera.CFrame = CFrame.new(Camera.CFrame.Position, targetPos)
+    else
+        local tween = TweenService:Create(Camera, TweenInfo.new(smoothness, easingStyle, easingDir), {
+            CFrame = CFrame.new(Camera.CFrame.Position, targetPos)
+        })
+        tween:Play()
+    end
+end
+
+-- ⚙️ True predictive math using velocity and ping
+local function GetPredictedPosition(part)
+    if not part or not part.Parent then return part and part.Position end
+
+    local hrp = part.Parent:FindFirstChild("HumanoidRootPart")
+    if not hrp then return part.Position end
+
+    local velocity = hrp.Velocity
+    local horiz = tonumber(Goonstah.Aim.HorizontalPrediction) or 0
+    local vert = tonumber(Goonstah.Aim.VerticalPrediction) or 0
+    local jump = tonumber(Goonstah.Aim.JumpOffset) or 0
+    local pingAdd = 0
+
+    if Goonstah.Aim.PingBased and typeof(LocalPlayer.GetNetworkPing) == "function" then
+        local ping = LocalPlayer:GetNetworkPing()
+        pingAdd = ping * 0.1
+    end
+
+    -- ✅ actual predictive aim
+    local predicted = hrp.Position + (velocity * (horiz + pingAdd))
+    predicted = predicted + Vector3.new(0, vert + jump, 0)
+    return predicted
+end
+
+-- 🧭 Update Loop
+RunService.RenderStepped:Connect(function()
+    if not Goonstah.Main.Enabled or not Goonstah.CameraLock.Enabled then return end
+
+    -- Validate target
+    if not Goonstah.CameraLock.Target
+        or not Goonstah.CameraLock.Target.Character
+        or not Goonstah.CameraLock.Target.Character:FindFirstChild(Goonstah.Aim.AimPart or "Head") then
+        Goonstah.CameraLock.Target = GetClosestPlayer()
+        if Goonstah.CameraLock.Target then
+            GoonNotify("Targeting: " .. Goonstah.CameraLock.Target.DisplayName)
+        end
+        return
+    end
+
+    local aimPart = Goonstah.Aim.AimPart or "Head"
+    local targetPart = Goonstah.CameraLock.Target.Character:FindFirstChild(aimPart)
+    if not targetPart then return end
+
+    local predictedPos = GetPredictedPosition(targetPart)
+    MoveCameraToTarget(predictedPos)
+end)
+
+-- 🎯 Toggle Function
+function ToggleCameraLock()
+    if not Goonstah.Main.Enabled then return end
+
+    Goonstah.CameraLock.Enabled = not Goonstah.CameraLock.Enabled
+    if Goonstah.CameraLock.Enabled then
+        Goonstah.CameraLock.Target = GetClosestPlayer()
+        if Goonstah.CameraLock.Target then
+            GoonNotify("Targeting: " .. Goonstah.CameraLock.Target.DisplayName)
+        end
+    else
+        Goonstah.CameraLock.Target = nil
+    end
+
+    -- 🔄 Update button GUI
+    local gui = LocalPlayer:FindFirstChild("PlayerGui")
+    if gui and gui:FindFirstChild("StandaloneToggleGui") then
+        local button = gui.StandaloneToggleGui:FindFirstChild("DraggableFrame")
+                    and gui.StandaloneToggleGui.DraggableFrame:FindFirstChild("ToggleButton")
+        if button then
+            button.Image = Goonstah.CameraLock.Enabled
+                and "rbxassetid://10723434711"   -- locked
+                or  "rbxassetid://10747366027"  -- unlocked
+        end
+    end
+end
+
+-- 🎮 Keybind
+UserInputService.InputBegan:Connect(function(input, gpe)
+    if gpe then return end
+    if input.KeyCode == Enum.KeyCode.Q then
+        ToggleCameraLock()
+    end
+end)
+
+-- 🧰 Tool Hook
+if Goonstah.Main.LockToolLoaded and LocalPlayer.Backpack:FindFirstChild("Lock Tool") then
+    LocalPlayer.Backpack["Lock Tool"].Activated:Connect(ToggleCameraLock)
+end
+
+-- 🧰 GUI Button Hook
+local gui = LocalPlayer:FindFirstChild("PlayerGui")
+if gui and gui:FindFirstChild("StandaloneToggleGui") then
+    local button = gui.StandaloneToggleGui:FindFirstChild("DraggableFrame")
+                and gui.StandaloneToggleGui.DraggableFrame:FindFirstChild("ToggleButton")
+    if button then
+        button.MouseButton1Down:Connect(ToggleCameraLock)
+    end
+end
+
+-----------------------------------------------------
+-- 🎯 TARGET MODE SYSTEM (Closest To Screen Center + True Prediction)
+-----------------------------------------------------
+local Goonstah = getgenv().Goonstah
+local Players = game:GetService("Players")
+local Camera = workspace.CurrentCamera
+local LocalPlayer = Players.LocalPlayer
+local RunService = game:GetService("RunService")
+local CoreGui = game:GetService("CoreGui")
+
+-----------------------------------------------------
+-- 🧭 Get Closest To Center
+-----------------------------------------------------
+local function GetClosestToCenter()
+    local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+    local closest, minDist = nil, math.huge
+
+    for _, plr in ipairs(Players:GetPlayers()) do
+        if plr ~= LocalPlayer and plr.Character and plr.Character:FindFirstChild("HumanoidRootPart") then
+            local pos, visible = Camera:WorldToViewportPoint(plr.Character.HumanoidRootPart.Position)
+            if visible then
+                local dist = (Vector2.new(pos.X, pos.Y) - center).Magnitude
+                if dist < minDist then
+                    closest = plr
+                    minDist = dist
+                end
+            end
+        end
+    end
+    return closest
+end
+
+-- current target stored globally
+Goonstah.Aim.CurrentTarget = nil
+
+-----------------------------------------------------
+-- 🎯 Manual Target Select / Clear
+-----------------------------------------------------
+local function SelectTarget()
+    if not Goonstah.Main.Enabled or not Goonstah.Aim.TargetLockEnabled then
+        GoonNotify("Enable Main + Target Lock first!")
+        return
+    end
+    local newTarget = GetClosestToCenter()
+    if newTarget then
+        Goonstah.Aim.CurrentTarget = newTarget
+        GoonNotify("🎯 Locked onto: " .. newTarget.DisplayName)
+    else
+        GoonNotify("❌ No valid targets found on screen.")
+    end
+end
+
+local function ClearTarget()
+    if Goonstah.Aim.CurrentTarget then
+        GoonNotify("🔓 Unlocked: " .. Goonstah.Aim.CurrentTarget.DisplayName)
+        Goonstah.Aim.CurrentTarget = nil
+    end
+end
+
+-----------------------------------------------------
+-- 🌐 FOV UI
+-----------------------------------------------------
+do
+    if CoreGui:FindFirstChild("Goonstah_SilentFOV") then
+        CoreGui.Goonstah_SilentFOV:Destroy()
+    end
+
+    local sg = Instance.new("ScreenGui")
+    sg.Name = "Goonstah_SilentFOV"
+    sg.ResetOnSpawn = false
+    sg.Parent = CoreGui
+
+    local frame = Instance.new("Frame")
+    frame.Name = "FOVCircle"
+    frame.BackgroundTransparency = 1
+    frame.BorderSizePixel = 0
+    local initialSize = tonumber(Goonstah.Aim.FOVSize) or 200
+    frame.Size = UDim2.new(0, initialSize, 0, initialSize)
+    frame.Position = UDim2.new(0.5, -initialSize / 2, 0.5, -initialSize / 2 - 18)
+    frame.Visible = Goonstah.Aim.FOVShow or false
+    frame.Parent = sg
+
+    Instance.new("UICorner", frame).CornerRadius = UDim.new(1, 0)
+
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.fromRGB(255, 255, 255)
+    stroke.Thickness = 1.6
+    stroke.Parent = frame
+
+    Goonstah.Aim._UpdateFOV = function(size, show)
+        if not Goonstah.Aim then return end
+        size = tonumber(size) or Goonstah.Aim.FOVSize or 200
+        frame.Size = UDim2.new(0, size, 0, size)
+        frame.Position = UDim2.new(0.5, -size / 2, 0.5, -size / 2 - 18)
+        frame.Visible = show == nil and (Goonstah.Aim.FOVShow or false) or show
+    end
+
+    RunService.RenderStepped:Connect(function()
+        if not Goonstah.Aim then return end
+        local size = Goonstah.Aim.FOVSize or 200
+        frame.Size = UDim2.new(0, size, 0, size)
+        frame.Position = UDim2.new(0.5, -size / 2, 0.5, -size / 2 - 18)
+        frame.Visible = Goonstah.Aim.FOVShow or false
+    end)
+end
+
+-----------------------------------------------------
+-- 🧰 Helpers
+-----------------------------------------------------
+local function safeIsAlive(pl)
+    if not pl or not pl.Character then return false end
+    local hrp = pl.Character:FindFirstChild("HumanoidRootPart")
+    local hum = pl.Character:FindFirstChildOfClass("Humanoid")
+    return hrp and hum and hum.Health > 0
+end
+
+-- ✅ Unified Velocity-Based Prediction
+local function PredictPosition(part)
+    if not part or not Goonstah.Aim then return nil end
+    local hrp = part.Parent:FindFirstChild("HumanoidRootPart")
+    if not hrp then return part.Position end
+
+    local velocity = hrp.Velocity
+    local horiz = tonumber(Goonstah.Aim.HorizontalPrediction) or 0
+    local vert = tonumber(Goonstah.Aim.VerticalPrediction) or 0
+    local jump = tonumber(Goonstah.Aim.JumpOffset) or 0
+    local pingAdd = 0
+
+    if Goonstah.Aim.PingBased and typeof(LocalPlayer.GetNetworkPing) == "function" then
+        local ping = LocalPlayer:GetNetworkPing()
+        pingAdd = ping * 0.1
+    end
+
+    local predicted = hrp.Position + (velocity * (horiz + pingAdd))
+    predicted = predicted + Vector3.new(0, vert + jump, 0)
+
+    if Goonstah.Aim.AntiAimView then
+        local yaw = math.rad((math.random() - 0.5) * 6)
+        predicted = (CFrame.new(predicted) * CFrame.Angles(0, yaw, 0)).p
+    end
+
+    return predicted
+end
+
+-----------------------------------------------------
+-- 🎯 Silent Target Finder
+-----------------------------------------------------
+local function getSilentTarget()
+    if not Goonstah.Aim then return nil end
+    local center = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+    local best, bestDist = nil, math.huge
+    local fov = tonumber(Goonstah.Aim.FOVSize) or 200
+
+    for _, pl in ipairs(Players:GetPlayers()) do
+        if pl ~= LocalPlayer and safeIsAlive(pl) then
+            local part = pl.Character:FindFirstChild(Goonstah.Aim.AimPart or "Head") or pl.Character:FindFirstChild("Head")
+            if part then
+                local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
+                if onScreen then
+                    local d = (Vector2.new(screenPos.X, screenPos.Y) - center).Magnitude
+                    if d <= fov and d < bestDist then
+                        best, bestDist = pl, d
+                    end
+                end
+            end
+        end
+    end
+
+    return best
+end
+
+Goonstah.Aim.SetSilentAimHook = function(fn)
+    if not Goonstah.Aim then return end
+    Goonstah.Aim.SilentAimHook = type(fn) == "function" and fn or nil
+end
+
+-----------------------------------------------------
+-- 🔧 Hooks (Silent Aim + Target Lock | Universal MainEvent Support)
+-----------------------------------------------------
+do
+    local ReplicatedStorage = game:GetService("ReplicatedStorage")
+    local Mouse = LocalPlayer:GetMouse()
+    local MainEvent = ReplicatedStorage:FindFirstChild("MainEvent")
+    local mt = getrawmetatable(game)
+    local oldNamecall = mt.__namecall
+    setreadonly(mt, false)
+
+    local validArgNames = {
+        "UpdateMousePos","GetMousePos","MousePos","MOUSE","MousePosUpdate",
+        "UpdateMousePosI","UpdateMousePosI2","UpdateAim","UpdateAimingAt",
+        "D3RHooDMSOUEPoS233^+","MOUSEPOSUPDATEI12","DEAHOODMOUSEPOSx3^3"
+    }
+
+    local cachedPos, lastUpdate = nil, 0
+    local updateInterval = 0.05
+    local ToolConn
+
+    -----------------------------------------------------
+    -- 🔮 Velocity Prediction (shared)
+    -----------------------------------------------------
+    local function PredictFromPart(part)
+        return part and PredictPosition(part) or nil
+    end
+
+    -----------------------------------------------------
+    -- 🎯 Target Resolver
+    -----------------------------------------------------
+    local function ResolveTarget()
+        if not Goonstah.Main.Enabled then
+            cachedPos = nil
+            return nil
+        end
+
+        if Goonstah.Aim.TargetLockEnabled and Goonstah.Aim.CurrentTarget and Goonstah.Aim.CurrentTarget.Character then
+            local t = Goonstah.Aim.CurrentTarget
+            if t.Character and t.Character:FindFirstChild(Goonstah.Aim.AimPart or "Head") then
+                return t
+            end
+        end
+
+        if not Goonstah.Aim.SilentMode then return nil end
+        return getSilentTarget()
+    end
+
+    -----------------------------------------------------
+    -- 🧩 Tool Hook (Anti-Aim View compatible)
+    -----------------------------------------------------
+    local function Bypass(character)
+        character.ChildAdded:Connect(function(child)
+            if child:IsA("Tool") then
+                if ToolConn then ToolConn:Disconnect() end
+                ToolConn = child.Activated:Connect(function()
+                    if not (MainEvent and Goonstah and Goonstah.Aim and Goonstah.Aim.AntiAimView) then return end
+
+                    local sendPos = Mouse.Hit.Position
+                    local target = ResolveTarget()
+                    if target and target.Character then
+                        local part = target.Character:FindFirstChild(Goonstah.Aim.AimPart or "Head")
+                        if part then
+                            sendPos = PredictFromPart(part)
+                        end
+                    end
+                    MainEvent:FireServer("UpdateMousePos", sendPos)
+                end)
+            end
+        end)
+    end
+
+    LocalPlayer.CharacterAdded:Connect(Bypass)
+    if LocalPlayer.Character then Bypass(LocalPlayer.Character) end
+
+    -----------------------------------------------------
+    -- 🧩 MainEvent Hook
+    -----------------------------------------------------
+    mt.__namecall = newcclosure(function(self, ...)
+        local args = {...}
+        local method = getnamecallmethod()
+
+        if checkcaller() or not Goonstah.Main.Enabled or not (Goonstah.Aim.UseNamecall or Goonstah.Aim.SilentMode or Goonstah.Aim.TargetLockEnabled or Goonstah.Aim.AntiAimView) then
+            return oldNamecall(self, ...)
+        end
+
+        if method == "FireServer" then
+            local remoteName = tostring(self):lower()
+            if remoteName:match("mainevent") or remoteName:match("mainremoteevent") then
+                local stringArgIndex
+                for i, arg in ipairs(args) do
+                    if typeof(arg) == "string" and table.find(validArgNames, arg) then
+                        stringArgIndex = i
+                        break
+                    end
+                end
+
+                if stringArgIndex then
+                    local now = tick()
+                    if now - lastUpdate > updateInterval then
+                        lastUpdate = now
+                        local target = ResolveTarget()
+                        if target and target.Character then
+                            local part = target.Character:FindFirstChild(Goonstah.Aim.AimPart or "Head") or target.Character:FindFirstChild("Head")
+                            cachedPos = part and PredictFromPart(part)
+                        else
+                            cachedPos = nil
+                        end
+                    end
+
+                    if cachedPos then
+                        args[stringArgIndex + 1] = cachedPos
+                    end
+                end
+            end
+        end
+        return oldNamecall(self, unpack(args))
+    end)
+
+    setreadonly(mt, true)
+end
+
+
+-- 🌀 Main loop
+do
+    local lastTarget = nil
+    RunService.RenderStepped:Connect(function()
+        if not (Goonstah.Main and Goonstah.Main.Enabled) or not (Goonstah.Aim and Goonstah.Aim.SilentMode) then
+            if Goonstah.Aim then
+                Goonstah.Aim._UpdateFOV(Goonstah.Aim.FOVSize, false)
+            end
+            lastTarget = nil
+            return
+        end
+
+        if Goonstah.Aim then
+            Goonstah.Aim._UpdateFOV(Goonstah.Aim.FOVSize, Goonstah.Aim.FOVShow)
+        end
+
+        local target = getSilentTarget()
+        if target and target ~= lastTarget then
+            lastTarget = target
+            if type(Goonstah.Notify) == "function" then
+                pcall(Goonstah.Notify, "Targeting (Silent): "..tostring(target.DisplayName or target.Name))
+            else
+                print("[Goonstah] Silent locked on:", target.Name)
+            end
+        end
+    end)
+end
+
+-- // Services
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Camera = workspace.CurrentCamera
+
+-- // Raycast params
+local rayParams = RaycastParams.new()
+rayParams.FilterType = Enum.RaycastFilterType.Blacklist
+rayParams.IgnoreWater = true
+
+-- // Timer
+local lastTriggerTime = 0
+
+-- // FOV Circle UI (Invisible)
+local ScreenGui = Instance.new("ScreenGui")
+local Circle = Instance.new("Frame")
+local UICorner = Instance.new("UICorner")
+local UIStroke = Instance.new("UIStroke")
+
+ScreenGui.Name = "TriggerFOVCircle"
+ScreenGui.Parent = game:GetService("CoreGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Circle.Parent = ScreenGui
+Circle.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Circle.BackgroundTransparency = 1 -- fully invisible
+UICorner.CornerRadius = UDim.new(1, 0)
+UICorner.Parent = Circle
+UIStroke.Parent = Circle
+UIStroke.Thickness = 1.8
+UIStroke.Color = Color3.fromRGB(0, 0, 139)
+Circle.Visible = true
+Circle.Size = UDim2.new(0, 10, 0, 10) -- fixed invisible size
+
+-- // Main TriggerBot loop
+RunService.RenderStepped:Connect(function()
+    local TB = getgenv().Goonstah.TriggerBot or {}
+    if not TB.Enabled then
+        Circle.Visible = false
+        return
+    end
+
+    local radius = tonumber(TB.FOV) or 100
+    local delay = tonumber(TB.Delay) or 0.15
+
+    -- Circle stays invisible and small, no resizing
+    Circle.Visible = true
+    Circle.Size = UDim2.new(0, 10, 0, 10) 
+
+    -- Center logic for calculations
+    local center = Camera.ViewportSize * 0.5
+
+    -- Rate limit
+    local now = tick()
+    if now - lastTriggerTime < delay then return end
+
+    -- Find closest visible part in FOV
+    local closestPart, minDistance = nil, radius
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            for _, partName in ipairs({"Head", "HumanoidRootPart", "LowerTorso"}) do
+                local part = player.Character:FindFirstChild(partName)
+                if part then
+                    local screenPos, onScreen = Camera:WorldToViewportPoint(part.Position)
+                    if onScreen then
+                        local dist = (Vector2.new(screenPos.X, screenPos.Y) - center).Magnitude
+                        if dist < minDistance then
+                            -- Wall check
+                            rayParams.FilterDescendantsInstances = {LocalPlayer.Character}
+                            local origin = Camera.CFrame.Position
+                            local direction = part.Position - origin
+                            local result = workspace:Raycast(origin, direction, rayParams)
+                            if result and not result.Instance:IsDescendantOf(player.Character) then
+                                continue
+                            end
+                            minDistance = dist
+                            closestPart = part
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    -- Activate tool if a valid target is found
+    if closestPart then
+        local tool = LocalPlayer.Character and LocalPlayer.Character:FindFirstChildOfClass("Tool")
+        if tool and not tool.Name:lower():find("katana") and not tool.Name:lower():find("knife") then
+            lastTriggerTime = tick()
+            task.spawn(function()
+                tool:Activate()
+                task.wait(delay / 2)
+                tool:Deactivate()
+            end)
+        end
+    end
+end)
