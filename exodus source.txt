@@ -1,0 +1,4505 @@
+getgenv()["Allusive"] = {
+
+	['Core'] = {
+		['Key'] = 'GUhQSrohwZYrRtSLiNDnCqsZjSEwbPwI',
+
+		['Panel'] = {
+			['Enabled'] = true,
+
+			['Colors'] = {
+				['Allusive Color'] = Color3.fromRGB(143, 174, 211),
+				['Extension Color'] = Color3.fromRGB(255, 100, 100),
+				['Feature Color'] = Color3.fromRGB(200, 200, 200),
+				['Current Target'] = Color3.fromRGB(255, 100, 100),
+			},
+			['Position'] = {
+				['X'] = workspace.CurrentCamera.ViewportSize.X / 2,
+				['Y'] = workspace.CurrentCamera.ViewportSize.Y - 200,
+			}
+		},
+	},
+
+	['Keybinds'] = {
+		['Aim Assist'] = 'C',
+		['Silent Aim Target'] = 'C',
+		['Triggerbot Target'] = 'C',
+		['Triggerbot'] = 'C',
+		['Walk Speed'] = 'T',
+		['Jump Toggle'] = 'Z',
+		['Hit Part Override'] = 'L',
+		['Inventory Sorter'] = 'F2',
+		['ESP Toggle'] = 'P',
+		['Purchase Armor'] = 'J',
+	},
+
+	['Conditions'] = {
+		['Player Force Field'] = true,
+		['Player Visible'] = true,
+		['Player Grabbed'] = true,
+		['Player Knocked'] = true,
+		['Player Moving'] = false,
+		['Player Alive'] = true,
+		['Player In Vehicle'] = true,
+		['Player Blocking'] = true,
+		['Tool Equipped'] = false,
+		['Self Knocked'] = false,
+		['Chat Typing'] = true,
+		['Crew Check'] = true,
+	},
+
+	['Silent Aim'] = {
+		['Enabled'] = true,
+		['Max Range'] = math.huge,
+		['Selection'] = 'Target', -- Automatic / Target
+		['Override Y Axis'] = 'None', -- None / Half / Full
+
+		['Target Line'] = {
+			['Enabled'] = false,
+			['Color'] = Color3.fromRGB(255, 255, 255),
+			['In-FOV Color'] = Color3.fromRGB(130, 185, 255),
+		},
+
+		['Rage'] = { true }, -- Will automatically shoot when the shot being hit is inevitable, (forcehit)
+
+		['Hit Chance'] = { true, 100 }, -- Enabled, Percentage
+
+		['FOV'] = {
+			['Enabled'] = true,
+			['Visible'] = false,
+
+			['FOV Color'] = {
+				['Color'] = Color3.fromRGB(255, 255, 255),
+				['In-FOV Color'] = Color3.fromRGB(130, 185, 255),
+			},
+
+			['Size'] = {
+				['Width'] = math.huge,
+				['Height'] = math.huge,
+			},
+		},
+
+		['Hit Part'] = {
+			['Selection'] = 'Head', -- Nearest Point / Nearest Part / Named Part / Multi
+
+			['Nearest Point'] = {
+				['Plane'] = 'Vertical', -- 'Vertical' (Y only) / 'Full' (XYZ)
+				['Precision'] = 1, -- 1 = instant snap, 0.5 = balanced, 0.01 = gradual
+				['Offset'] = { -- Distance inward from surface edge (0 = hugs edges)
+					['Vertical'] = 0.7,
+					['Full'] = 0.7,
+				},
+			},
+
+			['Multi'] = {
+				['Enabled'] = false,
+				['Mode'] = 'Cycle', -- Cycle / Dynamic
+
+				['Dynamic'] = {
+					['Prefer Visible'] = true, -- picks parts not blocked by walls/cover
+					['Prefer Closest'] = false, -- picks the part nearest to your crosshair
+					['Head Priority'] = true, -- always try head first if visible
+				},
+
+				['Parts'] = { 'Head', 'UpperTorso', 'LowerTorso', 'LeftUpperArm', 'RightUpperArm', 'LeftUpperLeg', 'RightUpperLeg' },
+
+				['Preset'] = 'Upper Body', -- Upper Body / Full Body / Limbs Only / Custom
+
+				['Cycle Speed'] = 1, -- shots before switching to next part closest to your mouse, only for cycle mode
+				['No Repeat'] = true, -- never hit the same part twice in a row
+			},
+
+			['Override'] = { 
+				['Enabled'] = true, 
+				['Part'] = 'Head',
+			},
+
+			['Per Weapon'] = {
+				['Enabled'] = false,
+
+				['Shotguns'] = {
+					['Weapons'] = { '[Double-Barrel SG]', '[TacticalShotgun]', '[Shotgun]' },
+					['Selection'] = 'Nearest Point', -- Nearest Point / Nearest Part / Named Part / Multi
+					['Named Part'] = 'UpperTorso',
+					['Nearest Point'] = {
+						['Plane'] = 'Vertical',
+						['Precision'] = 1,
+						['Offset'] = { ['Vertical'] = 0.5, ['Full'] = 0.5 },
+					},
+					['Multi'] = {
+						['Enabled'] = false,
+						['Mode'] = 'Cycle',
+						['Parts'] = { 'UpperTorso', 'LowerTorso' },
+						['Preset'] = 'Upper Body',
+						['Cycle Speed'] = 1,
+						['No Repeat'] = true,
+						['Dynamic'] = { ['Prefer Visible'] = true, ['Prefer Closest'] = false, ['Head Priority'] = false },
+					},
+				},
+
+				['Pistols'] = {
+					['Weapons'] = { '[Revolver]', '[Silencer]', '[Glock]' },
+					['Selection'] = 'Nearest Point', -- Nearest Point / Nearest Part / Named Part / Multi
+					['Named Part'] = 'Head',
+					['Nearest Point'] = {
+						['Plane'] = 'Vertical',
+						['Precision'] = 1,
+						['Offset'] = { ['Vertical'] = 0.7, ['Full'] = 0.7 },
+					},
+					['Multi'] = {
+						['Enabled'] = false,
+						['Mode'] = 'Cycle',
+						['Parts'] = { 'Head', 'UpperTorso' },
+						['Preset'] = 'Upper Body',
+						['Cycle Speed'] = 1,
+						['No Repeat'] = true,
+						['Dynamic'] = { ['Prefer Visible'] = true, ['Prefer Closest'] = false, ['Head Priority'] = true },
+					},
+				},
+
+				['Others'] = {
+					['Weapons'] = { '[SMG]', '[Knife]', '[Firework Launcher]' },
+					['Selection'] = 'Nearest Point', -- Nearest Point / Nearest Part / Named Part / Multi
+					['Named Part'] = 'UpperTorso',
+					['Nearest Point'] = {
+						['Plane'] = 'Vertical',
+						['Precision'] = 1,
+						['Offset'] = { ['Vertical'] = 0.7, ['Full'] = 0.7 },
+					},
+					['Multi'] = {
+						['Enabled'] = false,
+						['Mode'] = 'Cycle',
+						['Parts'] = { 'Head', 'UpperTorso', 'LowerTorso' },
+						['Preset'] = 'Upper Body',
+						['Cycle Speed'] = 1,
+						['No Repeat'] = true,
+						['Dynamic'] = { ['Prefer Visible'] = true, ['Prefer Closest'] = true, ['Head Priority'] = false },
+					},
+				},
+			},
+		},
+
+		['Prediction'] = { false, 0.13 },
+
+		['Custom Y Prediction'] = {
+			['Enabled'] = false,
+
+			['Jumping'] = {
+				['Value'] = 0.2,
+			},
+			['Falling'] = {
+				['Value'] = 0.2,
+			}
+		}
+	},
+
+	['Aim Assist'] = {
+		['Enabled'] = true,
+		['Mode'] = 'Toggle', -- Toggle / Hold
+		['Max Range'] = math.huge,
+
+		['FOV'] = {
+			['Enabled'] = true,
+			['Visible'] = false,
+
+			['FOV Color'] = {
+				['Color'] = Color3.fromRGB(255, 255, 255),
+				['In-FOV Color'] = Color3.fromRGB(130, 185, 255),
+			},
+
+			['Size'] = {
+				['Width'] = 9e9,
+				['Height'] = 9e9,
+			},
+		},
+
+		['Hit Part'] = {
+			['Selection'] = 'Head', -- Nearest Point / Nearest Part / Named Part / Multi
+
+			['Nearest Point'] = {
+				['Plane'] = 'Vertical', -- 'Vertical' (Y only) / 'Full' (XYZ)
+				['Precision'] = 1, -- 1 = instant snap, 0.5 = balanced, 0.01 = gradual
+				['Offset'] = { -- Distance inward from surface edge (0 = hugs edges)
+					['Vertical'] = 0.7,
+					['Full'] = 0.7,
+				},
+			},
+
+			['Multi'] = {
+				['Enabled'] = false,
+				['Mode'] = 'Cycle', -- Cycle / Dynamic
+
+				['Dynamic'] = {
+					['Prefer Visible'] = true, -- picks parts not blocked by walls/cover
+					['Prefer Closest'] = false, -- picks the part nearest to your crosshair
+					['Head Priority'] = true, -- always try head first if visible
+				},
+
+				['Parts'] = { 'Head', 'UpperTorso', 'LowerTorso', 'LeftUpperArm', 'RightUpperArm', 'LeftUpperLeg', 'RightUpperLeg' },
+
+				['Preset'] = 'Upper Body', -- Upper Body / Full Body / Limbs Only / Custom
+
+				['Cycle Speed'] = 1, -- shots before switching to next part
+				['No Repeat'] = true, -- never hit the same part twice in a row
+			},
+
+			['Override'] = { 
+				['Enabled'] = true, 
+				['Part'] = 'Head',
+			},
+
+			['Per Weapon'] = {
+				['Enabled'] = false,
+
+				['Shotguns'] = {
+					['Weapons'] = { '[Double-Barrel SG]', '[TacticalShotgun]', '[Shotgun]' },
+					['Selection'] = 'Nearest Point', -- Nearest Point / Nearest Part / Named Part / Multi
+					['Named Part'] = 'UpperTorso',
+					['Nearest Point'] = {
+						['Plane'] = 'Vertical',
+						['Precision'] = 1,
+						['Offset'] = { ['Vertical'] = 0.5, ['Full'] = 0.5 },
+					},
+					['Multi'] = {
+						['Enabled'] = false,
+						['Mode'] = 'Cycle',
+						['Parts'] = { 'UpperTorso', 'LowerTorso' },
+						['Preset'] = 'Upper Body',
+						['Cycle Speed'] = 1,
+						['No Repeat'] = true,
+						['Dynamic'] = { ['Prefer Visible'] = true, ['Prefer Closest'] = false, ['Head Priority'] = false },
+					},
+				},
+
+				['Pistols'] = {
+					['Weapons'] = { '[Revolver]', '[Silencer]', '[Flintlock]' },
+					['Selection'] = 'Nearest Point', -- Nearest Point / Nearest Part / Named Part / Multi
+					['Named Part'] = 'Head',
+					['Nearest Point'] = {
+						['Plane'] = 'Vertical',
+						['Precision'] = 1,
+						['Offset'] = { ['Vertical'] = 0.7, ['Full'] = 0.7 },
+					},
+					['Multi'] = {
+						['Enabled'] = false,
+						['Mode'] = 'Cycle',
+						['Parts'] = { 'Head', 'UpperTorso' },
+						['Preset'] = 'Upper Body',
+						['Cycle Speed'] = 1,
+						['No Repeat'] = true,
+						['Dynamic'] = { ['Prefer Visible'] = true, ['Prefer Closest'] = false, ['Head Priority'] = true },
+					},
+				},
+
+				['Others'] = {
+					['Weapons'] = { '[SMG]', '[Firework Launcher]' },
+					['Selection'] = 'Nearest Point', -- Nearest Point / Nearest Part / Named Part / Multi
+					['Named Part'] = 'UpperTorso',
+					['Nearest Point'] = {
+						['Plane'] = 'Vertical',
+						['Precision'] = 1,
+						['Offset'] = { ['Vertical'] = 0.7, ['Full'] = 0.7 },
+					},
+					['Multi'] = {
+						['Enabled'] = false,
+						['Mode'] = 'Cycle',
+						['Parts'] = { 'Head', 'UpperTorso', 'LowerTorso' },
+						['Preset'] = 'Upper Body',
+						['Cycle Speed'] = 1,
+						['No Repeat'] = true,
+						['Dynamic'] = { ['Prefer Visible'] = true, ['Prefer Closest'] = true, ['Head Priority'] = false },
+					},
+				},
+			},
+		},
+
+		['Smoothness'] = {
+			['Enabled'] = false,
+			['Type'] = { 'Sine', 'InOut' }, -- Easing Style, Easing Direction | https://create.roblox.com/docs/reference/engine/enums/EasingStyle | https://create.roblox.com/docs/reference/engine/enums/EasingDirection
+
+			['Smoothness'] = { 0.09, 0.09 }, -- Position, Rotation
+		},
+
+		['Prediction'] = { false, 0.13 },
+
+		['Custom Y Prediction'] = {
+			['Enabled'] = false,
+
+			['Jumping'] = {
+				['Value'] = 0.2,
+			},
+			['Falling'] = {
+				['Value'] = 0.2,
+			}
+		}
+	},
+
+	['Triggerbot'] = {
+		['Enabled'] = true,
+		['Max Range'] = math.huge,
+		['Selection'] = 'Target', -- Automatic / Target
+
+		['FOV'] = {
+			['Enabled'] = true,
+			['Visible'] = false,
+
+			['FOV Color'] = {
+				['Color'] = Color3.fromRGB(255, 255, 255),
+				['In-FOV Color'] = Color3.fromRGB(130, 185, 255),
+			},
+
+			['Size'] = {
+				['Width'] = 9e9,
+				['Height'] = 9e9,
+			},
+		},
+
+		['Delay'] = {
+			['Enabled'] = true,
+			['Value'] = { 0, 0 } -- Min, Max
+		},
+
+		['Hit Check'] = 'FOV', -- FOV / On Player
+
+		['Activation'] = {
+			['Mode'] = 'Keybind', -- Mouse / Keybind
+			['Type'] = 'Toggle', -- Toggle / Hold
+		},
+
+		['Prediction'] = { false, 0.13 },
+
+		['Custom Y Prediction'] = {
+			['Enabled'] = false,
+
+			['Jumping'] = {
+				['Value'] = 0.2,
+			},
+			['Falling'] = {
+				['Value'] = 0.2,
+			}
+		}
+	},
+
+	['Future'] = {
+		['Enabled'] = true,
+
+		['Guns'] = {
+			['[Double-Barrel SG]'] = { ['X'] = 0.13, ['Y'] = 0.02, ['Z'] = 0.13, },
+			['[Revolver]'] = { ['X'] = 0.13, ['Y'] = 0.02, ['Z'] = 0.13, },
+			['[TacticalShotgun]'] = { ['X'] = 0.13, ['Y'] = 0.02, ['Z'] = 0.13, },
+		    -- You can add more guns below, just copy the format above and change the name and values.
+		}
+	},
+
+	['Gun Modifications'] = {
+
+		['Double Tap'] = {
+			['Enabled'] = false,
+			['Weapons'] = { '[Revolver]', '[Double-Barrel SG]'},
+		},
+
+		['Spread Modifications'] = {
+			['Enabled'] = false,
+
+			['Weapons'] = {
+				['[Double-Barrel SG]'] = {
+					['Multiplier'] = 0.81,
+				},
+				['[TacticalShotgun]'] = {
+					['Multiplier'] = 0.79,
+				},
+			},
+		},
+
+		['Misc Gun Modifications'] = {
+			['No Recoil'] = true,
+			['No AUG Cooldown'] = true,
+		},
+
+		['Delay Changer'] = {
+			['Enabled'] = true,
+			['Weapons'] = {
+				['[Double-Barrel SG]'] = {
+					['Value'] = 0,
+				},
+				['[Revolver]'] = {
+					['Value'] = 0,
+				},
+				['[TacticalShotgun]'] = {
+					['Value'] = 0,
+				},
+			},
+		},
+	},
+
+	['Name ESP'] = {
+		['Enabled'] = true,
+
+		['Settings'] = {
+			['Color Settings'] = {
+				['Color'] = Color3.fromRGB(180, 180, 180),
+				['Locked Color'] = Color3.fromRGB(130, 185, 255),
+			},
+			['Text Size'] = 13,
+			['Font'] = 'GothamBold', -- https://create.roblox.com/docs/reference/engine/enums/Font
+		},
+	},
+	['Movement'] = {
+		['Anti Fall'] = true,
+		['No Jump Cooldown'] = true,
+
+		['WalkSpeed'] = {
+			['Enabled'] = true,
+
+			['Normal'] = {
+				['Multiplier'] = 6.2,
+			},
+			['Shooting'] = {
+				['Multiplier'] = 6.2,
+			},
+			['Reload'] = {
+				['Multiplier'] = 6.2,
+			},
+			['Low Health'] = {
+				['Multiplier'] = 6.2,
+			},
+		},
+
+		['JumpPower'] = {
+			['Enabled'] = true,
+			['Spiderman Mode'] = true,
+
+			['Normal'] = {
+				['Multiplier'] = 4,
+			},
+			['Shooting'] = {
+				['Multiplier'] = 4,
+			},
+			['Reload'] = {
+				['Multiplier'] = 4,
+			},
+			['Low Health'] = {
+				['Multiplier'] = 4,
+			},
+		},
+	},
+
+	['Utilities'] = {
+		['Inventory Sorter'] = {
+			['Enabled'] = true,
+			['Order'] = {
+				'[Double-Barrel SG]',
+				'[Revolver]',
+				'[TacticalShotgun]',
+				'[Knife]',
+			},
+		},
+
+		['Skin Changer'] = {
+			['Enabled'] = true,
+
+			['Skins'] = {
+				['[Double-Barrel SG]'] = 'Galaxy',
+				['[Revolver]'] = 'Galaxy',
+				['[TacticalShotgun]'] = 'Galaxy',
+				['[Knife]'] = 'Love Kukri',
+			},
+		},
+	},
+
+	['Purchase Armor'] = {
+		['Enabled'] = true,
+	},
+
+	['Anti Stomp'] = {
+		['Enabled'] = false,
+	},
+}
+
+
+--[[if LRM_INIT_SCRIPT then
+	LRM_INIT_SCRIPT(function()
+		local cfg = getgenv()["Allusive"] and getgenv()["Allusive"]
+		script_key = cfg and cfg.Core and cfg.Core.Key or ""
+	end)
+end]]
+if not LPH_OBFUSCATED then
+    LPH_JIT_MAX = function(...) return ... end
+    LPH_NO_VIRTUALIZE = function(...) return ... end
+    LPH_ENCSTR = function(...) return ... end
+    LPH_ENCFUNC = function(...) return ... end
+    LPH_CRASH = function() end
+end
+-- Services
+getgenv()["Players"] = game:GetService("Players");
+getgenv()["Workspace"] = game:GetService("Workspace");
+getgenv()["RunService"] = game:GetService("RunService");
+getgenv()["ReplicatedStorage"] = game:GetService("ReplicatedStorage");
+getgenv()["UserInputService"] = game:GetService("UserInputService");
+getgenv()["TweenService"] = game:GetService("TweenService");
+getgenv()["HttpService"] = game:GetService("HttpService");
+getgenv()["CoreGui"] = game:GetService("CoreGui");
+getgenv()["LocalPlayer"] = Players.LocalPlayer;
+getgenv()["Mouse"] = LocalPlayer:GetMouse();
+getgenv()["Camera"] = Workspace.CurrentCamera;
+getgenv()["RunService"] = game:GetService("RunService");
+getgenv()["GuiService"] = game:GetService("GuiService");
+getgenv()["Inset"] = GuiService:GetGuiInset().Y;
+
+-- Variables
+local Config = getgenv()["Allusive"];
+
+local MathRandom, MathFloor, MathCeil, MathClamp, MathAbs, MathSqrt, MathAtan2 = math.random, math.floor, math.ceil, math.clamp, math.abs, math.sqrt, math.atan2;
+local MathHuge, MathMin, MathMax, MathRad, MathDeg, MathPi, MathNoise = math.huge, math.min, math.max, math.rad, math.deg, math.pi, math.noise;
+
+local Vector2New, Vector3New, Vector3Zero = Vector2.new, Vector3.new, Vector3.zero;
+local CFrameNew, CFrameAngles, CFrameIdentity = CFrame.new, CFrame.Angles, CFrame.identity;
+local Color3RGB, Color3HSV, UDim2New = Color3.fromRGB, Color3.fromHSV, UDim2.new;
+local RayNew, RaycastParamsNew = Ray.new, RaycastParams.new;
+
+local Spawn, Defer, Delay, Wait, Cancel = task.spawn, task.defer, task.delay, task.wait, task.cancel;
+
+local Tick, Clock, Typeof, Unpack, Select = tick, os.clock, typeof, unpack, select;
+local Tonumber, Tostring, Pcall, Xpcall = tonumber, tostring, pcall, xpcall;
+
+local function ErrHandler(err)
+	warn('[Allusive Error]:', tostring(err));
+	return err;
+end;
+
+local State = {
+	Connections = {},
+	Targets = {
+		Silent = nil,
+		Assist = nil,
+		Triggerbot = nil,
+	},
+	Toggles = {
+		SilentAim = true,
+		AimAssist = true,
+		Triggerbot = true,
+	},
+	Cache = {
+		Previous = {},
+		Tracked = {},
+	},
+	Ticks = {
+		Triggerbot = 0,
+		Rage = {},
+	},
+	RageStatus = 'Idle',
+	TriggerState = false,
+	CanTriggerbotShoot = true,
+	LastTriggerShot = 0,
+	WalkSpeedActive = false,
+	JumpPowerActive = false,
+	IsShooting = false,
+	SorterActive = false,
+
+	MultiHitPart = {
+		Index = 1,
+		ShotCount = 0,
+		LastPart = nil,
+	},
+};
+
+local CachedIgnored = Workspace:FindFirstChild('Ignored');
+local CachedBush = Workspace:FindFirstChild('Bush');
+local CachedSkinAssets = ReplicatedStorage:FindFirstChild('SkinAssets');
+local CachedAnimations = ReplicatedStorage:FindFirstChild('Animations') or ReplicatedStorage:FindFirstChild('ClientAnimations');
+
+local ShootFilter = {};
+local RageFilter = {};
+
+local EnumExclude = Enum.RaycastFilterType.Exclude;
+local EnumAir = Enum.Material.Air;
+local EnumJumping = Enum.HumanoidStateType.Jumping;
+local EnumFreefall = Enum.HumanoidStateType.Freefall;
+local EnumLanded = Enum.HumanoidStateType.Landed;
+local EnumRunning = Enum.HumanoidStateType.Running;
+local EnumDead = Enum.HumanoidStateType.Dead;
+local EnumFallingDown = Enum.HumanoidStateType.FallingDown;
+local EnumRagdoll = Enum.HumanoidStateType.Ragdoll;
+local EnumGettingUp = Enum.HumanoidStateType.GettingUp;
+
+local function BuildFilter(Tbl, Character)
+	local Idx = 0;
+	if Character then Idx = Idx + 1; Tbl[Idx] = Character end;
+	if CachedIgnored then Idx = Idx + 1; Tbl[Idx] = CachedIgnored end;
+	if CachedBush then Idx = Idx + 1; Tbl[Idx] = CachedBush end;
+	for i = Idx + 1, #Tbl do Tbl[i] = nil end;
+	return Tbl;
+end;
+
+local function ResolveBodyEffect(Player, Effect)
+	local Object = Player and Player.Character;
+	local Body = Object and Object:FindFirstChild('BodyEffects');
+	return Body and Body:FindFirstChild(Effect) and Body[Effect].Value or false;
+end;
+
+local function ResolveConstraint(Player, Tag)
+	local Object = Player and Player.Character;
+	return Object and Object:FindFirstChild(Tag) ~= nil or false;
+end;
+
+local function ResolveRemote(Name)
+	return function() return ReplicatedStorage:FindFirstChild(Name) end;
+end;
+
+local Stub = function() return false end;
+
+local Games = {
+	[1008451066] = {
+		Name = 'Da Hood',
+		Updater = 'UpdateMousePosI2',
+		Knocked = function(P) return ResolveBodyEffect(P, 'K.O') end,
+		Grabbed = function(P) return ResolveConstraint(P, 'GRABBING_CONSTRAINT') end,
+		Remote = ResolveRemote('MainEvent'),
+	},
+};
+
+local Fallback = { Name = 'Universal', Updater = 'UpdateMousePos', Knocked = Stub, Grabbed = Stub, Remote = ResolveRemote('MainEvent') };
+local CurrentGame = Games[game.GameId] or Fallback;
+
+local PositionCache = {};
+local PositionHistorySize = 8;
+local PositionSampleInterval = 0.03;
+local LastPositionCacheUpdate = 0;
+
+local PositionEntryPool = {};
+local PositionPoolSize = 0;
+
+local function AcquireEntry(Pos, Time)
+	local E;
+	if PositionPoolSize > 0 then
+		E = PositionEntryPool[PositionPoolSize];
+		PositionEntryPool[PositionPoolSize] = nil;
+		PositionPoolSize = PositionPoolSize - 1;
+		E.Position = Pos;
+		E.Time = Time;
+	else
+		E = { Position = Pos, Time = Time };
+	end;
+	return E;
+end;
+
+local function ReleaseEntry(E)
+	PositionPoolSize = PositionPoolSize + 1;
+	PositionEntryPool[PositionPoolSize] = E;
+end;
+
+local UpdatePositionCache = LPH_JIT_MAX(function()
+	local Now = Clock();
+	if (Now - LastPositionCacheUpdate) < PositionSampleInterval then return end;
+	LastPositionCacheUpdate = Now;
+	for _, Player in next, Players:GetPlayers() do
+		if Player ~= LocalPlayer and Player.Character then
+			local RootPart = Player.Character:FindFirstChild('HumanoidRootPart');
+			if RootPart then
+				if not PositionCache[Player] then
+					PositionCache[Player] = {};
+				end;
+				local Cache = PositionCache[Player];
+				local LastEntry = Cache[1];
+				if not LastEntry or (Now - LastEntry.Time) >= PositionSampleInterval then
+					table.insert(Cache, 1, AcquireEntry(RootPart.Position, Now));
+					if #Cache > PositionHistorySize then
+						ReleaseEntry(Cache[#Cache]);
+						Cache[#Cache] = nil;
+					end;
+				end;
+			end;
+		end;
+	end;
+	for Player in next, PositionCache do
+		if not Player.Parent then
+			PositionCache[Player] = nil;
+		end;
+	end;
+end);
+
+local GetDeltaVelocity = LPH_JIT_MAX(function(Player)
+	local Cache = PositionCache[Player];
+	if not Cache or #Cache < 2 then return Vector3Zero end;
+	local Newest = Cache[1];
+	local SampleIdx = MathMin(#Cache, 4);
+	local Oldest = Cache[SampleIdx];
+	local DeltaTime = Newest.Time - Oldest.Time;
+	if DeltaTime <= 0.001 then return Vector3Zero end;
+	return (Newest.Position - Oldest.Position) / DeltaTime;
+end);
+
+local ApplyPrediction = LPH_JIT_MAX(function(Position, Target, FeatureCfg)
+	local Character = Target.Character;
+	if not Character then return Position end;
+	local RootPart = Character:FindFirstChild('HumanoidRootPart');
+	if not RootPart then return Position end;
+
+	local PredCfg = FeatureCfg['Prediction'];
+	if not PredCfg or PredCfg[1] ~= true then return Position end;
+
+	local Vel = GetDeltaVelocity(Target);
+	local PredValue = PredCfg[2] or 0.13;
+	local OverrideY = FeatureCfg['Override Y Axis'] or 'None';
+	local PredY = PredValue;
+
+	if OverrideY == 'Full' then
+		PredY = 0;
+	elseif OverrideY == 'Half' then
+		PredY = PredValue * 0.5;
+	end;
+
+	local YPred = FeatureCfg['Custom Y Prediction'];
+	if YPred and YPred['Enabled'] then
+		local Humanoid = Character:FindFirstChildOfClass('Humanoid');
+		if Humanoid then
+			local InAir = Humanoid.FloorMaterial == EnumAir;
+			if InAir then
+				local HState = Humanoid:GetState();
+				if HState == EnumJumping then
+					PredY = YPred['Jumping']['Value'] or 0.2;
+				else
+					local FallVal = YPred['Falling']['Value'] or 0.2;
+					PredY = FallVal / 4.8;
+				end;
+			end;
+		end;
+	end;
+
+	return Position + Vel * Vector3New(PredValue, PredY, PredValue);
+end);
+
+local VisibilityParams = RaycastParamsNew();
+VisibilityParams.FilterType = EnumExclude;
+VisibilityParams.IgnoreWater = true;
+
+local function IsTyping()
+	return UserInputService:GetFocusedTextBox() ~= nil;
+end;
+
+local function IsCrew(Player)
+	local PlayerCrew = Player and Player:GetAttribute('CrewID');
+	local ClientCrew = LocalPlayer:GetAttribute('CrewID');
+	return PlayerCrew and ClientCrew and PlayerCrew == ClientCrew or false;
+end;
+
+local VisibilityFilter = {};
+local VisibilityCache = {};
+local VisibilityCacheFrame = 0;
+
+local IsVisible = LPH_JIT_MAX(function(TargetPos, Player)
+	local FrameNow = MathFloor(Clock() * 60 + 0.5);
+	if FrameNow ~= VisibilityCacheFrame then
+		VisibilityCacheFrame = FrameNow;
+		table.clear(VisibilityCache);
+	end;
+	if Player and VisibilityCache[Player] ~= nil then
+		return VisibilityCache[Player];
+	end;
+	local Origin = Camera.CFrame.Position;
+	local Direction = TargetPos - Origin;
+	local Character = LocalPlayer.Character;
+	local Idx = 0;
+	if Character then Idx = Idx + 1; VisibilityFilter[Idx] = Character end;
+	if CachedIgnored then Idx = Idx + 1; VisibilityFilter[Idx] = CachedIgnored end;
+	if CachedBush then Idx = Idx + 1; VisibilityFilter[Idx] = CachedBush end;
+	for i = Idx + 1, #VisibilityFilter do VisibilityFilter[i] = nil end;
+	VisibilityParams.FilterDescendantsInstances = VisibilityFilter;
+	local Result = Workspace:Raycast(Origin, Direction, VisibilityParams);
+	local Visible = true;
+	if Result then
+		local Hit = Result.Instance;
+		if Hit then
+			local Model = Hit:FindFirstAncestorOfClass('Model');
+			if not Model or not Model:FindFirstChildOfClass('Humanoid') then Visible = false end;
+		else
+			Visible = false;
+		end;
+	end;
+	if Player then VisibilityCache[Player] = Visible end;
+	return Visible;
+end);
+
+local PassesConditions = LPH_JIT_MAX(function(Player)
+	local Conds = Config['Conditions'];
+	local Character = Player and Player.Character;
+	if not Character then return false end;
+	local Humanoid = Character:FindFirstChildOfClass('Humanoid');
+
+	if Conds['Player Alive'] then
+		if not Humanoid or Humanoid.Health <= 0 or Humanoid:GetState() == EnumDead then
+			return false;
+		end;
+	end;
+
+	if Conds['Player Force Field'] then
+		if Character:FindFirstChildOfClass('ForceField') or Character:FindFirstChild('FORCEFIELD') then
+			return false;
+		end;
+	end;
+
+	if Conds['Player Knocked'] then
+		if CurrentGame.Knocked(Player) then
+			return false;
+		end;
+	end;
+
+	if Conds['Player Grabbed'] then
+		if CurrentGame.Grabbed(Player) then
+			return false;
+		end;
+	end;
+
+	if Conds['Player In Vehicle'] then
+		if Humanoid and Humanoid.Sit then
+			return false;
+		end;
+	end;
+
+	if Conds['Player Blocking'] then
+		local Block = Character:FindFirstChild('Block');
+		if Block and Block:IsA('BoolValue') and Block.Value == true then
+			return false;
+		end;
+	end;
+
+	if Conds['Player Moving'] then
+		local HumanoidRootPart = Character:FindFirstChild('HumanoidRootPart');
+		if HumanoidRootPart then
+			local Vel = HumanoidRootPart.AssemblyLinearVelocity;
+			local Speed = Vector3New(Vel.X, 0, Vel.Z).Magnitude;
+			if Speed < 1 then
+				return false;
+			end;
+		end;
+	end;
+
+	if Conds['Player Visible'] then
+		local HumanoidRootPart = Character:FindFirstChild('HumanoidRootPart');
+		if HumanoidRootPart and not IsVisible(HumanoidRootPart.Position, Player) then
+			return false;
+		end;
+	end;
+
+	if Conds['Tool Equipped'] then
+		local MyChar = LocalPlayer.Character;
+		if MyChar and not MyChar:FindFirstChildOfClass('Tool') then
+			return false;
+		end;
+	end;
+
+	if Conds['Self Knocked'] then
+		if CurrentGame.Knocked(LocalPlayer) then
+			return false;
+		end;
+	end;
+
+	if Conds['Chat Typing'] then
+		if IsTyping() then
+			return false;
+		end;
+	end;
+
+	if Conds['Crew Check'] then
+		if IsCrew(Player) then
+			return false;
+		end;
+	end;
+
+	return true;
+end);
+
+local function CleanScripts(Tool)
+	if not Tool then return end;
+	for _, Descendant in next, Tool:GetDescendants() do
+		if Descendant:IsA('LocalScript') then
+			Descendant:Destroy();
+		end;
+	end;
+	Tool.DescendantAdded:Connect(function(Desc)
+		if Desc:IsA('LocalScript') then
+			Desc:Destroy();
+		end;
+	end);
+end;
+
+if CurrentGame.Name == 'Da Hood' then
+	local function WatchCharacter(Character)
+		if not Character then return end;
+		for _, Child in next, Character:GetChildren() do
+			if Child:IsA('Tool') then CleanScripts(Child) end;
+		end;
+		Character.ChildAdded:Connect(function(Child)
+			if Child:IsA('Tool') then
+				CleanScripts(Child);
+				Defer(CleanScripts, Child);
+			end;
+		end);
+	end;
+	if LocalPlayer.Character then WatchCharacter(LocalPlayer.Character) end;
+	LocalPlayer.CharacterAdded:Connect(WatchCharacter);
+end;
+
+local MuzzleOffsets = { -- Some muzzle offsets might be wrong lol but it doesnt matter cause this is a fallback if u dont find the muzzle thing
+	['[Deagle]'] = CFrameNew(0, 0.382, -1.568),
+	['[Revolver]'] = CFrameNew(-0.1, 0.4, 1.8),
+	['[Double-Barrel SG]'] = CFrameNew(0, 0.25, -2.5),
+	['[TacticalShotgun]'] = CFrameNew(0, 0.7, -3.8),
+	['[Silencer]'] = CFrameNew(0, 0.4, 1.3),
+	['[SMG]'] = CFrameNew(2.5, 0.35, 0),
+	['[Rifle]'] = CFrameNew(0, 0.2, -1.7),
+	['[Shotgun]'] = CFrameNew(0, 0.4, 2.4),
+	['[Flintlock]'] = CFrameNew(0, 0.25, 2.5),
+	['[AK47]'] = CFrameNew(0.6, 0.25, 0),
+	['[Glock]'] = CFrameNew(0, 0.4, 1.5),
+	['[AR]'] = CFrameNew(0, 0.3, -2.0),
+	['[AUG]'] = CFrameNew(0, 0.3, -2.5),
+	['[Drum-Shotgun]'] = CFrameNew(0, 0.4, -2.0),
+	['[DrumGun]'] = CFrameNew(0, 0.3, -1.5),
+	['[LMG]'] = CFrameNew(0, 0.3, -2.5),
+	['[P90]'] = CFrameNew(0, 0.3, -1.8),
+	['[SilencerAR]'] = CFrameNew(0, 0.3, -2.0),
+};
+
+local ShotgunWeapons = {
+	['[Double-Barrel SG]'] = true,
+	['[TacticalShotgun]'] = true,
+	['[Shotgun]'] = true,
+	['[Drum-Shotgun]'] = true,
+};
+
+local AutoWeapons = {
+	['[SMG]'] = true,
+	['[Rifle]'] = true,
+	['[Shotgun]'] = true, -- nah this tuff asf trust
+	['[AK47]'] = true,
+	['[AR]'] = true,
+	['[Drum-Shotgun]'] = true,
+	['[DrumGun]'] = true,
+	['[LMG]'] = true,
+	['[P90]'] = true,
+	['[SilencerAR]'] = true,
+};
+
+local BurstWeapons = {
+	['[AUG]'] = true,
+};
+
+local ShootRayParams = RaycastParamsNew();
+ShootRayParams.FilterType = EnumExclude;
+ShootRayParams.IgnoreWater = true;
+
+local CanShootCheck = LPH_NO_VIRTUALIZE(function(Character)
+	if not Character then return false end;
+	local Humanoid = Character:FindFirstChild('Humanoid');
+	if not Humanoid or Humanoid.Health <= 0 or Humanoid:GetState() == EnumDead then return false end;
+	local BodyEffects = Character:FindFirstChild('BodyEffects');
+	if not BodyEffects then return false end;
+	local Tool = Character:FindFirstChildOfClass('Tool');
+	if not Tool or not Tool:FindFirstChild('Handle') or not Tool:FindFirstChild('Ammo') then return false end;
+	if Tool.Ammo.Value <= 0 then return false end;
+	if Character:FindFirstChild('FULLY_LOADED_CHAR') == nil then return false end;
+	if Character:FindFirstChild('FORCEFIELD') then return false end;
+	if Character:FindFirstChild('GRABBING_CONSTRAINT') then return false end;
+	if Character:FindFirstChild('Christmas_Sock') then return false end;
+	if BodyEffects:FindFirstChild('Cuff') and BodyEffects.Cuff.Value then return false end;
+	if BodyEffects:FindFirstChild('Attacking') and BodyEffects.Attacking.Value then return false end;
+	if BodyEffects:FindFirstChild('K.O') and BodyEffects['K.O'].Value then return false end;
+	if BodyEffects:FindFirstChild('Grabbed') and BodyEffects.Grabbed.Value then return false end;
+	if BodyEffects:FindFirstChild('Reload') and BodyEffects.Reload.Value then return false end;
+	if BodyEffects:FindFirstChild('Dead') and BodyEffects.Dead.Value then return false end;
+	if BodyEffects:FindFirstChild('Block') then return false end;
+	if Tool:GetAttribute('Cooldown') then return false end;
+	local LastShot = Character:GetAttribute('LastGunShot');
+	local IsShotgun = Tool.Name == '[Shotgun]' or Tool.Name == '[Double-Barrel SG]' or Tool.Name == 'TacticalShotgun' or Tool.Name == 'Drum-Shotgun';
+	if LastShot ~= Tool.Name and Character:GetAttribute('ShotgunDebounce') then return false end;
+	return true;
+end);
+
+local CanShoot = LPH_NO_VIRTUALIZE(function(Character)
+	if not CanShootCheck(Character) then return false end;
+	local Tool = Character:FindFirstChildOfClass('Tool');
+	local IsShotgun = Tool.Name == '[Shotgun]' or Tool.Name == '[Double-Barrel SG]' or Tool.Name == 'TacticalShotgun' or Tool.Name == 'Drum-Shotgun';
+	if IsShotgun and not Character:GetAttribute('ShotgunDebounce') then
+		Character:SetAttribute('ShotgunDebounce', true);
+		task.delay(0.65, function()
+			Character:SetAttribute('ShotgunDebounce', nil);
+		end);
+	end;
+	Character:SetAttribute('LastGunShot', Tool.Name);
+	return true;
+end);
+
+local GetMuzzlePosition = LPH_NO_VIRTUALIZE(function(Tool)
+	local Handle = Tool:FindFirstChild('Handle');
+	if not Handle then return nil end;
+	local Offset = MuzzleOffsets[Tool.Name] or CFrameNew(0, 0.4, 1.8);
+	local FallbackPos = (Handle.CFrame * Offset).Position;
+	local Default = Tool:FindFirstChild('Default');
+	if Default then
+		local Mesh = Default:FindFirstChild('Mesh');
+		if Mesh then
+			local Muzzle = Mesh:FindFirstChild('Muzzle');
+			if Muzzle then return Muzzle.WorldPosition end;
+		end;
+	end;
+
+	local HandleMuzzle = Handle:FindFirstChild('Muzzle');
+	if HandleMuzzle then return HandleMuzzle.WorldPosition end;
+
+	return FallbackPos;
+end);
+
+local GetClosestPartToCursor = LPH_NO_VIRTUALIZE(function(Character)
+	local CurrentCamera = Workspace.CurrentCamera;
+	local MousePosition = UserInputService:GetMouseLocation();
+	local Closest = nil;
+	local BestDist = MathHuge;
+	for _, Part in next, Character:GetChildren() do
+		if not Part:IsA('BasePart') then continue end;
+		local ScreenPos, OnScreen = CurrentCamera:WorldToViewportPoint(Part.Position);
+		if not OnScreen then continue end;
+		local Dist = (MousePosition - Vector2New(ScreenPos.X, ScreenPos.Y)).Magnitude;
+		if Dist < BestDist then
+			BestDist = Dist;
+			Closest = Part;
+		end;
+	end;
+	return Closest;
+end);
+
+local GetNearestPointOnPart = LPH_NO_VIRTUALIZE(function(Part, Plane, Offset)
+	local MousePos = UserInputService:GetMouseLocation();
+	local CurrentCamera = Workspace.CurrentCamera;
+	local Ray = CurrentCamera:ViewportPointToRay(MousePos.X, MousePos.Y);
+	local Intersection = Ray.Origin + (Ray.Direction * Ray.Direction:Dot(Part.Position - Ray.Origin));
+	local Transform = Part.CFrame:PointToObjectSpace(Intersection);
+	local Reduction = Offset or 0;
+	local ReducedSize = Part.Size - (Part.Size * Reduction);
+	if Plane == 'Vertical' then
+		ReducedSize = ReducedSize * Vector3New(1, 1, 0);
+	end;
+	local Half = ReducedSize / 2;
+	return Part.CFrame * Vector3New(
+		MathClamp(Transform.X, -Half.X, Half.X),
+		MathClamp(Transform.Y, -Half.Y, Half.Y),
+		MathClamp(Transform.Z, -Half.Z, Half.Z)
+	);
+end);
+
+local MultiPresets = {
+	['Upper Body'] = { 'Head', 'UpperTorso', 'LowerTorso', 'LeftUpperArm', 'RightUpperArm', 'LeftUpperLeg', 'RightUpperLeg' },
+	['Full Body'] = { 'Head', 'UpperTorso', 'LowerTorso', 'HumanoidRootPart', 'LeftUpperArm', 'LeftLowerArm', 'LeftHand', 'RightUpperArm', 'RightLowerArm', 'RightHand', 'LeftUpperLeg', 'LeftLowerLeg', 'LeftFoot', 'RightUpperLeg', 'RightLowerLeg', 'RightFoot' },
+	['Limbs Only'] = { 'LeftUpperArm', 'LeftLowerArm', 'LeftHand', 'RightUpperArm', 'RightLowerArm', 'RightHand', 'LeftUpperLeg', 'LeftLowerLeg', 'LeftFoot', 'RightUpperLeg', 'RightLowerLeg', 'RightFoot' },
+};
+
+local ResolveMultiPart = LPH_NO_VIRTUALIZE(function(TargetChar, MultiCfg)
+	local Preset = MultiCfg['Preset'];
+	local Parts = (Preset ~= 'Custom' and MultiPresets[Preset]) or MultiCfg['Parts'];
+	if not Parts or #Parts == 0 then return nil, nil end;
+	local Mode = MultiCfg['Mode'] or 'Cycle';
+	local MS = State.MultiHitPart;
+
+	if Mode == 'Dynamic' then
+		local DynCfg = MultiCfg['Dynamic'] or {};
+		local HeadPriority = DynCfg['Head Priority'];
+		local PreferVisible = DynCfg['Prefer Visible'];
+		local PreferClosest = DynCfg['Prefer Closest'];
+
+		if HeadPriority then
+			local Head = TargetChar:FindFirstChild('Head');
+			if Head then
+				if not PreferVisible then return Head.Position, Head end;
+				local Origin = Workspace.CurrentCamera.CFrame.Position;
+				local Dir = (Head.Position - Origin);
+				local Params = RaycastParams.new();
+				Params.FilterType = Enum.RaycastFilterType.Exclude;
+				Params.FilterDescendantsInstances = {TargetChar, Workspace.CurrentCamera, CachedIgnored, CachedBush};
+				local Result = Workspace:Raycast(Origin, Dir, Params);
+				if not Result then return Head.Position, Head end;
+			end;
+		end;
+
+		local BestPart, BestScore = nil, MathHuge;
+		local MousePos = UserInputService:GetMouseLocation();
+		local Cam = Workspace.CurrentCamera;
+		for _, PartName in next, Parts do
+			local Part = TargetChar:FindFirstChild(PartName);
+			if not Part then continue end;
+			if PreferVisible then
+				local Origin = Cam.CFrame.Position;
+				local Dir = (Part.Position - Origin);
+				local Params = RaycastParams.new();
+				Params.FilterType = Enum.RaycastFilterType.Exclude;
+				Params.FilterDescendantsInstances = {TargetChar, Workspace.CurrentCamera, CachedIgnored, CachedBush};
+				local Result = Workspace:Raycast(Origin, Dir, Params);
+				if Result then continue end;
+			end;
+			if PreferClosest then
+				local ScreenPos, OnScreen = Cam:WorldToViewportPoint(Part.Position);
+				if not OnScreen then continue end;
+				local Dist = (MousePos - Vector2New(ScreenPos.X, ScreenPos.Y)).Magnitude;
+				if Dist < BestScore then BestScore = Dist; BestPart = Part end;
+			else
+				BestPart = Part;
+				break;
+			end;
+		end;
+		if BestPart then
+			MS.LastPart = BestPart.Name;
+			return BestPart.Position, BestPart;
+		end;
+
+	elseif Mode == 'Cycle' then
+		local CycleSpeed = MultiCfg['Cycle Speed'] or 1;
+		local NoRepeat = MultiCfg['No Repeat'];
+		MS.ShotCount = MS.ShotCount + 1;
+		if MS.ShotCount >= CycleSpeed then
+			MS.ShotCount = 0;
+			MS.Index = MS.Index + 1;
+			if MS.Index > #Parts then MS.Index = 1 end;
+		end;
+		local PartName = Parts[MS.Index];
+		if NoRepeat and PartName == MS.LastPart and #Parts > 1 then
+			MS.Index = MS.Index + 1;
+			if MS.Index > #Parts then MS.Index = 1 end;
+			PartName = Parts[MS.Index];
+		end;
+		if not PartName then return nil, nil end;
+		local Part = TargetChar:FindFirstChild(PartName);
+		if Part then
+			MS.LastPart = PartName;
+			return Part.Position, Part;
+		end;
+	end;
+
+	return nil, nil;
+end);
+
+local PerWeaponCategories = { 'Shotguns', 'Pistols', 'Others' };
+
+local ResolvePerWeaponCfg = LPH_NO_VIRTUALIZE(function(HitPartCfg)
+	local PerWeapon = HitPartCfg and HitPartCfg['Per Weapon'];
+	if not PerWeapon or not PerWeapon['Enabled'] then return nil end;
+
+	local MyChar = LocalPlayer.Character;
+	if not MyChar then return nil end;
+	local Tool = MyChar:FindFirstChildOfClass('Tool');
+	if not Tool then return nil end;
+	local ToolName = Tool.Name;
+
+	for _, Category in next, PerWeaponCategories do
+		local CatCfg = PerWeapon[Category];
+		if not CatCfg then continue end;
+		local Weapons = CatCfg['Weapons'];
+		if not Weapons then continue end;
+		for _, WeaponName in next, Weapons do
+			if WeaponName == ToolName then
+				return CatCfg;
+			end;
+		end;
+	end;
+
+	return nil;
+end);
+
+local ResolveHitFromCfg = LPH_NO_VIRTUALIZE(function(TargetChar, HitPartMode, NpCfg, MultiCfg, NamedPart)
+	if HitPartMode == 'Multi' and MultiCfg and MultiCfg['Enabled'] then
+		local Pos, Part = ResolveMultiPart(TargetChar, MultiCfg);
+		if Pos then return Pos, Part end;
+	end;
+
+	if HitPartMode == 'Named Part' then
+		local PartName = NamedPart or 'HumanoidRootPart';
+		local Part = TargetChar:FindFirstChild(PartName);
+		if Part then return Part.Position, Part end;
+
+	elseif HitPartMode == 'Nearest Part' then
+		local Part = GetClosestPartToCursor(TargetChar);
+		if Part then return Part.Position, Part end;
+
+	elseif HitPartMode == 'Nearest Point' then
+		local Part = GetClosestPartToCursor(TargetChar);
+		if Part then
+			local Plane = NpCfg and NpCfg['Plane'] or 'Vertical';
+			local OffsetKey = Plane == 'Vertical' and 'Vertical' or 'Full';
+			local Offset = NpCfg and NpCfg['Offset'] and NpCfg['Offset'][OffsetKey] or 0.7;
+			local Precision = NpCfg and NpCfg['Precision'] or 1;
+			local Point = GetNearestPointOnPart(Part, Plane, Offset);
+			if Precision < 1 then
+				Point = Part.Position:Lerp(Point, Precision);
+			end;
+			return Point, Part;
+		end;
+
+	else
+		local Part = TargetChar:FindFirstChild(HitPartMode);
+		if Part then return Part.Position, Part end;
+	end;
+
+	return nil, nil;
+end);
+
+local ResolveHitPosition = LPH_NO_VIRTUALIZE(function(TargetChar, FeatureCfg)
+	local HitPartCfg = FeatureCfg['Hit Part'];
+
+	-- support both old string format and new table format
+	local HitPartMode, OverrideCfg, NpCfg, MultiCfg;
+	if type(HitPartCfg) == 'table' then
+		HitPartMode = HitPartCfg['Selection'] or 'Nearest Point';
+		OverrideCfg = HitPartCfg['Override'];
+		NpCfg = HitPartCfg['Nearest Point'];
+		MultiCfg = HitPartCfg['Multi'];
+	else
+		HitPartMode = HitPartCfg or 'Nearest Point';
+		OverrideCfg = FeatureCfg['Hit Part Override'];
+		NpCfg = FeatureCfg['Nearest Point'];
+	end;
+
+	if OverrideCfg and OverrideCfg['Enabled'] then
+		local PartName = OverrideCfg['Part'] or 'Head';
+		local Part = TargetChar:FindFirstChild(PartName);
+		if Part then return Part.Position, Part end;
+	end;
+
+	local PwCfg = ResolvePerWeaponCfg(HitPartCfg);
+	if PwCfg then
+		local PwMode = PwCfg['Selection'] or 'Nearest Point';
+		local PwNp = PwCfg['Nearest Point'];
+		local PwMulti = PwCfg['Multi'];
+		local PwNamed = PwCfg['Named Part'];
+		local Pos, Part = ResolveHitFromCfg(TargetChar, PwMode, PwNp, PwMulti, PwNamed);
+		if Pos then return Pos, Part end;
+	end;
+
+	local NamedPart = (type(HitPartCfg) == 'table' and HitPartCfg['Named Part']) or (OverrideCfg and OverrideCfg['Part']);
+	local Pos, Part = ResolveHitFromCfg(TargetChar, HitPartMode, NpCfg, MultiCfg, NamedPart);
+	if Pos then return Pos, Part end;
+
+	local Fallback = TargetChar:FindFirstChild('HumanoidRootPart');
+	if Fallback then return Fallback.Position, Fallback end;
+	return nil, nil;
+end);
+
+local GetAimPosition = LPH_NO_VIRTUALIZE(function(MuzzlePos, Range)
+	local SilentCfg = Config['Silent Aim'];
+	if SilentCfg['Enabled'] and State.Targets.Silent and PassesConditions(State.Targets.Silent) then
+		local Target = State.Targets.Silent;
+		local TargetChar = Target.Character;
+		if TargetChar then
+			local HumanoidRootPart = TargetChar:FindFirstChild('HumanoidRootPart');
+			if HumanoidRootPart then
+				local CurrentCamera = Workspace.CurrentCamera;
+				local MaxRange = SilentCfg['Max Range'];
+				if MaxRange and MaxRange < MathHuge then
+					local WorldDist = (CurrentCamera.CFrame.Position - HumanoidRootPart.Position).Magnitude;
+					if WorldDist > MaxRange then return Mouse.Hit.Position end;
+				end;
+				local ScreenPos, OnScreen = CurrentCamera:WorldToViewportPoint(HumanoidRootPart.Position);
+				if OnScreen and ScreenPos.Z > 1 then
+					local MousePosition = UserInputService:GetMouseLocation();
+					local ViewportY = CurrentCamera.ViewportSize.Y;
+					local CamFOV = CurrentCamera.FieldOfView;
+					local ScaleFactor = (HumanoidRootPart.Size.Y * ViewportY) / (ScreenPos.Z * 2) * 80 / CamFOV;
+					local W = (SilentCfg['FOV']['Size']['Width'] or 150) * ScaleFactor;
+					local H = (SilentCfg['FOV']['Size']['Height'] or 150) * ScaleFactor;
+					local Delta = Vector2New(ScreenPos.X, ScreenPos.Y) - MousePosition;
+					local InBox = (not SilentCfg['FOV']['Enabled']) or (MathAbs(Delta.X) <= W / 2 and MathAbs(Delta.Y) <= H / 2);
+
+					if InBox then
+						local HitChanceCfg = SilentCfg['Hit Chance'];
+						if HitChanceCfg and HitChanceCfg[1] == true then
+							local Roll = MathRandom(1, 100);
+							if Roll > (HitChanceCfg[2] or 100) then
+								return Mouse.Hit.Position;
+							end;
+						end;
+
+						local TargetPos, _ = ResolveHitPosition(TargetChar, SilentCfg);
+						if not TargetPos then TargetPos = HumanoidRootPart.Position end;
+
+						TargetPos = ApplyPrediction(TargetPos, Target, SilentCfg);
+						return TargetPos;
+					end;
+				end;
+			end;
+		end;
+	end;
+	return Mouse.Hit.Position;
+end);
+
+local DefaultBeamColor = Color3.new(1, 0.545098, 0.14902);
+
+local SoundsPlaying = {};
+local IsAimed = false;
+
+local ScopedWeapons = {
+	'[Shotgun]', '[Drum-Shotgun]', '[Rifle]', '[TacticalShotgun]',
+	'[AR]', '[AUG]', '[AK47]', '[LMG]', '[SilencerAR]',
+};
+
+local CustomBulletHoleRotations = {
+	['SoulII'] = Vector3New(-90, 0, 0),
+	['Sushi'] = 'Position',
+	['XMAS'] = Vector3New(180, 0, 0),
+	['Gift'] = Vector3New(180, 0, 0),
+	['Jellyfish'] = Vector3New(180, 0, 0),
+	['Halloween23'] = Vector3New(180, 0, 0),
+	['Wild West'] = Vector3New(180, 0, 0),
+	['Cat'] = Vector3New(180, 0, 0),
+	['Ninja'] = Vector3New(180, 0, 0),
+	['Void'] = Vector3New(180, 0, 0),
+	['Ice'] = Vector3New(180, 0, 0),
+	['Beary'] = { CFrameNew(0, 0, -0.45), Vector3New(180, 0, 0) },
+	['XMAS24'] = Vector3New(-90, 0, 0),
+	['Heartbreak'] = 'Position',
+	['Blaze'] = 'Position',
+	['Short Cake'] = 'Position',
+	['Shrimp'] = Vector3New(-90, 0, 0),
+	['Arcane'] = Vector3New(-90, 0, 0),
+	['PrestigeCandyCane'] = 'Position',
+	['Duck'] = 'Position',
+	['Flower'] = Vector3New(180, 0, 0),
+	['Car'] = Vector3New(180, 0, 0),
+	['Music'] = Vector3New(180, 0, 0),
+	['Brainrot'] = { CFrameNew(0, 0, -0.25), Vector3New(0, 0, 0) },
+};
+
+local UndeadBeamColors = {
+	Color3.fromRGB(248, 147, 255),
+	Color3.fromRGB(255, 160, 64),
+	Color3.fromRGB(76, 255, 82),
+	Color3.fromRGB(110, 149, 255),
+};
+
+local function DoMuzzleEmit(MuzzleSource, ShooterCharacter)
+	Spawn(function()
+		Xpcall(function()
+			if not ShooterCharacter then return end;
+			local Tool = ShooterCharacter:FindFirstChildOfClass('Tool');
+			if not Tool then return end;
+			local ToolHandle = Tool:FindFirstChild('Handle');
+			if not ToolHandle then return end;
+			local MuzzleAtt = (Tool:FindFirstChild('Default') and Tool.Default:FindFirstChild('Mesh') and Tool.Default.Mesh:FindFirstChild('Muzzle')) or ToolHandle:FindFirstChild('Muzzle');
+			if not MuzzleAtt then return end;
+			if ToolHandle:GetAttribute('Emitted') then return end;
+			ToolHandle:SetAttribute('Emitted', true);
+			Delay(0.05, function()
+				if ToolHandle then ToolHandle:SetAttribute('Emitted', nil) end;
+			end);
+			for _, Emitter in next, MuzzleSource:GetChildren() do
+				if Emitter:IsA('ParticleEmitter') then
+					local Clone = Emitter:Clone();
+					Clone.Parent = MuzzleAtt;
+					Clone.Enabled = true;
+					Clone:Emit(Clone:GetAttribute('EmitCount') or 1);
+					Clone.Enabled = false;
+					game.Debris:AddItem(Clone, 2);
+				end;
+			end;
+		end, ErrHandler);
+	end);
+end;
+
+local CachedGunBeam = ReplicatedStorage:FindFirstChild('GunBeam');
+local CachedAnimChar = nil;
+local CachedShootAnim = nil;
+local CachedAimShootAnim = nil;
+
+local function Animate(Gun)
+	if not Gun then return end;
+	local Character = LocalPlayer.Character;
+	if not Character or not Character:FindFirstChild('Humanoid') or not Character.Humanoid:FindFirstChild('Animator') then return end;
+	if not CachedAnimations then CachedAnimations = ReplicatedStorage:FindFirstChild('Animations') or ReplicatedStorage:FindFirstChild('ClientAnimations') end;
+	if not CachedAnimations then return end;
+	local GunCombat = CachedAnimations:FindFirstChild('GunCombat');
+	if not GunCombat then return end;
+	local Animator = Character.Humanoid.Animator;
+	if CachedAnimChar ~= Character then
+		CachedAnimChar = Character;
+		CachedShootAnim = Animator:LoadAnimation(GunCombat.Shoot);
+		CachedAimShootAnim = Animator:LoadAnimation(GunCombat.AimShoot);
+	end;
+	if CachedShootAnim then CachedShootAnim:Stop(0) end;
+	if CachedAimShootAnim then CachedAimShootAnim:Stop(0) end;
+	if IsAimed or table.find(ScopedWeapons, Gun.Name) then
+		CachedAimShootAnim:Play();
+	else
+		CachedShootAnim:Play();
+	end;
+end;
+
+local ShowPellet = LPH_NO_VIRTUALIZE(function(Shooter, Handle, ForcedOrigin, AimPosition, Range, BeamColor, SkipVisual)
+	BeamColor = BeamColor or DefaultBeamColor;
+	local Direction = (AimPosition - ForcedOrigin).Unit;
+
+	ShootRayParams.FilterDescendantsInstances = BuildFilter(ShootFilter, Shooter);
+
+	local RayResult = Workspace:Raycast(ForcedOrigin, Direction * Range, ShootRayParams);
+	local HitPosition = RayResult and RayResult.Position or (ForcedOrigin + Direction * Range);
+	local HitNormal = RayResult and RayResult.Normal or nil;
+	local HitInstance = RayResult and RayResult.Instance or nil;
+
+	if SkipVisual then
+		return HitPosition, HitInstance, HitNormal;
+	end;
+
+	local ToolName = Handle and Handle.Parent and Handle.Parent.Name or '';
+	local SkinName = nil;
+	Pcall(function()
+		SkinName = Handle:GetAttribute('SkinName');
+	end);
+	if not SkinName or SkinName == '' then
+		Pcall(function()
+			local Decoded = HttpService:JSONDecode(LocalPlayer.DataFolder.Information.EquipSkins.Value);
+			SkinName = Decoded and Decoded[ToolName] or nil;
+		end);
+	end;
+	if not SkinName or SkinName == '' then
+		SkinName = 'Default';
+	end;
+
+	local SkinAssets = CachedSkinAssets;
+	local BulletPart = Instance.new('Part');
+	BulletPart.Name = 'BULLET_RAYS';
+	BulletPart.Anchored = true;
+	BulletPart.CanCollide = false;
+	BulletPart.CanTouch = false;
+	BulletPart.CanQuery = false;
+	BulletPart.Size = Vector3New(0, 0, 0);
+	BulletPart.Transparency = 1;
+	BulletPart.CFrame = CFrameNew(ForcedOrigin, HitPosition);
+	BulletPart.Parent = (CachedIgnored and CachedIgnored:FindFirstChild('Siren') and CachedIgnored.Siren:FindFirstChild('Radius') and CachedIgnored.Siren.Radius) or CachedIgnored or Workspace;
+
+	local GunBeamTemplate = CachedGunBeam;
+	local LeftBeamTemplate = nil;
+	local ImpactTemplate = nil;
+	local IsDefaultBeam = false;
+
+	if SkinAssets and SkinAssets:FindFirstChild('GunBeam') and SkinAssets.GunBeam:FindFirstChild(SkinName) then
+		local SkinBeamFolder = SkinAssets.GunBeam[SkinName];
+		if SkinBeamFolder:FindFirstChildOfClass('Beam') then
+			if SkinBeamFolder:FindFirstChild('GunBeam') and SkinBeamFolder:FindFirstChild('LeftGunBeam') then
+				GunBeamTemplate = SkinBeamFolder:FindFirstChild('GunBeam');
+				LeftBeamTemplate = SkinBeamFolder:FindFirstChild('LeftGunBeam');
+			else
+				GunBeamTemplate = SkinBeamFolder:FindFirstChildOfClass('Beam');
+			end;
+			if SkinBeamFolder:FindFirstChild('Impact') then
+				ImpactTemplate = SkinBeamFolder.Impact;
+			end;
+		elseif SkinBeamFolder:FindFirstChildWhichIsA('BasePart') then
+			local PartBeam = SkinBeamFolder:FindFirstChildWhichIsA('BasePart');
+			if PartBeam:FindFirstChild('Different_GunBeam') then
+				local DiffFolder = PartBeam.Different_GunBeam;
+				if DiffFolder:FindFirstChild(ToolName) then
+					local WeaponBeam = DiffFolder[ToolName];
+					if WeaponBeam:FindFirstChildWhichIsA('BasePart') then
+						GunBeamTemplate = WeaponBeam:FindFirstChildWhichIsA('BasePart');
+						if GunBeamTemplate:FindFirstChild('Impact') then
+							ImpactTemplate = GunBeamTemplate.Impact;
+						end;
+					elseif WeaponBeam:FindFirstChildOfClass('Beam') then
+						GunBeamTemplate = WeaponBeam:FindFirstChildOfClass('Beam');
+						if WeaponBeam:FindFirstChild('Impact') then
+							ImpactTemplate = WeaponBeam.Impact;
+						end;
+					else
+						GunBeamTemplate = CachedGunBeam;
+						IsDefaultBeam = true;
+					end;
+				end;
+			else
+				GunBeamTemplate = PartBeam;
+				if PartBeam:FindFirstChild('Impact') then
+					ImpactTemplate = PartBeam.Impact;
+				end;
+			end;
+		else
+			GunBeamTemplate = CachedGunBeam;
+			IsDefaultBeam = true;
+		end;
+	else
+		if not GunBeamTemplate and SkinAssets then
+			local GunBeamFolder = SkinAssets:FindFirstChild('GunBeam');
+			if GunBeamFolder then
+				local DefaultFolder = GunBeamFolder:FindFirstChild('Default');
+				if DefaultFolder then
+					local BeamObj = DefaultFolder:FindFirstChildOfClass('Beam');
+					if BeamObj then GunBeamTemplate = BeamObj end;
+				end;
+			end;
+		end;
+		IsDefaultBeam = true;
+	end;
+
+	local ClonedBeam = GunBeamTemplate and GunBeamTemplate:Clone() or nil;
+	local BeamDistance = (HitPosition - ForcedOrigin).Magnitude;
+	local TravelTime = BeamDistance / 725;
+	if not ClonedBeam then
+		game.Debris:AddItem(BulletPart, 0.5);
+	elseif ClonedBeam:IsA('Beam') then
+		game.Debris:AddItem(BulletPart, 0.5);
+	else
+		game.Debris:AddItem(BulletPart, TravelTime + 5);
+	end;
+
+	if ClonedBeam then
+		local StartAttachment = Instance.new('Attachment');
+		StartAttachment.Position = Vector3New(0, 0, 0);
+		StartAttachment.Parent = BulletPart;
+		local EndAttachment = Instance.new('Attachment');
+		EndAttachment.Position = Vector3New(0, 0, -BeamDistance);
+		EndAttachment.Parent = BulletPart;
+
+		if ClonedBeam:IsA('Beam') then
+			if IsDefaultBeam and BeamColor then
+				ClonedBeam.Color = ColorSequence.new(BeamColor);
+			end;
+			ClonedBeam.Attachment0 = StartAttachment;
+			ClonedBeam.Attachment1 = EndAttachment;
+			ClonedBeam.Parent = BulletPart;
+		elseif ClonedBeam:IsA('BasePart') then
+			ClonedBeam.Anchored = true;
+			ClonedBeam.CanCollide = false;
+			ClonedBeam.CanQuery = false;
+			ClonedBeam.CFrame = CFrameNew(ForcedOrigin, HitPosition);
+			local BeamEndCFrame = ClonedBeam.CFrame * CFrameNew(0, 0, -BeamDistance);
+			ClonedBeam.Parent = BulletPart.Parent;
+			if ClonedBeam:GetAttribute('SpecialEffects') then
+				for _, BeamDescendant in next, ClonedBeam:GetDescendants() do
+					if BeamDescendant:IsA('Trail') and BeamDescendant:GetAttribute('ColorRandom') then
+						local RandomColorSeq = BeamDescendant:GetAttribute('ColorRandom');
+						BeamDescendant.Color = ColorSequence.new(Color3.new(RandomColorSeq.X, RandomColorSeq.Y, RandomColorSeq.Z):Lerp(Color3.new(1, 1, 1), MathRandom()));
+					end;
+				end;
+			end;
+			if SkinName == 'Undead' and ToolName == '[Revolver]' then
+				local RandColor = UndeadBeamColors[MathRandom(1, #UndeadBeamColors)];
+				local Trail = ClonedBeam:FindFirstChildOfClass('Trail');
+				if Trail then
+					Trail.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0, RandColor), ColorSequenceKeypoint.new(1, RandColor) });
+				end;
+			end;
+			Spawn(function()
+				local InitialTween = TweenService:Create(ClonedBeam, TweenInfo.new(0.05, Enum.EasingStyle.Linear), {
+					['CFrame'] = ClonedBeam.CFrame * CFrameNew(0, 0, -0.1),
+				});
+				InitialTween:Play();
+				Wait(0.05);
+				if InitialTween.PlaybackState ~= Enum.PlaybackState.Completed then
+					InitialTween:Pause();
+				end;
+				local TravelTween = TweenService:Create(ClonedBeam, TweenInfo.new(TravelTime, Enum.EasingStyle.Linear), {
+					['CFrame'] = BeamEndCFrame,
+				});
+				TravelTween:Play();
+				Wait(TravelTime);
+				if ClonedBeam:FindFirstChild('Impact') and (HitInstance and HitNormal and not HitInstance.Parent:FindFirstChild('Humanoid')) then
+					if TravelTween.PlaybackState ~= Enum.PlaybackState.Completed then
+						Wait(0.05);
+					end;
+					if not ClonedBeam:FindFirstChild('NoNormal') then
+						ClonedBeam.CFrame = CFrameNew(HitPosition, HitPosition - HitNormal);
+					end;
+					for _, ImpactChild in next, ClonedBeam.Impact:GetChildren() do
+						if ImpactChild:IsA('ParticleEmitter') then
+							ImpactChild:Emit(ImpactChild:GetAttribute('EmitCount') or 1);
+						end;
+					end;
+				else
+					for _, BeamChild in next, ClonedBeam:GetChildren() do
+						if BeamChild:IsA('BasePart') then
+							BeamChild.Transparency = 1;
+						end;
+					end;
+				end;
+				if ClonedBeam then
+					for _, Desc in next, ClonedBeam:GetDescendants() do
+						if Desc:IsA('ParticleEmitter') then Desc.Enabled = false end;
+					end;
+				end;
+			end);
+		end;
+
+		if LeftBeamTemplate then
+			local SecondaryMesh = nil;
+			local ToolModel = Handle and Handle.Parent;
+			if ToolModel then
+				local Default = ToolModel:FindFirstChild('Default');
+				if Default then
+					local Mesh = Default:FindFirstChild('Mesh');
+					if Mesh then
+						for _, Child in next, Mesh:GetChildren() do
+							if Child:IsA('BasePart') and Child:GetAttribute('SecondaryMesh') then
+								SecondaryMesh = Child;
+							end;
+						end;
+					end;
+				end;
+			end;
+			if SecondaryMesh then
+				local LeftMuzzle = SecondaryMesh:FindFirstChild('LeftMuzzle') or SecondaryMesh:FindFirstChildOfClass('Attachment');
+				if LeftMuzzle then
+					local LeftMuzzlePos = LeftMuzzle.WorldPosition;
+					local LeftBeamDist = (HitPosition - LeftMuzzlePos).Magnitude;
+					local LeftTravelTime = LeftBeamDist / 725;
+					local LeftPart = Instance.new('Part');
+					LeftPart.Name = 'BULLET_RAYS';
+					LeftPart.Size = Vector3New(0, 0, 0);
+					LeftPart.Transparency = 1;
+					LeftPart.CanCollide = false;
+					LeftPart.CanTouch = false;
+					LeftPart.CanQuery = false;
+					LeftPart.Anchored = true;
+					LeftPart.CFrame = CFrameNew(LeftMuzzlePos, HitPosition);
+					LeftPart.Parent = BulletPart.Parent;
+					local LeftClone = LeftBeamTemplate:Clone();
+					if LeftClone:IsA('Beam') then
+						local LAtt0 = Instance.new('Attachment');
+						LAtt0.Position = Vector3New(0, 0, 0);
+						LAtt0.Parent = LeftPart;
+						local LAtt1 = Instance.new('Attachment');
+						LAtt1.Position = Vector3New(0, 0, -LeftBeamDist);
+						LAtt1.Parent = LeftPart;
+						if IsDefaultBeam and BeamColor then
+							LeftClone.Color = ColorSequence.new(BeamColor);
+						end;
+						LeftClone.Attachment0 = LAtt0;
+						LeftClone.Attachment1 = LAtt1;
+						LeftClone.Parent = LeftPart;
+						game.Debris:AddItem(LeftPart, 0.5);
+					elseif LeftClone:IsA('BasePart') then
+						LeftClone.Anchored = true;
+						LeftClone.CanCollide = false;
+						LeftClone.CanQuery = false;
+						LeftClone.CFrame = CFrameNew(LeftMuzzlePos, HitPosition);
+						local LeftEndCFrame = LeftClone.CFrame * CFrameNew(0, 0, -LeftBeamDist);
+						LeftClone.Parent = LeftPart.Parent;
+						game.Debris:AddItem(LeftPart, LeftTravelTime + 5);
+						Spawn(function()
+							local LTw = TweenService:Create(LeftClone, TweenInfo.new(LeftTravelTime, Enum.EasingStyle.Linear), {
+								['CFrame'] = LeftEndCFrame,
+							});
+							LTw:Play();
+							Wait(LeftTravelTime);
+							if LeftClone then
+								for _, Desc in next, LeftClone:GetDescendants() do
+									if Desc:IsA('ParticleEmitter') then Desc.Enabled = false end;
+								end;
+							end;
+						end);
+					end;
+					Spawn(function()
+						for _, Child in next, LeftMuzzle:GetChildren() do
+							if Child:IsA('ParticleEmitter') then
+								Child:Emit(Child:GetAttribute('EmitCount') or 1);
+							end;
+						end;
+					end);
+				end;
+			end;
+		end;
+
+		Spawn(function()
+			if RayResult and ImpactTemplate then
+				Xpcall(function()
+					if HitInstance and not HitInstance.Parent:FindFirstChildOfClass('Humanoid') then
+						local BulletHole = Instance.new('Part');
+						Delay(5, function() if BulletHole then BulletHole:Destroy() end end);
+						BulletHole.Transparency = 1;
+						BulletHole.Name = 'BULLETHOLE';
+						BulletHole.Size = Vector3New(0.83, 0.731, 0.001);
+						BulletHole.Anchored = true;
+						BulletHole.CanCollide = false;
+						BulletHole.CanTouch = false;
+						BulletHole.CanQuery = false;
+						local ImpactClone = ImpactTemplate:Clone();
+						ImpactClone.Parent = BulletHole;
+						local NormalOffset = HitNormal and (HitNormal * 0.1) or Vector3New(0, 0, 0);
+						BulletHole.Position = HitPosition + NormalOffset;
+						BulletHole.CFrame = CFrameNew(HitPosition + NormalOffset, HitPosition + (HitNormal or Vector3New(0, 1, 0)));
+						local CustomRot = CustomBulletHoleRotations[SkinName];
+						if CustomRot then
+							if typeof(CustomRot) == 'string' then
+								if CustomRot == 'Position' then
+									ImpactClone.Position = BulletHole.Position;
+								else
+									ImpactClone.CFrame = BulletHole.CFrame;
+								end;
+							elseif typeof(CustomRot) == 'table' then
+								ImpactClone.CFrame = ImpactClone.CFrame * CustomRot[1] * CFrame.Angles(MathRad(CustomRot[2].X), MathRad(CustomRot[2].Y), MathRad(CustomRot[2].Z));
+							else
+								ImpactClone.CFrame = ImpactClone.CFrame * CFrame.Angles(MathRad(CustomRot.X), MathRad(CustomRot.Y), MathRad(CustomRot.Z));
+							end;
+						elseif ImpactClone:IsA('Part') then
+							ImpactClone.CFrame = BulletHole.CFrame;
+						end;
+						BulletHole.Parent = BulletPart.Parent;
+						for _, Desc in next, BulletHole:GetDescendants() do
+							if Desc:IsA('ParticleEmitter') then
+								Desc:Emit(Desc:GetAttribute('EmitCount') or 1);
+							end;
+						end;
+					end;
+				end, ErrHandler);
+			end;
+		end);
+	end;
+
+	local function PlayGunSound(SoundHandle, ShouldClone)
+		local ShootSound = SoundHandle:FindFirstChild('ShootSound');
+		if not ShootSound then return end;
+		if SkinName and SkinName ~= 'Default' and SkinAssets then
+			local GunShootSounds = SkinAssets:FindFirstChild('GunShootSounds');
+			if GunShootSounds then
+				local WeaponFolder = GunShootSounds:FindFirstChild(ToolName);
+				if WeaponFolder then
+					local SoundValue = WeaponFolder:FindFirstChild(SkinName);
+					if SoundValue and SoundValue:IsA('StringValue') and SoundValue.Value ~= '' then
+						ShootSound.SoundId = SoundValue.Value;
+					end;
+				end;
+			end;
+		end;
+		local SeqSFX = ShootSound:GetAttribute('SequenceSFX');
+		if SeqSFX then
+			if ShootSound:GetAttribute('CurrentSequence') == nil then
+				ShootSound:SetAttribute('CurrentSequence', 1);
+			else
+				ShootSound:SetAttribute('CurrentSequence', ShootSound:GetAttribute('CurrentSequence') + 1);
+			end;
+			local Seq = ShootSound:GetAttribute('CurrentSequence');
+			local Ids = {};
+			for Id in string.gmatch(SeqSFX, '%d+') do
+				table.insert(Ids, Id);
+			end;
+			if #Ids > 0 then
+				ShootSound.SoundId = 'rbxassetid://' .. Ids[Seq % #Ids + 1];
+			end;
+		end;
+		if ShouldClone then
+			local Clone = ShootSound:Clone();
+			Clone.Name = '\0';
+			Clone.Parent = SoundHandle;
+			Clone:Play();
+			Clone.Ended:Once(function()
+				if Clone and Clone.Parent then Clone:Destroy() end;
+			end);
+		else
+			ShootSound:Play();
+		end;
+	end;
+
+	local IsShotgunType = ShotgunWeapons[ToolName] or false;
+	if IsShotgunType then
+		if not Handle:GetAttribute('PlayingSound') then
+			Handle:SetAttribute('PlayingSound', true);
+			Delay(0.075, function()
+				if Handle and Handle.Parent then Handle:SetAttribute('PlayingSound', nil) end;
+			end);
+			Spawn(function()
+				if not SoundsPlaying[Handle] then
+					PlayGunSound(Handle, true);
+					SoundsPlaying[Handle] = true;
+					Delay(0.021, function() SoundsPlaying[Handle] = nil end);
+				end;
+			end);
+		end;
+	elseif SkinName == 'Toilet' then
+		local ToiletSounds = { 125391056005695, 132466522418892, 129999172684348 };
+		local SoundObj = Instance.new('Sound');
+		SoundObj.Name = 'ShootSound';
+		SoundObj.SoundId = 'rbxassetid://' .. ToiletSounds[MathRandom(1, #ToiletSounds)];
+		SoundObj.Parent = Handle;
+		SoundObj.Ended:Once(function() SoundObj:Destroy() end);
+		SoundObj:Play();
+	else
+		Spawn(function()
+			if not SoundsPlaying[Handle] then
+				PlayGunSound(Handle, true);
+				SoundsPlaying[Handle] = true;
+				Delay(0.021, function() SoundsPlaying[Handle] = nil end);
+			end;
+		end);
+	end;
+
+	local SkinMuzzleUsed = false;
+	Spawn(function()
+		if not SkinAssets then return end;
+		local MuzzleParticles = SkinAssets:FindFirstChild('GunSkinMuzzleParticle');
+		if not MuzzleParticles then return end;
+		local WeaponMuzzle = MuzzleParticles:FindFirstChild(ToolName);
+		if WeaponMuzzle then
+			local MuzzleFolder = WeaponMuzzle:FindFirstChild('Muzzle');
+			if MuzzleFolder then
+				DoMuzzleEmit(MuzzleFolder, Shooter);
+			else
+				DoMuzzleEmit(WeaponMuzzle, Shooter);
+			end;
+			SkinMuzzleUsed = true;
+		else
+			local SkinMuzzle = MuzzleParticles:FindFirstChild(SkinName);
+			if SkinMuzzle then
+				local MuzzleFolder = SkinMuzzle:FindFirstChild('Muzzle');
+				if MuzzleFolder then
+					local DiffGunMuzzle = MuzzleFolder:FindFirstChild('Different_GunMuzzle');
+					if DiffGunMuzzle and DiffGunMuzzle:FindFirstChild(ToolName) then
+						DoMuzzleEmit(DiffGunMuzzle[ToolName], Shooter);
+					else
+						DoMuzzleEmit(MuzzleFolder, Shooter);
+					end;
+					SkinMuzzleUsed = true;
+				else
+					local SingleEmitter = SkinMuzzle:FindFirstChildOfClass('ParticleEmitter');
+					if SingleEmitter then
+						local MuzzleAtt = nil;
+						local ToolModel = Handle.Parent;
+						if ToolModel then
+							local Default = ToolModel:FindFirstChild('Default');
+							if Default then
+								local Mesh = Default:FindFirstChild('Mesh');
+								if Mesh then MuzzleAtt = Mesh:FindFirstChild('Muzzle') end;
+							end;
+						end;
+						if not MuzzleAtt then MuzzleAtt = Handle:FindFirstChild('Muzzle') end;
+						if MuzzleAtt then
+							local Clone = SingleEmitter:Clone();
+							Clone.Rotation = NumberRange.new(MathRandom(-180, 180));
+							Clone.RotSpeed = NumberRange.new(MathRandom(-90, 90));
+							Clone.Parent = MuzzleAtt;
+							Clone:Emit(1);
+							SkinMuzzleUsed = true;
+						end;
+					end;
+				end;
+			end;
+		end;
+	end);
+
+	Xpcall(function()
+		local ShootBBGUI = Handle.Parent.Handle:FindFirstChild('ShootBBGUI');
+		if ShootBBGUI then
+			ShootBBGUI.Enabled = not SkinMuzzleUsed;
+		end;
+	end, ErrHandler);
+
+	local Light = Instance.new('PointLight');
+	Light.Brightness = 0.5;
+	Light.Range = 15;
+	Light.Shadows = false;
+	Light.Color = Color3.new(1, 1, 1);
+	Light.Parent = BulletPart;
+	local LightTween = TweenService:Create(Light, TweenInfo.new(0.5, Enum.EasingStyle.Bounce, Enum.EasingDirection.In), { Range = 0 });
+	LightTween:Play();
+	local LightConn;
+	LightConn = LightTween.Completed:Connect(function()
+		if Light then Light:Destroy() end;
+		LightConn:Disconnect();
+	end);
+
+	local BodyEffects = Shooter:FindFirstChild('BodyEffects');
+	if BodyEffects then
+		local Movement = BodyEffects:FindFirstChild('Movement');
+		if Movement then
+			local ReduceWalk = Instance.new('IntValue');
+			ReduceWalk.Name = 'ReduceWalk';
+			ReduceWalk.Value = 5;
+			ReduceWalk.Parent = Movement;
+			local ShootCooldown = Handle.Parent and Handle.Parent:FindFirstChild('ShootingCooldown');
+			local Duration = ShootCooldown and tonumber(ShootCooldown.Value) or 0.3;
+			Delay(Duration, function()
+				if ReduceWalk and ReduceWalk.Parent then ReduceWalk:Destroy() end;
+			end);
+		end;
+	end;
+
+	Spawn(function()
+		Animate(Handle.Parent);
+	end);
+
+	return HitPosition, HitInstance, HitNormal;
+end);
+
+local EmulateGunFire = LPH_NO_VIRTUALIZE(function(Tool)
+	local Character = LocalPlayer.Character;
+	if not Character then return end;
+	if _G.GUN_COMBAT_TOGGLE then return end;
+	if not CanShoot(Character) then return end;
+
+	local Handle = Tool:FindFirstChild('Handle');
+	if not Handle then return end;
+	local Ammo = Tool:FindFirstChild('Ammo');
+	if not Ammo or Ammo.Value <= 0 then
+		local NoAmmo = Handle:FindFirstChild('NoAmmo');
+		if NoAmmo then NoAmmo:Play() end;
+		return;
+	end;
+	local Range = Tool:FindFirstChild('Range');
+	local RangeValue = Range and Range.Value or 200;
+
+	local RemoteEvent = Tool:FindFirstChild('RemoteEvent');
+	local ToolRemote = RemoteEvent or { FireServer = function() end };
+
+	local MuzzlePos = GetMuzzlePosition(Tool);
+	if not MuzzlePos then return end;
+
+	local IsShotgun = ShotgunWeapons[Tool.Name] or false;
+
+	ShootRayParams.FilterDescendantsInstances = BuildFilter(ShootFilter, Character);
+
+	ToolRemote:FireServer('Shoot');
+
+	local DoubleTapCfg = Config['Gun Modifications']['Double Tap'];
+	local DoubleTapCount = 1;
+	if DoubleTapCfg['Enabled'] then
+		for _, WeaponName in next, DoubleTapCfg['Weapons'] do
+			if Tool.Name == WeaponName then
+				DoubleTapCount = 2;
+				break;
+			end;
+		end;
+	end;
+
+	for _dt = 1, DoubleTapCount do
+		if IsShotgun then
+			local ServerTime = Workspace:GetServerTimeNow();
+			local SpreadMult = 1;
+			local SpreadCfg = Config['Gun Modifications']['Spread Modifications'];
+			if SpreadCfg['Enabled'] and SpreadCfg['Weapons'][Tool.Name] then
+				SpreadMult = SpreadCfg['Weapons'][Tool.Name]['Multiplier'] or 1;
+			end;
+			for _ = 1, 5 do
+				local SpreadX = (MathRandom() > 0.5 and MathRandom() * 0.05 or -MathRandom() * 0.05) * SpreadMult;
+				local SpreadY = (MathRandom() > 0.5 and MathRandom() * 0.1 or -MathRandom() * 0.1) * SpreadMult;
+				local SpreadZ = (MathRandom() > 0.5 and MathRandom() * 0.05 or -MathRandom() * 0.05) * SpreadMult;
+				local Spread = Vector3New(SpreadX, SpreadY, SpreadZ);
+
+				local AimPos = GetAimPosition(MuzzlePos, RangeValue);
+				local AimDir = (AimPos - MuzzlePos).Unit + Spread;
+				local AimPosition = MuzzlePos + AimDir * RangeValue;
+
+				local HitPosition, HitInstance, HitNormal;
+				if _dt == 1 then
+					HitPosition, HitInstance, HitNormal = ShowPellet(Character, Handle, MuzzlePos, AimPosition, RangeValue);
+				end;
+				if not HitPosition then
+					local Direction = AimDir * RangeValue;
+					local RayResult = Workspace:Raycast(MuzzlePos, Direction, ShootRayParams);
+					HitPosition = RayResult and RayResult.Position or (MuzzlePos + Direction);
+					HitInstance = RayResult and RayResult.Instance or nil;
+					HitNormal = RayResult and RayResult.Normal or Vector3New(0, 1, 0);
+				end;
+
+				ReplicatedStorage.MainEvent:FireServer('ShootGun', Handle, MuzzlePos, HitPosition, HitInstance, HitNormal, ServerTime);
+			end;
+		else
+			local AimPos = GetAimPosition(MuzzlePos, RangeValue);
+			local AimPosition = MuzzlePos + (AimPos - MuzzlePos).Unit * RangeValue;
+
+			local HitPosition, HitInstance, HitNormal;
+			if _dt == 1 then
+				HitPosition, HitInstance, HitNormal = ShowPellet(Character, Handle, MuzzlePos, AimPosition, RangeValue);
+			end;
+			if not HitPosition then
+				local Direction = (AimPos - MuzzlePos).Unit * RangeValue;
+				local RayResult = Workspace:Raycast(MuzzlePos, Direction, ShootRayParams);
+				HitPosition = RayResult and RayResult.Position or (MuzzlePos + Direction);
+				HitInstance = RayResult and RayResult.Instance or nil;
+				HitNormal = RayResult and RayResult.Normal or Vector3New(0, 1, 0);
+			end;
+
+			ReplicatedStorage.MainEvent:FireServer('ShootGun', Handle, MuzzlePos, HitPosition, HitInstance, HitNormal);
+		end;
+	end;
+
+	ToolRemote:FireServer();
+end);
+
+local RageRayParams = RaycastParamsNew();
+RageRayParams.FilterType = EnumExclude;
+RageRayParams.IgnoreWater = true;
+local RageLastFire = {};
+local RageLastVisual = {};
+local CachedMainEvent = nil;
+
+local HookedTools = {};
+local function HookGunActivation(Character)
+	if not Character then return end;
+	Character.ChildAdded:Connect(function(Child)
+		if not Child:IsA('Tool') then return end;
+		if not MuzzleOffsets[Child.Name] then return end;
+		if HookedTools[Child] then return end;
+		HookedTools[Child] = true;
+		local LastFire = 0;
+		local Cooldown = 0.3;
+		Xpcall(function()
+			local CD = Child:FindFirstChild('ShootingCooldown');
+			if CD then Cooldown = CD.Value end;
+		end, ErrHandler);
+		local DelayCfg = Config['Gun Modifications']['Delay Changer'];
+		if DelayCfg['Enabled'] and DelayCfg['Weapons'][Child.Name] then
+			Cooldown = DelayCfg['Weapons'][Child.Name]['Value'] or Cooldown;
+		end;
+		local FutureCfg = Config['Future'];
+		local FutureX, FutureY, FutureZ = 0, 0, 0;
+		if FutureCfg['Enabled'] and FutureCfg['Guns'][Child.Name] then
+			local GunData = FutureCfg['Guns'][Child.Name];
+			FutureX = GunData['X'] or 0;
+			FutureY = GunData['Y'] or 0;
+			FutureZ = GunData['Z'] or 0;
+		end;
+		local IsAuto = AutoWeapons[Child.Name] or false;
+		local IsBurst = BurstWeapons[Child.Name] or false;
+
+		Child.Activated:Connect(function()
+			State.IsShooting = true;
+			if IsAuto then
+				if Tick() - LastFire < Cooldown + 0.0095 then return end;
+				LastFire = Tick();
+				local Firing = true;
+				Spawn(function()
+					while Firing and Child.Parent == Character do
+						EmulateGunFire(Child);
+						Wait(Cooldown + 0.0095);
+						LastFire = Tick();
+					end;
+				end);
+				Child.Deactivated:Wait();
+				Firing = false;
+				State.IsShooting = false;
+			elseif IsBurst then
+				if Config['Gun Modifications']['Misc Gun Modifications']['No AUG Cooldown'] then
+					if Tick() - LastFire < Cooldown + 0.0095 then return end;
+					LastFire = Tick();
+					local Firing = true;
+					Spawn(function()
+						while Firing and Child.Parent == Character do
+							EmulateGunFire(Child);
+							Wait(Cooldown + 0.0095);
+							LastFire = Tick();
+						end;
+					end);
+					Child.Deactivated:Wait();
+					Firing = false;
+					State.IsShooting = false;
+				else
+					local Tolerance = 0.3;
+					Pcall(function()
+						local TC = Child:FindFirstChild('ToleranceCooldown');
+						if TC then Tolerance = TC.Value end;
+					end);
+					if Tick() - LastFire < Tolerance then return end;
+					LastFire = Tick();
+					local BurstCount = 3;
+					Xpcall(function()
+						local Ammo = Child:FindFirstChild('Ammo');
+						if Ammo then BurstCount = MathMin(BurstCount, Ammo.Value) end;
+					end, ErrHandler);
+					Spawn(function()
+						for _ = 1, BurstCount do
+							EmulateGunFire(Child);
+							Wait(Cooldown + 0.0095);
+						end;
+					end);
+				end;
+			else
+				if Tick() - LastFire < Cooldown + 0.0095 then return end;
+				LastFire = Tick();
+				EmulateGunFire(Child);
+				State.IsShooting = false;
+			end;
+		end);
+		Child.Deactivated:Connect(function()
+			State.IsShooting = false;
+		end);
+	end);
+end;
+
+local GetClosestPlayerToCursor = LPH_JIT_MAX(function(MaxRange)
+	local CurrentCamera = Workspace.CurrentCamera;
+	local MousePosition = UserInputService:GetMouseLocation();
+	local CamPos = CurrentCamera.CFrame.Position;
+	local Closest = nil;
+	local ClosestDist = MathHuge;
+
+	for _, Player in next, Players:GetPlayers() do
+		if Player == LocalPlayer then continue end;
+		if not PassesConditions(Player) then continue end;
+
+		local Character = Player.Character;
+		if not Character then continue end;
+		local HumanoidRootPart = Character:FindFirstChild('HumanoidRootPart');
+		if not HumanoidRootPart then continue end;
+
+		if MaxRange and MaxRange < MathHuge then
+			local WorldDist = (CamPos - HumanoidRootPart.Position).Magnitude;
+			if WorldDist > MaxRange then continue end;
+		end;
+
+		local ScreenPos, OnScreen = CurrentCamera:WorldToViewportPoint(HumanoidRootPart.Position);
+		if not OnScreen then continue end;
+		if ScreenPos.Z <= 0 then continue end;
+
+		local Magnitude = (Vector2New(ScreenPos.X, ScreenPos.Y) - MousePosition).Magnitude;
+		if Magnitude < ClosestDist then
+			Closest = Player;
+			ClosestDist = Magnitude;
+		end;
+	end;
+	return Closest;
+end);
+
+local function ActivateTool()
+	local Character = LocalPlayer.Character;
+	if not Character then return end;
+	local Tool = Character:FindFirstChildOfClass('Tool');
+	if Tool and Tool:IsDescendantOf(Character) and Tool.Name ~= '[Knife]' then
+		Tool:Activate();
+	end;
+end;
+
+local function TriggerShot(Cooldown)
+	local Now = DateTime.now().UnixTimestampMillis;
+	local Character = LocalPlayer.Character;
+	local GunCooldown = 0.3;
+	if Character then
+		local Tool = Character:FindFirstChildOfClass('Tool');
+		if Tool then
+			local Cooldown = Tool:FindFirstChild('ShootingCooldown');
+			if Cooldown then GunCooldown = Cooldown.Value end;
+		end;
+	end;
+	local MinCooldown = MathMax(Cooldown, GunCooldown * 0.75);
+	if Now - State.LastTriggerShot >= MinCooldown * 1000 then
+		State.LastTriggerShot = Now;
+		ActivateTool();
+	end;
+end;
+
+local RunTriggerbot = LPH_NO_VIRTUALIZE(function()
+	local TriggerCfg = Config['Triggerbot'];
+	if not TriggerCfg['Enabled'] then return end;
+	if not State.TriggerState then return end;
+
+	local Target = State.Targets.Triggerbot;
+	local TargetChar = Target and Target.Character;
+	if not TargetChar then return end;
+
+	local Character = LocalPlayer.Character;
+	if not Character then return end;
+	local Tool = Character:FindFirstChildOfClass('Tool');
+	if not Tool or not Tool:FindFirstChild('Ammo') or Tool.Name == '[Knife]' then return end;
+	if not State.CanTriggerbotShoot then return end;
+	if not PassesConditions(Target) then return end;
+
+	local SelfHRP = Character:FindFirstChild('HumanoidRootPart');
+	local TargetHRP = TargetChar:FindFirstChild('HumanoidRootPart');
+	if not SelfHRP or not TargetHRP then return end;
+
+	local TargetDist = (SelfHRP.Position - TargetHRP.Position).Magnitude;
+	local TrigMaxRange = TriggerCfg['Max Range'] or MathHuge;
+	if TargetDist > TrigMaxRange then return end;
+
+	local CurrentCamera = Workspace.CurrentCamera;
+	local ViewportY = CurrentCamera.ViewportSize.Y;
+	local CamFOV = CurrentCamera.FieldOfView;
+
+	local AimPos = TargetHRP.Position;
+	local PredCfg = TriggerCfg['Prediction'];
+	if PredCfg and PredCfg[1] == true then
+		local Vel = GetDeltaVelocity(TargetHRP);
+		local M = PredCfg[2] or 0.13;
+		AimPos = AimPos + Vector3New(Vel.X * M, 0, Vel.Z * M);
+	end;
+
+	local ScreenPos, OnScreen = CurrentCamera:WorldToViewportPoint(AimPos);
+	if not OnScreen then return end;
+
+	local HitCheck = TriggerCfg['Hit Check'] or 'FOV';
+	local ShouldFire = false;
+
+	if HitCheck == 'On Player' then
+		local Mouse = LocalPlayer:GetMouse();
+		local MouseTarget = Mouse.Target;
+		ShouldFire = MouseTarget and MouseTarget:IsDescendantOf(TargetChar);
+	else
+		local MouseLoc = UserInputService:GetMouseLocation();
+		local Delta = Vector2New(ScreenPos.X, ScreenPos.Y) - MouseLoc;
+		local TrigFOV = TriggerCfg['FOV'];
+		local Depth = ScreenPos.Z;
+		if Depth <= 1 then return end;
+		local ScaleFactor = (TargetHRP.Size.Y * ViewportY) / (Depth * 2) * 80 / CamFOV;
+		local ScaledW = TrigFOV['Size']['Width'] * ScaleFactor;
+		local ScaledH = TrigFOV['Size']['Height'] * ScaleFactor;
+		ShouldFire = not TrigFOV['Enabled'] or (MathAbs(Delta.X) <= ScaledW / 2 and MathAbs(Delta.Y) <= ScaledH / 2);
+	end;
+
+	if ShouldFire then
+		local DelayCfg = TriggerCfg['Delay'];
+		local Cooldown = 0;
+		if DelayCfg and DelayCfg['Enabled'] then
+			local Min = DelayCfg['Value'][1] or 0;
+			local Max = DelayCfg['Value'][2] or 0;
+			Cooldown = Min + math.random() * (Max - Min);
+		end;
+		TriggerShot(Cooldown);
+	end;
+end);
+
+local SilentTargetLocked = false;
+
+local UtilityUI = Instance.new('ScreenGui');
+UtilityUI.Name = 'AllusiveUI';
+UtilityUI.IgnoreGuiInset = true;
+UtilityUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling;
+UtilityUI.Parent = CoreGui;
+
+local function CreateSquare()
+	local Obj = {
+		_Size = Vector2New(0, 0),
+		_Position = Vector2New(0, 0),
+		_Color = Color3.new(1, 1, 1),
+		_Visible = false,
+		_Filled = false,
+		_Thickness = 1,
+		_Transparency = 1,
+	};
+	local Frame = Instance.new('Frame');
+	Frame.BorderSizePixel = 0;
+	Frame.BackgroundTransparency = 1;
+	Frame.BackgroundColor3 = Obj._Color;
+	Frame.Visible = Obj._Visible;
+	Frame.Parent = UtilityUI;
+	local Stroke = Instance.new('UIStroke');
+	Stroke.Thickness = Obj._Thickness;
+	Stroke.Enabled = true;
+	Stroke.LineJoinMode = Enum.LineJoinMode.Miter;
+	Stroke.Parent = Frame;
+	local Proxy = {};
+	local Meta = {
+		__newindex = function(_, Key, Value)
+			if Key == 'Size' then
+				Obj._Size = Value;
+				Frame.Size = UDim2.fromOffset(Value.X, Value.Y);
+			elseif Key == 'Position' then
+				Obj._Position = Value;
+				Frame.Position = UDim2.fromOffset(Value.X, Value.Y);
+			elseif Key == 'Color' then
+				Obj._Color = Value;
+				Frame.BackgroundColor3 = Value;
+				Stroke.Color = Value;
+			elseif Key == 'Visible' then
+				Obj._Visible = Value;
+				Frame.Visible = Value;
+			elseif Key == 'Filled' then
+				Obj._Filled = Value;
+				Frame.BackgroundTransparency = Value and MathClamp(1 - Obj._Transparency, 0, 1) or 1;
+				Stroke.Enabled = not Value;
+			elseif Key == 'Thickness' then
+				Obj._Thickness = Value;
+				Stroke.Thickness = MathClamp(Value, 0.6, 0x7FFFFFFF);
+			elseif Key == 'Transparency' then
+				Obj._Transparency = Value;
+				local Alpha = MathClamp(1 - Value, 0, 1);
+				Frame.BackgroundTransparency = Obj._Filled and Alpha or 1;
+				Stroke.Transparency = Alpha;
+			end;
+		end,
+		__index = function(_, Key)
+			if Key == 'Remove' or Key == 'Destroy' then
+				return function() Frame:Destroy() end;
+			elseif Key == 'Size' then return Obj._Size;
+			elseif Key == 'Position' then return Obj._Position;
+			elseif Key == 'Color' then return Obj._Color;
+			elseif Key == 'Visible' then return Obj._Visible;
+			elseif Key == 'Filled' then return Obj._Filled;
+			elseif Key == 'Thickness' then return Obj._Thickness;
+			elseif Key == 'Transparency' then return Obj._Transparency;
+			end;
+			return nil;
+		end,
+	};
+	return setmetatable(Proxy, Meta);
+end;
+
+local function CreateLine()
+	local Obj = {
+		_From = Vector2New(0, 0),
+		_To = Vector2New(0, 0),
+		_Color = Color3.new(1, 1, 1),
+		_Visible = false,
+		_Thickness = 1,
+		_Transparency = 1,
+	};
+	local Frame = Instance.new('Frame');
+	Frame.AnchorPoint = Vector2New(0.5, 0.5);
+	Frame.BorderSizePixel = 0;
+	Frame.BackgroundColor3 = Obj._Color;
+	Frame.Visible = Obj._Visible;
+	Frame.BackgroundTransparency = 0;
+	Frame.Size = UDim2.new();
+	Frame.Parent = UtilityUI;
+	local function UpdateLine()
+		local Dir = Obj._To - Obj._From;
+		local Center = (Obj._To + Obj._From) / 2;
+		local Mag = Dir.Magnitude;
+		local Theta = MathDeg(MathAtan2(Dir.Y, Dir.X));
+		Frame.Position = UDim2.fromOffset(Center.X, Center.Y);
+		Frame.Rotation = Theta;
+		Frame.Size = UDim2.fromOffset(Mag, Obj._Thickness);
+	end;
+	local Proxy = {};
+	local Meta = {
+		__newindex = function(_, Key, Value)
+			if Key == 'From' then
+				Obj._From = Value;
+				UpdateLine();
+			elseif Key == 'To' then
+				Obj._To = Value;
+				UpdateLine();
+			elseif Key == 'Color' then
+				Obj._Color = Value;
+				Frame.BackgroundColor3 = Value;
+			elseif Key == 'Visible' then
+				Obj._Visible = Value;
+				Frame.Visible = Value;
+			elseif Key == 'Thickness' then
+				Obj._Thickness = Value;
+				UpdateLine();
+			elseif Key == 'Transparency' then
+				Obj._Transparency = Value;
+				Frame.BackgroundTransparency = MathClamp(1 - Value, 0, 1);
+			end;
+		end,
+		__index = function(_, Key)
+			if Key == 'Remove' or Key == 'Destroy' then
+				return function() Frame:Destroy() end;
+			elseif Key == 'From' then return Obj._From;
+			elseif Key == 'To' then return Obj._To;
+			elseif Key == 'Color' then return Obj._Color;
+			elseif Key == 'Visible' then return Obj._Visible;
+			elseif Key == 'Thickness' then return Obj._Thickness;
+			elseif Key == 'Transparency' then return Obj._Transparency;
+			end;
+			return nil;
+		end,
+	};
+	return setmetatable(Proxy, Meta);
+end;
+
+local SilentFOVBox = CreateSquare();
+SilentFOVBox.Visible = false;
+SilentFOVBox.Filled = false;
+SilentFOVBox.Thickness = 1;
+SilentFOVBox.Transparency = 1;
+
+local TriggerFOVBox = CreateSquare();
+TriggerFOVBox.Visible = false;
+TriggerFOVBox.Filled = false;
+TriggerFOVBox.Thickness = 1;
+TriggerFOVBox.Transparency = 1;
+
+local AssistFOVBox = CreateSquare();
+AssistFOVBox.Visible = false;
+AssistFOVBox.Filled = false;
+AssistFOVBox.Thickness = 1;
+AssistFOVBox.Transparency = 1;
+
+local SilentTargetLine = CreateLine();
+SilentTargetLine.Visible = false;
+SilentTargetLine.Thickness = 1;
+SilentTargetLine.Transparency = 1;
+
+local function CreateTextLabel()
+	local Obj = {
+		_Text = '',
+		_Size = 13,
+		_Position = Vector2New(0, 0),
+		_Color = Color3.new(1, 1, 1),
+		_Visible = false,
+		_Center = false,
+		_Outline = true,
+		_OutlineColor = Color3.new(0, 0, 0),
+		_Transparency = 1,
+	};
+
+	local Label = Instance.new('TextLabel');
+	Label.AnchorPoint = Vector2New(0.5, 0.5);
+	Label.BorderSizePixel = 0;
+	Label.BackgroundTransparency = 1;
+	Label.RichText = true;
+	Label.Font = Enum.Font.SourceSansBold;
+	Label.TextSize = Obj._Size;
+	Label.TextColor3 = Obj._Color;
+	Label.Visible = Obj._Visible;
+	Label.Text = '';
+	Label.Parent = UtilityUI;
+
+	local Stroke = Instance.new('UIStroke');
+	Stroke.Thickness = 1;
+	Stroke.Color = Obj._OutlineColor;
+	Stroke.Enabled = Obj._Outline;
+	Stroke.Parent = Label;
+
+	local function UpdatePosition()
+		local Bounds = Label.TextBounds;
+		local OffsetX = Obj._Center and 0 or (Bounds.X / 2);
+		Label.Position = UDim2.fromOffset(Obj._Position.X + OffsetX, Obj._Position.Y + Bounds.Y / 2);
+	end;
+
+	Label:GetPropertyChangedSignal('TextBounds'):Connect(UpdatePosition);
+
+	local Proxy = {};
+	local Meta = {
+		__newindex = function(_, Key, Value)
+			if Key == 'Text' then
+				Obj._Text = Value;
+				Label.Text = Value;
+			elseif Key == 'Size' then
+				Obj._Size = Value;
+				Label.TextSize = Value;
+			elseif Key == 'Position' then
+				Obj._Position = Value;
+				UpdatePosition();
+			elseif Key == 'Color' then
+				Obj._Color = Value;
+				Label.TextColor3 = Value;
+			elseif Key == 'Visible' then
+				Obj._Visible = Value;
+				Label.Visible = Value;
+			elseif Key == 'Center' then
+				Obj._Center = Value;
+				UpdatePosition();
+			elseif Key == 'Outline' then
+				Obj._Outline = Value;
+				Stroke.Enabled = Value;
+			elseif Key == 'OutlineColor' then
+				Obj._OutlineColor = Value;
+				Stroke.Color = Value;
+			elseif Key == 'Transparency' then
+				Obj._Transparency = Value;
+				local Alpha = MathClamp(1 - Value, 0, 1);
+				Label.TextTransparency = Alpha;
+				Stroke.Transparency = Alpha;
+			elseif Key == 'Font' then
+			end;
+		end,
+		__index = function(_, Key)
+			if Key == 'TextBounds' then
+				return Label.TextBounds;
+			elseif Key == 'Remove' or Key == 'Destroy' then
+				return function()
+					Label:Destroy();
+				end;
+			elseif Key == 'Text' then return Obj._Text;
+			elseif Key == 'Size' then return Obj._Size;
+			elseif Key == 'Position' then return Obj._Position;
+			elseif Key == 'Color' then return Obj._Color;
+			elseif Key == 'Visible' then return Obj._Visible;
+			elseif Key == 'Center' then return Obj._Center;
+			elseif Key == 'Outline' then return Obj._Outline;
+			elseif Key == 'Transparency' then return Obj._Transparency;
+			end;
+			return nil;
+		end,
+	};
+	return setmetatable(Proxy, Meta);
+end;
+
+local NameESPDrawings = {};
+
+local function CleanNameESP()
+	for Player, Draw in next, NameESPDrawings do
+		if not Player.Parent then
+			Draw:Remove();
+			NameESPDrawings[Player] = nil;
+		end;
+	end;
+end;
+
+Players.PlayerRemoving:Connect(function(Player)
+	local Draw = NameESPDrawings[Player];
+	if Draw then
+		Draw:Remove();
+		NameESPDrawings[Player] = nil;
+	end;
+end);
+
+local PanelTitle = CreateTextLabel();
+PanelTitle.Visible = false;
+PanelTitle.Size = 16;
+PanelTitle.Outline = true;
+PanelTitle.Center = true;
+
+local PanelLabels = {};
+for i = 1, 10 do
+	local Label = CreateTextLabel();
+	Label.Visible = false;
+	Label.Size = 12;
+	Label.Outline = true;
+	Label.Center = true;
+	PanelLabels[i] = Label;
+end;
+
+local TriggerTargetLocked = false;
+local AssistTargetLocked = false;
+
+UserInputService.InputBegan:Connect(function(Input, GameProcessed)
+	if not GameProcessed or Input.UserInputType == Enum.UserInputType.MouseButton2 then
+		if Input.UserInputType == Enum.UserInputType.MouseButton2 then
+			IsAimed = true;
+		end;
+	end;
+end);
+UserInputService.InputEnded:Connect(function(Input)
+	if Input.UserInputType == Enum.UserInputType.MouseButton2 then
+		IsAimed = false;
+	end;
+end);
+
+UserInputService.InputBegan:Connect(function(Input, Processed)
+	if Processed then return end;
+	if Config['Conditions']['Chat Typing'] and IsTyping() then return end;
+
+	local SilentAimCfg = Config['Silent Aim'];
+	local TriggerCfg = Config['Triggerbot'];
+	local Keybinds = Config['Keybinds'];
+
+	if SilentAimCfg['Selection'] == 'Target' then
+		local TargetKey = Keybinds['Silent Aim Target'];
+		if TargetKey then
+			local Match = false;
+			Pcall(function()
+				if Input.KeyCode == Enum.KeyCode[TargetKey:upper()] then Match = true end;
+			end);
+			if not Match then
+				Pcall(function()
+					if Input.UserInputType == Enum.UserInputType[TargetKey] then Match = true end;
+				end);
+			end;
+			if Match then
+				SilentTargetLocked = not SilentTargetLocked;
+				if SilentTargetLocked then
+					State.Targets.Silent = GetClosestPlayerToCursor(Config['Silent Aim']['Max Range']);
+				else
+					State.Targets.Silent = nil;
+				end;
+			end;
+		end;
+	end;
+
+	if TriggerCfg['Selection'] == 'Target' then
+		local TargetKey = Keybinds['Triggerbot Target'];
+		if TargetKey then
+			local Match = false;
+			Pcall(function()
+				if Input.KeyCode == Enum.KeyCode[TargetKey:upper()] then Match = true end;
+			end);
+			if not Match then
+				Pcall(function()
+					if Input.UserInputType == Enum.UserInputType[TargetKey] then Match = true end;
+				end);
+			end;
+			if Match then
+				TriggerTargetLocked = not TriggerTargetLocked;
+				if TriggerTargetLocked then
+					State.Targets.Triggerbot = GetClosestPlayerToCursor(Config['Triggerbot']['Max Range']);
+				else
+					State.Targets.Triggerbot = nil;
+				end;
+			end;
+		end;
+	end;
+
+	local AssistKey = Keybinds['Aim Assist'];
+	if AssistKey then
+		local Match = false;
+		Pcall(function()
+			if Input.KeyCode == Enum.KeyCode[AssistKey:upper()] then Match = true end;
+		end);
+		if not Match then
+			Pcall(function()
+				if Input.UserInputType == Enum.UserInputType[AssistKey] then Match = true end;
+			end);
+		end;
+		if Match then
+			local AssistCfg = Config['Aim Assist'];
+			local Mode = AssistCfg['Mode'] or 'Toggle';
+			if Mode == 'Hold' then
+				AssistTargetLocked = true;
+				State.Targets.Assist = GetClosestPlayerToCursor(Config['Aim Assist']['Max Range']);
+			else
+				AssistTargetLocked = not AssistTargetLocked;
+				if AssistTargetLocked then
+					State.Targets.Assist = GetClosestPlayerToCursor(Config['Aim Assist']['Max Range']);
+				else
+					State.Targets.Assist = nil;
+				end;
+			end;
+		end;
+	end;
+
+	local OverrideKey = Keybinds['Hit Part Override'];
+	if OverrideKey then
+		local Match = false;
+		Pcall(function()
+			if Input.KeyCode == Enum.KeyCode[OverrideKey:upper()] then Match = true end;
+		end);
+		if not Match then
+			Pcall(function()
+				if Input.UserInputType == Enum.UserInputType[OverrideKey] then Match = true end;
+			end);
+		end;
+		if Match then
+			local Cfg = Config['Silent Aim']['Hit Part']['Override'];
+			Cfg['Enabled'] = not Cfg['Enabled'];
+		end;
+	end;
+
+	local TrigActivation = TriggerCfg['Activation'];
+	local TrigToggleKey = Keybinds['Triggerbot'];
+	if TrigToggleKey then
+		local IsMouseMode = TrigActivation['Mode'] == 'Mouse';
+		local IsKeybindMode = TrigActivation['Mode'] == 'Keybind';
+		local TrigMatch = false;
+		if IsMouseMode then
+			Pcall(function()
+				if Input.UserInputType == Enum.UserInputType[TrigToggleKey] then TrigMatch = true end;
+			end);
+		end;
+		if IsKeybindMode then
+			Pcall(function()
+				if Input.KeyCode == Enum.KeyCode[TrigToggleKey:upper()] then TrigMatch = true end;
+			end);
+		end;
+		if TrigMatch then
+			if TrigActivation['Type'] == 'Toggle' then
+				State.TriggerState = not State.TriggerState;
+			elseif TrigActivation['Type'] == 'Hold' then
+				State.TriggerState = true;
+			end;
+		end;
+	end;
+
+	local WalkSpeedKey = Keybinds['Walk Speed'];
+	if WalkSpeedKey then
+		local Match = false;
+		Pcall(function()
+			if Input.KeyCode == Enum.KeyCode[WalkSpeedKey:upper()] then Match = true end;
+		end);
+		if Match then
+			State.WalkSpeedActive = not State.WalkSpeedActive;
+		end;
+	end;
+
+	local JumpToggleKey = Keybinds['Jump Toggle'];
+	if JumpToggleKey then
+		local Match = false;
+		Pcall(function()
+			if Input.KeyCode == Enum.KeyCode[JumpToggleKey:upper()] then Match = true end;
+		end);
+		if Match then
+			State.JumpPowerActive = not State.JumpPowerActive;
+		end;
+	end;
+
+	local ESPToggleKey = Keybinds['ESP Toggle'];
+	if ESPToggleKey then
+		local Match = false;
+		Pcall(function()
+			if Input.KeyCode == Enum.KeyCode[ESPToggleKey:upper()] then Match = true end;
+		end);
+		if Match then
+			Config['Name ESP']['Enabled'] = not Config['Name ESP']['Enabled'];
+		end;
+	end;
+
+	local SorterKey = Keybinds['Inventory Sorter'];
+	if SorterKey and Config['Utilities']['Inventory Sorter']['Enabled'] then
+		local Match = false;
+		Pcall(function()
+			if Input.KeyCode == Enum.KeyCode[SorterKey:upper()] then Match = true end;
+		end);
+		if Match then
+			Spawn(function()
+			State.SorterActive = true;
+			local Character = LocalPlayer.Character;
+			if not Character then State.SorterActive = false; return end;
+			local Backpack = LocalPlayer:FindFirstChildOfClass('Backpack');
+			if not Backpack then State.SorterActive = false; return end;
+			local GunOrder = Config['Utilities']['Inventory Sorter']['Order'];
+			local OrderV = 10 - #GunOrder;
+			local FakeFolder = Instance.new('Folder');
+			FakeFolder.Name = 'SorterTemp';
+			FakeFolder.Parent = Workspace;
+			for _, v in next, Backpack:GetChildren() do
+				if v:IsA('Tool') then
+					v.Parent = FakeFolder;
+				end;
+			end;
+			for _, Name in next, GunOrder do
+				local Gun = FakeFolder:FindFirstChild(Name);
+				if Gun then
+					Gun.Parent = Backpack;
+					Wait(0.05);
+				else
+					OrderV = OrderV + 1;
+				end;
+			end;
+			for _, v in next, FakeFolder:GetChildren() do
+				if v:FindFirstChild('Drink') or v:FindFirstChild('Eat') then
+					v.Parent = Backpack;
+					OrderV = OrderV - 1;
+				end;
+			end;
+			if OrderV > 0 then
+				for _ = 1, OrderV do
+					local PlaceHolder = Instance.new('Tool');
+					PlaceHolder.Name = '';
+					PlaceHolder.ToolTip = 'PlaceHolder';
+					PlaceHolder.GripPos = Vector3New(0, 1, 0);
+					PlaceHolder.RequiresHandle = false;
+					PlaceHolder.Parent = Backpack;
+				end;
+			end;
+			for _, v in next, FakeFolder:GetChildren() do
+				if v:IsA('Tool') then
+					v.Parent = Backpack;
+				end;
+			end;
+			for _, v in next, Backpack:GetChildren() do
+				if v.Name == '' then
+					v:Destroy();
+				end;
+			end;
+			FakeFolder:Destroy();
+			Wait(0.5);
+			State.SorterActive = false;
+			end);
+		end;
+	end;
+
+	if Input.KeyCode == Enum.KeyCode.LeftControl then
+		State.CanTriggerbotShoot = false;
+	end;
+end);
+
+UserInputService.InputEnded:Connect(function(Input)
+	local AssistCfg = Config['Aim Assist'];
+	if AssistCfg['Mode'] == 'Hold' then
+		local AssistKey = Config['Keybinds']['Aim Assist'];
+		if AssistKey then
+			local Match = false;
+			Pcall(function()
+				if Input.KeyCode == Enum.KeyCode[AssistKey:upper()] then Match = true end;
+			end);
+			if not Match then
+				Pcall(function()
+					if Input.UserInputType == Enum.UserInputType[AssistKey] then Match = true end;
+				end);
+			end;
+			if Match then
+				AssistTargetLocked = false;
+				State.Targets.Assist = nil;
+			end;
+		end;
+	end;
+
+	local TriggerCfg = Config['Triggerbot'];
+	local TrigActivation = TriggerCfg['Activation'];
+	if TrigActivation['Type'] == 'Hold' then
+		local TrigToggleKey = Config['Keybinds']['Triggerbot'];
+		if TrigToggleKey then
+			local TrigMatch = false;
+			if TrigActivation['Mode'] == 'Mouse' then
+				Pcall(function()
+					if Input.UserInputType == Enum.UserInputType[TrigToggleKey] then TrigMatch = true end;
+				end);
+			end;
+			if TrigActivation['Mode'] == 'Keybind' then
+				Pcall(function()
+					if Input.KeyCode == Enum.KeyCode[TrigToggleKey:upper()] then TrigMatch = true end;
+				end);
+			end;
+			if TrigMatch then
+				State.TriggerState = false;
+			end;
+		end;
+	end;
+
+	if Input.KeyCode == Enum.KeyCode.LeftControl then
+		State.CanTriggerbotShoot = true;
+	end;
+end);
+
+
+RunService.Heartbeat:Connect(function()
+	Config = getgenv()["Allusive"] or Config;
+	UpdatePositionCache();
+	CachedIgnored = Workspace:FindFirstChild('Ignored');
+	CachedBush = Workspace:FindFirstChild('Bush');
+end);
+
+RunService.PreRender:Connect(LPH_JIT_MAX(function()
+	local SilentAimCfg = Config['Silent Aim'];
+	local TriggerCfg = Config['Triggerbot'];
+	local AssistCfg = Config['Aim Assist'];
+	local CurrentCamera = Workspace.CurrentCamera;
+	local ViewportY = CurrentCamera.ViewportSize.Y;
+	local CamFOV = CurrentCamera.FieldOfView;
+	local MousePosition = UserInputService:GetMouseLocation();
+
+	local ClosestPlayer = GetClosestPlayerToCursor();
+
+	if SilentAimCfg['Selection'] == 'Automatic' then
+		State.Targets.Silent = ClosestPlayer;
+	end;
+
+	if TriggerCfg['Selection'] == 'Automatic' then
+		State.Targets.Triggerbot = ClosestPlayer;
+	end;
+
+	local SilentTarget = State.Targets.Silent;
+	local SilentDisplay = SilentTarget;
+	if not SilentDisplay and SilentAimCfg['FOV']['Enabled'] then
+		SilentDisplay = ClosestPlayer;
+	end;
+	local ViewportX = CurrentCamera.ViewportSize.X;
+	if SilentAimCfg['FOV']['Enabled'] and SilentAimCfg['FOV']['Visible'] and SilentDisplay then
+		local Char = SilentDisplay.Character;
+		local Root = Char and Char:FindFirstChild('HumanoidRootPart');
+		if Root then
+			local ScreenPos, OnScreen = CurrentCamera:WorldToViewportPoint(Root.Position);
+			if OnScreen and ScreenPos.Z > 1 then
+				local ScaleFactor = (Root.Size.Y * ViewportY) / (ScreenPos.Z * 2) * 80 / CamFOV;
+				local W = MathMin(SilentAimCfg['FOV']['Size']['Width'] * ScaleFactor, ViewportX * 2);
+				local H = MathMin(SilentAimCfg['FOV']['Size']['Height'] * ScaleFactor, ViewportY * 2);
+
+				SilentFOVBox.Size = Vector2New(MathFloor(W + 0.5), MathFloor(H + 0.5));
+				SilentFOVBox.Position = Vector2New(MathFloor(ScreenPos.X - W / 2 + 0.5), MathFloor(ScreenPos.Y - H / 2 + 0.5));
+
+				local Delta = Vector2New(ScreenPos.X, ScreenPos.Y) - MousePosition;
+				local InBox = MathAbs(Delta.X) <= W / 2 and MathAbs(Delta.Y) <= H / 2;
+				local Colors = SilentAimCfg['FOV']['FOV Color'];
+				SilentFOVBox.Color = InBox and Colors['In-FOV Color'] or Colors['Color'];
+				SilentFOVBox.Visible = true;
+			else
+				SilentFOVBox.Visible = false;
+			end;
+		else
+			SilentFOVBox.Visible = false;
+		end;
+	else
+		SilentFOVBox.Visible = false;
+	end;
+
+	local LineCfg = SilentAimCfg['Target Line'];
+	if LineCfg and LineCfg['Enabled'] and SilentTarget then
+		local Char = SilentTarget.Character;
+		local Root = Char and Char:FindFirstChild('Head');
+		if Root then
+			local ScreenPos, OnScreen = CurrentCamera:WorldToViewportPoint(Root.Position);
+			if OnScreen then
+				SilentTargetLine.From = Vector2New(MousePosition.X, MousePosition.Y);
+				SilentTargetLine.To = Vector2New(ScreenPos.X, ScreenPos.Y);
+
+				local RootPart = Char:FindFirstChild('HumanoidRootPart');
+				if RootPart then
+					local RootScreen = CurrentCamera:WorldToViewportPoint(RootPart.Position);
+					local ScaleFactor = (RootPart.Size.Y * ViewportY) / (RootScreen.Z * 2) * 80 / CamFOV;
+					local W = SilentAimCfg['FOV']['Size']['Width'] * ScaleFactor;
+					local H = SilentAimCfg['FOV']['Size']['Height'] * ScaleFactor;
+					local Delta = Vector2New(RootScreen.X, RootScreen.Y) - MousePosition;
+					local InBox = SilentAimCfg['FOV']['Enabled'] and MathAbs(Delta.X) <= W / 2 and MathAbs(Delta.Y) <= H / 2;
+					SilentTargetLine.Color = InBox and LineCfg['In-FOV Color'] or LineCfg['Color'];
+				else
+					SilentTargetLine.Color = LineCfg['Color'];
+				end;
+				SilentTargetLine.Visible = true;
+			else
+				SilentTargetLine.Visible = false;
+			end;
+		else
+			SilentTargetLine.Visible = false;
+		end;
+	else
+		SilentTargetLine.Visible = false;
+	end;
+
+	local TrigTarget = State.Targets.Triggerbot;
+	local TrigDisplay = TrigTarget;
+	if not TrigDisplay and TriggerCfg['FOV']['Enabled'] then
+		TrigDisplay = ClosestPlayer;
+	end;
+	if TriggerCfg['FOV']['Enabled'] and TriggerCfg['FOV']['Visible'] and TrigDisplay then
+		local Char = TrigDisplay.Character;
+		local Root = Char and Char:FindFirstChild('HumanoidRootPart');
+		if Root then
+			local ScreenPos, OnScreen = CurrentCamera:WorldToViewportPoint(Root.Position);
+			if OnScreen and ScreenPos.Z > 1 then
+				local ScaleFactor = (Root.Size.Y * ViewportY) / (ScreenPos.Z * 2) * 80 / CamFOV;
+				local W = MathMin(TriggerCfg['FOV']['Size']['Width'] * ScaleFactor, ViewportX * 2);
+				local H = MathMin(TriggerCfg['FOV']['Size']['Height'] * ScaleFactor, ViewportY * 2);
+
+				TriggerFOVBox.Size = Vector2New(MathFloor(W + 0.5), MathFloor(H + 0.5));
+				TriggerFOVBox.Position = Vector2New(MathFloor(ScreenPos.X - W / 2 + 0.5), MathFloor(ScreenPos.Y - H / 2 + 0.5));
+
+				local Delta = Vector2New(ScreenPos.X, ScreenPos.Y) - MousePosition;
+				local InBox = MathAbs(Delta.X) <= W / 2 and MathAbs(Delta.Y) <= H / 2;
+				local Colors = TriggerCfg['FOV']['FOV Color'];
+				TriggerFOVBox.Color = InBox and Colors['In-FOV Color'] or Colors['Color'];
+				TriggerFOVBox.Visible = true;
+			else
+				TriggerFOVBox.Visible = false;
+			end;
+		else
+			TriggerFOVBox.Visible = false;
+		end;
+	else
+		TriggerFOVBox.Visible = false;
+	end;
+
+	local AssistTarget = State.Targets.Assist;
+	local AssistDisplay = AssistTarget;
+	if not AssistDisplay and AssistCfg['FOV']['Enabled'] then
+		AssistDisplay = ClosestPlayer;
+	end;
+	if AssistCfg['FOV']['Enabled'] and AssistCfg['FOV']['Visible'] and AssistDisplay then
+		local Char = AssistDisplay.Character;
+		local Root = Char and Char:FindFirstChild('HumanoidRootPart');
+		if Root then
+			local ScreenPos, OnScreen = CurrentCamera:WorldToViewportPoint(Root.Position);
+			if OnScreen and ScreenPos.Z > 1 then
+				local ScaleFactor = (Root.Size.Y * ViewportY) / (ScreenPos.Z * 2) * 80 / CamFOV;
+				local W = MathMin(AssistCfg['FOV']['Size']['Width'] * ScaleFactor, ViewportX * 2);
+				local H = MathMin(AssistCfg['FOV']['Size']['Height'] * ScaleFactor, ViewportY * 2);
+
+				AssistFOVBox.Size = Vector2New(MathFloor(W + 0.5), MathFloor(H + 0.5));
+				AssistFOVBox.Position = Vector2New(MathFloor(ScreenPos.X - W / 2 + 0.5), MathFloor(ScreenPos.Y - H / 2 + 0.5));
+
+				local Delta = Vector2New(ScreenPos.X, ScreenPos.Y) - MousePosition;
+				local InBox = MathAbs(Delta.X) <= W / 2 and MathAbs(Delta.Y) <= H / 2;
+				local Colors = AssistCfg['FOV']['FOV Color'];
+				AssistFOVBox.Color = InBox and Colors['In-FOV Color'] or Colors['Color'];
+				AssistFOVBox.Visible = true;
+			else
+				AssistFOVBox.Visible = false;
+			end;
+		else
+			AssistFOVBox.Visible = false;
+		end;
+	else
+		AssistFOVBox.Visible = false;
+	end;
+
+	local ESPCfg = Config['Name ESP'];
+	if ESPCfg['Enabled'] then
+		local ESPSettings = ESPCfg['Settings'];
+		local ESPColors = ESPSettings['Color Settings'];
+		local ESPSize = ESPSettings['Text Size'] or 13;
+		for _, Player in next, Players:GetPlayers() do
+			if Player == LocalPlayer then continue end;
+			local Character = Player.Character;
+			if not Character then
+				if NameESPDrawings[Player] then NameESPDrawings[Player].Visible = false end;
+				continue;
+			end;
+			local HumanoidRootPart = Character:FindFirstChild('HumanoidRootPart');
+			if not HumanoidRootPart then
+				if NameESPDrawings[Player] then NameESPDrawings[Player].Visible = false end;
+				continue;
+			end;
+			local ESPPos = HumanoidRootPart.Position + Vector3New(0, -2.5, 0);
+			local ScreenPos, OnScreen = CurrentCamera:WorldToViewportPoint(ESPPos);
+			if not OnScreen then
+				if NameESPDrawings[Player] then NameESPDrawings[Player].Visible = false end;
+				continue;
+			end;
+			if not NameESPDrawings[Player] then
+				local Draw = CreateTextLabel();
+				Draw.Outline = true;
+				Draw.Center = true;
+				NameESPDrawings[Player] = Draw;
+			end;
+			local Draw = NameESPDrawings[Player];
+			local IsTarget = (Player == State.Targets.Silent or Player == State.Targets.Assist or Player == State.Targets.Triggerbot);
+			Draw.Text = Player.DisplayName;
+			Draw.Size = ESPSize;
+			Draw.Color = IsTarget and ESPColors['Locked Color'] or ESPColors['Color'];
+			Draw.Position = Vector2New(MathFloor(ScreenPos.X + 0.5), MathFloor(ScreenPos.Y + 0.5));
+			Draw.Visible = true;
+		end;
+	else
+		for _, Draw in next, NameESPDrawings do
+			Draw.Visible = false;
+		end;
+	end;
+
+	local PanelCfg = Config['Core']['Panel'];
+	if PanelCfg['Enabled'] then
+		local PColors = PanelCfg['Colors'];
+		local PPos = PanelCfg['Position'];
+		local BaseX = MathFloor(PPos['X'] + 0.5);
+		local BaseY = MathFloor(PPos['Y'] + 0.5);
+
+		local AC = PColors['Allusive Color'];
+		local EC = PColors['Extension Color'];
+		PanelTitle.Text = string.format('<font color="rgb(%d, %d, %d)">allusive</font><font color="rgb(%d, %d, %d)">.club</font>', MathFloor(AC.R * 255 + 0.5), MathFloor(AC.G * 255 + 0.5), MathFloor(AC.B * 255 + 0.5), MathFloor(EC.R * 255 + 0.5), MathFloor(EC.G * 255 + 0.5), MathFloor(EC.B * 255 + 0.5));
+		PanelTitle.Position = Vector2New(BaseX, BaseY);
+		PanelTitle.Visible = true;
+
+		local OffsetY = BaseY + 20;
+		local LabelIdx = 0;
+
+		if SilentAimCfg['Enabled'] and State.Toggles.SilentAim then
+			LabelIdx = LabelIdx + 1;
+			local L = PanelLabels[LabelIdx];
+			if L then
+				local STarget = State.Targets.Silent;
+				local TName = STarget and STarget.DisplayName or 'none';
+				local FC = PColors['Feature Color'];
+				local TC = STarget and PColors['Current Target'] or PColors['Feature Color'];
+				L.Text = string.format('<font color="rgb(%d, %d, %d)">silent aim</font> <font color="rgb(90, 90, 90)">\u{203A}</font> <font color="rgb(%d, %d, %d)">%s</font>', MathFloor(FC.R * 255 + 0.5), MathFloor(FC.G * 255 + 0.5), MathFloor(FC.B * 255 + 0.5), MathFloor(TC.R * 255 + 0.5), MathFloor(TC.G * 255 + 0.5), MathFloor(TC.B * 255 + 0.5), TName);
+				L.Color = Color3.new(1, 1, 1);
+				L.Position = Vector2New(BaseX, OffsetY);
+				L.Visible = true;
+				OffsetY = OffsetY + 16;
+			end;
+		end;
+
+		if AssistCfg['Enabled'] and AssistTargetLocked then
+			LabelIdx = LabelIdx + 1;
+			local L = PanelLabels[LabelIdx];
+			if L then
+				local ATarget = State.Targets.Assist;
+				local TName = ATarget and ATarget.DisplayName or 'none';
+				local FC = PColors['Feature Color'];
+				local TC = ATarget and PColors['Current Target'] or PColors['Feature Color'];
+				L.Text = string.format('<font color="rgb(%d, %d, %d)">aim assist</font> <font color="rgb(90, 90, 90)">\u{203A}</font> <font color="rgb(%d, %d, %d)">%s</font>', MathFloor(FC.R * 255 + 0.5), MathFloor(FC.G * 255 + 0.5), MathFloor(FC.B * 255 + 0.5), MathFloor(TC.R * 255 + 0.5), MathFloor(TC.G * 255 + 0.5), MathFloor(TC.B * 255 + 0.5), TName);
+				L.Color = Color3.new(1, 1, 1);
+				L.Position = Vector2New(BaseX, OffsetY);
+				L.Visible = true;
+				OffsetY = OffsetY + 16;
+			end;
+		end;
+
+		if TriggerCfg['Enabled'] and State.TriggerState then
+			LabelIdx = LabelIdx + 1;
+			local L = PanelLabels[LabelIdx];
+			if L then
+				local TTarget = State.Targets.Triggerbot;
+				local TName = TTarget and TTarget.DisplayName or 'none';
+				local FC = PColors['Feature Color'];
+				local TC = TTarget and PColors['Current Target'] or PColors['Feature Color'];
+				L.Text = string.format('<font color="rgb(%d, %d, %d)">triggerbot</font> <font color="rgb(90, 90, 90)">\u{203A}</font> <font color="rgb(%d, %d, %d)">%s</font>', MathFloor(FC.R * 255 + 0.5), MathFloor(FC.G * 255 + 0.5), MathFloor(FC.B * 255 + 0.5), MathFloor(TC.R * 255 + 0.5), MathFloor(TC.G * 255 + 0.5), MathFloor(TC.B * 255 + 0.5), TName);
+				L.Color = Color3.new(1, 1, 1);
+				L.Position = Vector2New(BaseX, OffsetY);
+				L.Visible = true;
+				OffsetY = OffsetY + 16;
+			end;
+		end;
+
+		if Config['Silent Aim']['Hit Part']['Override']['Enabled'] then
+			LabelIdx = LabelIdx + 1;
+			local L = PanelLabels[LabelIdx];
+			if L then
+				local FC = PColors['Feature Color'];
+				L.Text = string.format('<font color="rgb(%d, %d, %d)">override</font>', MathFloor(FC.R * 255 + 0.5), MathFloor(FC.G * 255 + 0.5), MathFloor(FC.B * 255 + 0.5));
+				L.Color = Color3.new(1, 1, 1);
+				L.Position = Vector2New(BaseX, OffsetY);
+				L.Visible = true;
+				OffsetY = OffsetY + 16;
+			end;
+		end;
+
+		if SilentAimCfg['Rage'] and SilentAimCfg['Rage'][1] == true then
+			LabelIdx = LabelIdx + 1;
+			local L = PanelLabels[LabelIdx];
+			if L then
+				local FC = PColors['Feature Color'];
+				local Status = State.RageStatus or 'idle';
+				local SC = (Status == 'Shooting') and PColors['Current Target'] or PColors['Feature Color'];
+				local StatusLower = string.lower(Status);
+				L.Text = string.format('<font color="rgb(%d, %d, %d)">rage</font> <font color="rgb(90, 90, 90)">\u{203A}</font> <font color="rgb(%d, %d, %d)">%s</font>', MathFloor(FC.R * 255 + 0.5), MathFloor(FC.G * 255 + 0.5), MathFloor(FC.B * 255 + 0.5), MathFloor(SC.R * 255 + 0.5), MathFloor(SC.G * 255 + 0.5), MathFloor(SC.B * 255 + 0.5), StatusLower);
+				L.Color = Color3.new(1, 1, 1);
+				L.Position = Vector2New(BaseX, OffsetY);
+				L.Visible = true;
+				OffsetY = OffsetY + 16;
+			end;
+		end;
+
+		if Config['Movement']['WalkSpeed']['Enabled'] and State.WalkSpeedActive then
+			LabelIdx = LabelIdx + 1;
+			local L = PanelLabels[LabelIdx];
+			if L then
+				local FC = PColors['Feature Color'];
+				L.Text = string.format('<font color="rgb(%d, %d, %d)">speed</font>', MathFloor(FC.R * 255 + 0.5), MathFloor(FC.G * 255 + 0.5), MathFloor(FC.B * 255 + 0.5));
+				L.Color = Color3.new(1, 1, 1);
+				L.Position = Vector2New(BaseX, OffsetY);
+				L.Visible = true;
+				OffsetY = OffsetY + 16;
+			end;
+		end;
+
+		if Config['Movement']['JumpPower']['Enabled'] and State.JumpPowerActive then
+			LabelIdx = LabelIdx + 1;
+			local L = PanelLabels[LabelIdx];
+			if L then
+				local FC = PColors['Feature Color'];
+				L.Text = string.format('<font color="rgb(%d, %d, %d)">jump</font>', MathFloor(FC.R * 255 + 0.5), MathFloor(FC.G * 255 + 0.5), MathFloor(FC.B * 255 + 0.5));
+				L.Color = Color3.new(1, 1, 1);
+				L.Position = Vector2New(BaseX, OffsetY);
+				L.Visible = true;
+				OffsetY = OffsetY + 16;
+			end;
+		end;
+
+		if Config['Name ESP']['Enabled'] then
+			LabelIdx = LabelIdx + 1;
+			local L = PanelLabels[LabelIdx];
+			if L then
+				local FC = PColors['Feature Color'];
+				L.Text = string.format('<font color="rgb(%d, %d, %d)">esp</font>', MathFloor(FC.R * 255 + 0.5), MathFloor(FC.G * 255 + 0.5), MathFloor(FC.B * 255 + 0.5));
+				L.Color = Color3.new(1, 1, 1);
+				L.Position = Vector2New(BaseX, OffsetY);
+				L.Visible = true;
+				OffsetY = OffsetY + 16;
+			end;
+		end;
+
+		if State.SorterActive then
+			LabelIdx = LabelIdx + 1;
+			local L = PanelLabels[LabelIdx];
+			if L then
+				local FC = PColors['Feature Color'];
+				L.Text = string.format('<font color="rgb(%d, %d, %d)">sorter</font>', MathFloor(FC.R * 255 + 0.5), MathFloor(FC.G * 255 + 0.5), MathFloor(FC.B * 255 + 0.5));
+				L.Color = Color3.new(1, 1, 1);
+				L.Position = Vector2New(BaseX, OffsetY);
+				L.Visible = true;
+				OffsetY = OffsetY + 16;
+			end;
+		end;
+
+		for i = LabelIdx + 1, #PanelLabels do
+			PanelLabels[i].Visible = false;
+		end;
+	else
+		PanelTitle.Visible = false;
+		for _, L in next, PanelLabels do L.Visible = false end;
+	end;
+
+	RunTriggerbot();
+
+	if AssistCfg['Enabled'] and AssistTarget and PassesConditions(AssistTarget) then
+		local TargetChar = AssistTarget.Character;
+		if TargetChar then
+			local HumanoidRootPart = TargetChar:FindFirstChild('HumanoidRootPart');
+			if HumanoidRootPart then
+				local Distance = (HumanoidRootPart.Position - CurrentCamera.CFrame.Position).Magnitude;
+				if Distance <= (AssistCfg['Max Range'] or 750) then
+					local TargetPos, _ = ResolveHitPosition(TargetChar, AssistCfg);
+					if not TargetPos then TargetPos = HumanoidRootPart.Position end;
+					TargetPos = ApplyPrediction(TargetPos, AssistTarget, AssistCfg);
+
+					local CamPos = CurrentCamera.CFrame.Position;
+					local DesiredCFrame = CFrameNew(CamPos, TargetPos);
+
+					local InterpCfg = AssistCfg['Smoothness'];
+					if InterpCfg and InterpCfg['Enabled'] then
+						local PosAlpha = InterpCfg['Smoothness'][1] or 0.1;
+						local RotAlpha = InterpCfg['Smoothness'][2] or 0.1;
+
+						local LerpedPos = CurrentCamera.CFrame.Position:Lerp(DesiredCFrame.Position, PosAlpha);
+						local LerpedRot = CurrentCamera.CFrame:Lerp(DesiredCFrame, RotAlpha);
+						CurrentCamera.CFrame = CFrameNew(LerpedPos) * (LerpedRot - LerpedRot.Position);
+					else
+						CurrentCamera.CFrame = DesiredCFrame;
+					end;
+				end;
+			end;
+		end;
+	end;
+end));
+
+local function RageFire(Child, Handle, ToolName, Origin, Direction, GunRange, SpreadWeapons)
+	if ShotgunWeapons[ToolName] then
+		local ServerTime = Workspace:GetServerTimeNow();
+		local SpreadMult = 1;
+		if SpreadWeapons then
+			local WeaponSpread = SpreadWeapons[ToolName];
+			if WeaponSpread then SpreadMult = WeaponSpread['Multiplier'] or 1 end;
+		end;
+		for _ = 1, 5 do
+			local SpreadX = (MathRandom() > 0.5 and MathRandom() * 0.05 or -MathRandom() * 0.05) * SpreadMult;
+			local SpreadY = (MathRandom() > 0.5 and MathRandom() * 0.1 or -MathRandom() * 0.1) * SpreadMult;
+			local SpreadZ = (MathRandom() > 0.5 and MathRandom() * 0.05 or -MathRandom() * 0.05) * SpreadMult;
+			local AimDir = Direction + Vector3New(SpreadX, SpreadY, SpreadZ);
+			local RayVec = AimDir * GunRange;
+			local RayResult = Workspace:Raycast(Origin, RayVec, RageRayParams);
+			CachedMainEvent:FireServer('ShootGun', Handle, Origin, RayResult and RayResult.Position or (Origin + RayVec), RayResult and RayResult.Instance, RayResult and RayResult.Normal, ServerTime);
+		end;
+	else
+		local RayVec = Direction * GunRange;
+		local RayResult = Workspace:Raycast(Origin, RayVec, RageRayParams);
+		CachedMainEvent:FireServer('ShootGun', Handle, Origin, RayResult and RayResult.Position or (Origin + RayVec), RayResult and RayResult.Instance, RayResult and RayResult.Normal);
+	end;
+end;
+
+local RageCore = LPH_JIT_MAX(function()
+	local SilentAimCfg = Config['Silent Aim'];
+	local RageCfg = SilentAimCfg['Rage'];
+	if not RageCfg or RageCfg[1] ~= true or not SilentAimCfg['Enabled'] then
+		State.RageStatus = 'Disabled';
+		return;
+	end;
+	local Target = State.Targets.Silent;
+	if not Target then
+		State.RageStatus = 'No Target';
+		return;
+	end;
+	local Character = LocalPlayer.Character;
+	if not Character then
+		State.RageStatus = 'No Character';
+		return;
+	end;
+	local CharHRP = Character:FindFirstChild('HumanoidRootPart');
+	if not CharHRP then
+		State.RageStatus = 'Dead';
+		return;
+	end;
+	if not CanShootCheck(Character) then
+		State.RageStatus = 'Blocked';
+		return;
+	end;
+	if not PassesConditions(Target) then
+		State.RageStatus = 'Conditions';
+		return;
+	end;
+	local TargetChar = Target.Character;
+	if not TargetChar then
+		State.RageStatus = 'No Character';
+		return;
+	end;
+	local Hitbox = TargetChar:FindFirstChild('Head');
+	if not Hitbox then
+		State.RageStatus = 'Dead';
+		return;
+	end;
+
+	local HitPartCfg = SilentAimCfg['Hit Part'];
+	if type(HitPartCfg) == 'table' and HitPartCfg['Selection'] == 'Named Part' then
+		local NamedPart = HitPartCfg['Named Part'] or (HitPartCfg['Override'] and HitPartCfg['Override']['Part']) or 'HumanoidRootPart';
+		local Named = TargetChar:FindFirstChild(NamedPart);
+		if Named then Hitbox = Named end;
+	elseif type(HitPartCfg) == 'table' and HitPartCfg['Selection'] ~= 'Nearest Point' and HitPartCfg['Selection'] ~= 'Nearest Part' and HitPartCfg['Selection'] ~= 'Multi' then
+		local Named = TargetChar:FindFirstChild(HitPartCfg['Selection']);
+		if Named then Hitbox = Named end;
+	elseif type(HitPartCfg) == 'table' and HitPartCfg['Selection'] == 'Multi' then
+		local MultiCfg = HitPartCfg['Multi'];
+		if MultiCfg and MultiCfg['Enabled'] then
+			local Pos, Part = ResolveMultiPart(TargetChar, MultiCfg);
+			if Part then Hitbox = Part end;
+		end;
+	elseif HitPartCfg and HitPartCfg['Mode'] == 'Named Part' then
+		local Named = TargetChar:FindFirstChild(HitPartCfg['Part Name'] or 'HumanoidRootPart');
+		if Named then Hitbox = Named end;
+	end;
+
+	local AimPos = ApplyPrediction(Hitbox.Position, Target, SilentAimCfg);
+	local FallbackOrigin = CharHRP.Position;
+
+	if not CachedMainEvent then CachedMainEvent = ReplicatedStorage:FindFirstChild('MainEvent') end;
+	if not CachedMainEvent then return end;
+
+	RageRayParams.FilterDescendantsInstances = BuildFilter(RageFilter, Character);
+
+	local Now = Clock();
+	local GunModsCfg = Config['Gun Modifications'];
+	local DelayCfg = GunModsCfg['Delay Changer'];
+	local DelayEnabled = DelayCfg['Enabled'];
+	local DelayWeapons = DelayEnabled and DelayCfg['Weapons'];
+	local SpreadCfg = GunModsCfg['Spread Modifications'];
+	local SpreadEnabled = SpreadCfg['Enabled'];
+	local SpreadWeapons = SpreadEnabled and SpreadCfg['Weapons'];
+
+	local HasGun = false;
+	local DidShoot = false;
+	for _, Child in next, Character:GetChildren() do
+		if not Child:IsA('Tool') then continue end;
+		local ToolName = Child.Name;
+		if not MuzzleOffsets[ToolName] then continue end;
+		local Handle = Child:FindFirstChild('Handle');
+		if not Handle then continue end;
+		local Ammo = Child:FindFirstChild('Ammo');
+		if not Ammo or Ammo.Value <= 0 then continue end;
+		HasGun = true;
+
+		local CD = Child:FindFirstChild('ShootingCooldown');
+		local OrigCooldown = CD and CD.Value or 0.3;
+		local Cooldown = OrigCooldown;
+		if DelayWeapons then
+			local WeaponDelay = DelayWeapons[ToolName];
+			if WeaponDelay then Cooldown = WeaponDelay['Value'] or Cooldown end;
+		end;
+		if RageLastFire[Child] and (Now - RageLastFire[Child]) < MathMax(Cooldown, 0.006) then continue end;
+
+		local RangeVal = Child:FindFirstChild('Range');
+		local GunRange = RangeVal and RangeVal.Value or 200;
+
+		local Origin = GetMuzzlePosition(Child) or FallbackOrigin;
+		local AimOffset = AimPos - Origin;
+		local AimDist = AimOffset.Magnitude;
+		if AimDist <= 0 or AimDist > GunRange + 15 then continue end;
+		local Direction = AimOffset / AimDist;
+
+		for Burst = 1, 3 do
+			if Ammo.Value <= 0 then break end;
+			RageLastFire[Child] = Clock();
+			RageFire(Child, Handle, ToolName, Origin, Direction, GunRange, SpreadWeapons);
+		end;
+		DidShoot = true;
+
+		if not RageLastVisual[Child] or (Now - RageLastVisual[Child]) >= OrigCooldown then
+			RageLastVisual[Child] = Now;
+			Spawn(ShowPellet, Character, Handle, Origin, AimPos, GunRange);
+		end;
+	end;
+	if DidShoot then
+		State.RageStatus = 'Shooting';
+	elseif HasGun then
+		State.RageStatus = 'Out of Range';
+	else
+		State.RageStatus = 'No Gun';
+	end;
+end);
+
+RunService:BindToRenderStep('AllusiveRage', 0, RageCore);
+RunService.Stepped:Connect(RageCore);
+RunService.Heartbeat:Connect(RageCore);
+
+if CurrentGame.Name == 'Da Hood' then
+	if LocalPlayer.Character then HookGunActivation(LocalPlayer.Character) end;
+	LocalPlayer.CharacterAdded:Connect(HookGunActivation);
+end;
+
+local function SetupAntiFall(Character)
+	if not Character then return end;
+	local Humanoid = Character:FindFirstChildOfClass('Humanoid') or Character:WaitForChild('Humanoid', 10);
+	if not Humanoid then return end;
+	Humanoid.StateChanged:Connect(function(_, NewState)
+		if not Config['Movement']['Anti Fall'] then return end;
+		if NewState == EnumFallingDown or NewState == EnumRagdoll then
+			Humanoid:ChangeState(EnumGettingUp);
+		end;
+	end);
+end;
+if LocalPlayer.Character then SetupAntiFall(LocalPlayer.Character) end;
+LocalPlayer.CharacterAdded:Connect(SetupAntiFall);
+
+local function SetupNoJumpCooldown(Character)
+	if not Character then return end;
+	local Humanoid = Character:FindFirstChildOfClass('Humanoid');
+	if not Humanoid then return end;
+	local DefaultJumpPower = Humanoid.JumpPower;
+	Humanoid:GetPropertyChangedSignal('JumpPower'):Connect(function()
+		if not Config['Movement']['No Jump Cooldown'] then return end;
+		if Humanoid.JumpPower == 0 then
+			local JpCfg = Config['Movement']['JumpPower'];
+			if JpCfg['Enabled'] and State.JumpPowerActive and not JpCfg['Spiderman Mode'] then
+				local Tool = Character:FindFirstChildOfClass('Tool');
+				local IsReload = false;
+				if Tool then
+					local Ammo = Tool:FindFirstChild('Ammo');
+					if Ammo and Ammo.Value == 0 then IsReload = true end;
+					if not IsReload then
+						local Reloading = Tool:FindFirstChild('Reloading');
+						if Reloading and Reloading.Value then IsReload = true end;
+					end;
+				end;
+				local IsLowHealth = Humanoid.Health > 0 and Humanoid.Health <= 25;
+				local Key = 'Normal';
+				if IsLowHealth then
+					Key = 'Low Health';
+				elseif IsReload then
+					Key = 'Reload';
+				elseif State.IsShooting then
+					Key = 'Shooting';
+				end;
+				local Mult = JpCfg[Key] and JpCfg[Key]['Multiplier'] or 1;
+				Humanoid.JumpPower = Mult * 100;
+			else
+				Humanoid.JumpPower = DefaultJumpPower;
+			end;
+		end;
+	end);
+end;
+
+if LocalPlayer.Character then SetupNoJumpCooldown(LocalPlayer.Character) end;
+LocalPlayer.CharacterAdded:Connect(SetupNoJumpCooldown);
+
+local function SetupWalkSpeed(Character)
+	if not Character then return end;
+	local Humanoid = Character:FindFirstChildOfClass('Humanoid') or Character:WaitForChild('Humanoid', 10);
+	if not Humanoid then return end;
+	local WalkSpeedConn;
+	WalkSpeedConn = RunService.RenderStepped:Connect(LPH_JIT_MAX(function()
+		if not Character.Parent then WalkSpeedConn:Disconnect(); return end;
+		local WsCfg = Config['Movement']['WalkSpeed'];
+		if not WsCfg['Enabled'] or not State.WalkSpeedActive then return end;
+		local RootPart = Character:FindFirstChild('HumanoidRootPart');
+		local Tool = Character:FindFirstChildOfClass('Tool');
+		local IsReload = false;
+		if Tool then
+			local Ammo = Tool:FindFirstChild('Ammo');
+			if Ammo and Ammo.Value == 0 then IsReload = true end;
+			if not IsReload then
+				local Reloading = Tool:FindFirstChild('Reloading');
+				if Reloading and Reloading.Value then IsReload = true end;
+			end;
+		end;
+		local IsLowHealth = Humanoid.Health > 0 and Humanoid.Health <= 25;
+		local Key = 'Normal';
+		if IsLowHealth then
+			Key = 'Low Health';
+		elseif IsReload then
+			Key = 'Reload';
+		elseif State.IsShooting then
+			Key = 'Shooting';
+		end;
+		local Mult = WsCfg[Key] and WsCfg[Key]['Multiplier'] or 1;
+		Humanoid.WalkSpeed = Mult * 100;
+	end));
+end;
+
+if LocalPlayer.Character then SetupWalkSpeed(LocalPlayer.Character) end;
+LocalPlayer.CharacterAdded:Connect(SetupWalkSpeed);
+
+local function SetupJumpPower(Character)
+	if not Character then return end;
+	local Humanoid = Character:FindFirstChildOfClass('Humanoid') or Character:WaitForChild('Humanoid', 10);
+	if not Humanoid then return end;
+	local DefaultJumpPower = Humanoid.JumpPower;
+
+	local WallCheckParams = RaycastParamsNew();
+	WallCheckParams.FilterType = EnumExclude;
+	WallCheckParams.FilterDescendantsInstances = {Character};
+
+	local function IsNearWall(RootPart)
+		local Origin = RootPart.Position;
+		local CF = RootPart.CFrame;
+		local Directions = { CF.LookVector, -CF.LookVector, CF.RightVector, -CF.RightVector };
+		for _, Dir in next, Directions do
+			if Workspace:Raycast(Origin, Dir * 3, WallCheckParams) then return true end;
+		end;
+		return false;
+	end;
+
+	local function GetJumpMultiplier()
+		local JpCfg = Config['Movement']['JumpPower'];
+		local Tool = Character:FindFirstChildOfClass('Tool');
+		local IsReload = false;
+		if Tool then
+			local Ammo = Tool:FindFirstChild('Ammo');
+			if Ammo and Ammo.Value == 0 then IsReload = true end;
+			if not IsReload then
+				local Reloading = Tool:FindFirstChild('Reloading');
+				if Reloading and Reloading.Value then IsReload = true end;
+			end;
+		end;
+		local IsLowHealth = Humanoid.Health > 0 and Humanoid.Health <= 25;
+		local Key = 'Normal';
+		if IsLowHealth then
+			Key = 'Low Health';
+		elseif IsReload then
+			Key = 'Reload';
+		elseif State.IsShooting then
+			Key = 'Shooting';
+		end;
+		return JpCfg[Key] and JpCfg[Key]['Multiplier'] or 1;
+	end;
+
+	local JumpConn;
+	local JumpWasBoosted = false;
+	JumpConn = RunService.RenderStepped:Connect(LPH_JIT_MAX(function()
+		if not Character.Parent then JumpConn:Disconnect(); return end;
+		local JpCfg = Config['Movement']['JumpPower'];
+		if not JpCfg['Enabled'] or not State.JumpPowerActive or JpCfg['Spiderman Mode'] then
+			if JumpWasBoosted then
+				Humanoid.JumpPower = DefaultJumpPower;
+				JumpWasBoosted = false;
+			end;
+			return;
+		end;
+		Humanoid.JumpPower = GetJumpMultiplier() * 100;
+		JumpWasBoosted = true;
+	end));
+
+	local RequestConn;
+	local FreefallStart = 0;
+	Humanoid.StateChanged:Connect(function(_, NewState)
+		if NewState == EnumFreefall then
+			FreefallStart = Tick();
+		elseif NewState == EnumLanded or NewState == EnumRunning then
+			FreefallStart = 0;
+		end;
+	end);
+	RequestConn = UserInputService.JumpRequest:Connect(function()
+		if not Character.Parent then RequestConn:Disconnect(); return end;
+		local JpCfg = Config['Movement']['JumpPower'];
+		if not JpCfg['Enabled'] or not State.JumpPowerActive or not JpCfg['Spiderman Mode'] then return end;
+		local RootPart = Character:FindFirstChild('HumanoidRootPart');
+		if not RootPart then return end;
+		if Humanoid:GetState() ~= EnumFreefall then return end;
+		if FreefallStart == 0 or (Tick() - FreefallStart) < 0.2 then return end;
+		if not IsNearWall(RootPart) then return end;
+		local BoostedPower = GetJumpMultiplier() * 100;
+		Humanoid.JumpPower = BoostedPower;
+		Humanoid:ChangeState(EnumJumping);
+		local ResetConn;
+		ResetConn = Humanoid.StateChanged:Connect(function(_, NewState)
+			if NewState == EnumFreefall or NewState == EnumLanded then
+				ResetConn:Disconnect();
+				Humanoid.JumpPower = DefaultJumpPower;
+			end;
+		end);
+	end);
+end;
+
+if LocalPlayer.Character then SetupJumpPower(LocalPlayer.Character) end;
+LocalPlayer.CharacterAdded:Connect(SetupJumpPower);
+
+do
+	local function GetSkinChangerCfg() return Config['Utilities']['Skin Changer'] end;
+	local AppliedSkins = {};
+	local KnifeData = {};
+	local ToolRegistry = {};
+	local SkinAssets = CachedSkinAssets;
+	local SkinModules = ReplicatedStorage:FindFirstChild('SkinModules');
+	local SkinData = nil;
+
+	local function IsKnifeSkin(name)
+		local n = name:lower():gsub(' ', '');
+		return n == 'goldenagetanto' or n == 'gpo-knife' or n == 'gpo-knifeprestige' or n == 'heaven'
+			or n == 'lovekukri' or n == 'purpledagger' or n == 'bluedagger' or n == 'greendagger' or n == 'reddagger';
+	end;
+
+	local function CleanKnife(Tool)
+		local data = KnifeData[Tool];
+		if data then
+			if data.track then
+				data.track:Stop();
+				data.track:Destroy();
+				data.track = nil;
+			end;
+			if data.welds then
+				for _, w in next, data.welds do
+					if w then w:Destroy() end;
+				end;
+			end;
+			if data.sounds then
+				for _, s in next, data.sounds do
+					if s and s.Parent then s:Destroy() end;
+				end;
+			end;
+		end;
+		local mesh = Tool:FindFirstChild('Default');
+		if mesh then
+			for _, v in next, mesh:GetChildren() do
+				if v.Name == 'Handle.R' or v:IsA('Model') or (v:IsA('BasePart') and v.Name ~= 'Default') then
+					v:Destroy();
+				end;
+			end;
+			mesh.Transparency = 0;
+		end;
+		KnifeData[Tool] = nil;
+	end;
+
+	local function ApplyKnife(Character, Tool, SkinName)
+		if not IsKnifeSkin(SkinName) then return end;
+		if Tool.Parent ~= Character then return end;
+		local Humanoid = Character:FindFirstChild('Humanoid');
+		local rhand = Character:FindFirstChild('RightHand');
+		if not Humanoid or not rhand then return end;
+
+		local existing = KnifeData[Tool];
+		if existing and existing.welds and #existing.welds > 0 then
+			local handleR = Tool:FindFirstChild('Default') and Tool:FindFirstChild('Default'):FindFirstChild('Handle.R');
+			if handleR and handleR.Parent then
+				local m6d = handleR:FindFirstChildOfClass('Motor6D');
+				if m6d then
+					m6d.Part0 = rhand;
+				end;
+				local Animator = Humanoid:FindFirstChildOfClass('Animator');
+				if Animator then
+					local n = SkinName:lower():gsub(' ', '');
+					local animId, sndId;
+					if n == 'goldenagetanto' then animId = 'rbxassetid://13473404819'; sndId = 'rbxassetid://5917819099';
+					elseif n == 'gpo-knife' or n == 'gpo-knifeprestige' then animId = 'rbxassetid://14014278925'; sndId = 'rbxassetid://4604390759';
+					elseif n == 'heaven' then animId = 'rbxassetid://14500266726'; sndId = 'rbxassetid://14489860007';
+					elseif n == 'purpledagger' then animId = 'rbxassetid://17824999722'; sndId = 'rbxassetid://17822743153';
+					elseif n == 'bluedagger' then animId = 'rbxassetid://17824995184'; sndId = 'rbxassetid://17822737046';
+					elseif n == 'greendagger' then animId = 'rbxassetid://17825004320'; sndId = 'rbxassetid://17822741762';
+					elseif n == 'reddagger' then animId = 'rbxassetid://17825008844'; sndId = 'rbxassetid://17822952417';
+					end;
+					if animId then
+						if existing.track then
+							existing.track:Stop();
+							existing.track:Destroy();
+							existing.track = nil;
+						end;
+						local anim = Instance.new('Animation');
+						anim.AnimationId = animId;
+						local track = Animator:LoadAnimation(anim);
+						track.Looped = false;
+						track:Play();
+						existing.track = track;
+						anim:Destroy();
+						track.Ended:Once(function()
+							if existing.track == track then existing.track = nil end;
+							track:Destroy();
+						end);
+					end;
+					if sndId then
+						local snd = Instance.new('Sound');
+						snd.SoundId = sndId;
+						snd.Parent = Workspace;
+						snd:Play();
+						table.insert(existing.sounds, snd);
+						snd.Ended:Connect(function()
+							snd:Destroy();
+						end);
+					end;
+				end;
+				return;
+			end;
+		end;
+
+		CleanKnife(Tool);
+		KnifeData[Tool] = { track = nil, welds = {}, sounds = {} };
+		local data = KnifeData[Tool];
+		local mesh = Tool:FindFirstChild('Default');
+		if not mesh then return end;
+		mesh.Transparency = 1;
+		local knives = SkinModules and SkinModules:FindFirstChild('Knives');
+		if not knives then return end;
+		local skinmodel = knives:FindFirstChild(SkinName);
+		if not skinmodel then return end;
+		local clone = skinmodel:Clone();
+		clone.Name = SkinName;
+		local handr = Instance.new('Part');
+		handr.Name = 'Handle.R';
+		handr.Transparency = 1;
+		handr.CanCollide = false;
+		handr.Anchored = false;
+		handr.Size = Vector3New(0.001, 0.001, 0.001);
+		handr.Massless = true;
+		handr.Parent = mesh;
+		local m6d = Instance.new('Motor6D');
+		m6d.Name = 'Handle.R';
+		m6d.Part0 = rhand;
+		m6d.Part1 = handr;
+		m6d.Parent = handr;
+
+		local offset, animId, sndId;
+		local n = SkinName:lower():gsub(' ', '');
+
+		if n == 'goldenagetanto' then
+			offset = CFrameNew(0, -0.20, -1.2) * CFrame.Angles(MathRad(90), MathRad(263.7), MathRad(180));
+			animId = 'rbxassetid://13473404819';
+			sndId = 'rbxassetid://5917819099';
+		elseif n == 'gpo-knife' or n == 'gpo-knifeprestige' then
+			offset = CFrameNew(0, -0.32, -1.07) * CFrame.Angles(MathRad(90), MathRad(-97.4), MathRad(90));
+			animId = 'rbxassetid://14014278925';
+			sndId = 'rbxassetid://4604390759';
+		elseif n == 'heaven' then
+			offset = CFrameNew(-0.02, -0.82, 0.20) * CFrame.Angles(MathRad(64.42), MathRad(3.79), MathRad(0));
+			animId = 'rbxassetid://14500266726';
+			sndId = 'rbxassetid://14489860007';
+		elseif n == 'lovekukri' then
+			offset = CFrameNew(-0.14, 0.14, -1.62) * CFrame.Angles(MathRad(-90), MathRad(180), MathRad(-4.97));
+		elseif n == 'purpledagger' then
+			offset = CFrameNew(-0.13, -0.24, -1.80) * CFrame.Angles(MathRad(89.05), MathRad(96.63), MathRad(180));
+			animId = 'rbxassetid://17824999722';
+			sndId = 'rbxassetid://17822743153';
+		elseif n == 'bluedagger' then
+			offset = CFrameNew(-0.13, -0.24, -1.80) * CFrame.Angles(MathRad(89.05), MathRad(96.63), MathRad(180));
+			animId = 'rbxassetid://17824995184';
+			sndId = 'rbxassetid://17822737046';
+		elseif n == 'greendagger' then
+			offset = CFrameNew(-0.13, -0.24, -1.07) * CFrame.Angles(MathRad(89.05), MathRad(96.63), MathRad(180));
+			animId = 'rbxassetid://17825004320';
+			sndId = 'rbxassetid://17822741762';
+		elseif n == 'reddagger' then
+			offset = CFrameNew(-0.13, -0.24, -1.07) * CFrame.Angles(MathRad(89.05), MathRad(96.63), MathRad(180));
+			animId = 'rbxassetid://17825008844';
+			sndId = 'rbxassetid://17822952417';
+		end;
+
+		if not offset then return end;
+
+		if clone:IsA('Model') then
+			if not clone.PrimaryPart then
+				for _, c in next, clone:GetChildren() do
+					if c:IsA('BasePart') then
+						clone.PrimaryPart = c;
+						break;
+					end;
+				end;
+			end;
+			if clone.PrimaryPart then
+				for _, p in next, clone:GetDescendants() do
+					if p:IsA('BasePart') then
+						p.CanCollide = false;
+						p.Massless = true;
+						p.Anchored = false;
+						local w = Instance.new('Weld');
+						w.Part0 = handr;
+						w.Part1 = p;
+						w.C0 = offset;
+						w.C1 = p.CFrame:ToObjectSpace(clone.PrimaryPart.CFrame);
+						w.Parent = p;
+						table.insert(data.welds, w);
+					end;
+				end;
+			end;
+			clone.Parent = mesh;
+		elseif clone:IsA('BasePart') then
+			clone.CanCollide = false;
+			clone.Massless = true;
+			clone.Anchored = false;
+			clone.Parent = mesh;
+			local w = Instance.new('Weld');
+			w.Part0 = handr;
+			w.Part1 = clone;
+			w.C0 = offset;
+			w.Parent = clone;
+			table.insert(data.welds, w);
+		end;
+
+		local Animator = Humanoid:FindFirstChildOfClass('Animator');
+		if not Animator then
+			Animator = Instance.new('Animator');
+			Animator.Parent = Humanoid;
+		end;
+		if animId then
+			local anim = Instance.new('Animation');
+			anim.AnimationId = animId;
+			local track = Animator:LoadAnimation(anim);
+			track.Looped = false;
+			track:Play();
+			data.track = track;
+			anim:Destroy();
+			track.Ended:Once(function()
+				if data.track == track then
+					data.track = nil;
+				end;
+				track:Destroy();
+			end);
+		end;
+		if sndId then
+			local snd = Instance.new('Sound');
+			snd.SoundId = sndId;
+			snd.Parent = Workspace;
+			snd:Play();
+			table.insert(data.sounds, snd);
+			snd.Ended:Connect(function()
+				snd:Destroy();
+			end);
+		end;
+	end;
+
+	local SkinModulesClone = nil;
+	local function LoadSkinData()
+		if SkinData then return SkinData end;
+		if SkinModules and SkinModules:IsA('ModuleScript') then
+			SkinModulesClone = SkinModules:Clone();
+			local success, result = Xpcall(require, ErrHandler, SkinModulesClone);
+			if success then SkinData = result end;
+		end;
+		return SkinData;
+	end;
+
+	local function GetSkinInfo(weaponName, skinName)
+		local data = LoadSkinData();
+		if not data then return nil end;
+		local weaponSkins = data[weaponName];
+		if not weaponSkins then
+			local bracketName = '[' .. weaponName:gsub('%[', ''):gsub('%]', '') .. ']';
+			weaponSkins = data[bracketName];
+		end;
+		if not weaponSkins then return nil end;
+		local info = weaponSkins[skinName];
+		if not info then
+			info = weaponSkins[skinName:gsub('-', ' ')];
+		end;
+		if not info then
+			info = weaponSkins[skinName:gsub('-', '')];
+		end;
+		return info;
+	end;
+
+	local function FindSourceMesh(skinName, meshRef, isKnife)
+		if not SkinModules then return nil end;
+		if isKnife then
+			local cleanSkin = skinName:lower():gsub(' ', '');
+			local KnivesFolder = SkinModules:FindFirstChild('Knives');
+			if KnivesFolder then
+				for _, child in next, KnivesFolder:GetChildren() do
+					if child:IsA('MeshPart') then
+						local cleanName = child.Name:lower():gsub(' ', '');
+						if child.Name == skinName or cleanName == cleanSkin then
+							return child;
+						end;
+					elseif child:IsA('Folder') or child:IsA('Model') then
+						local cleanName = child.Name:lower():gsub(' ', '');
+						if child.Name == skinName or cleanName == cleanSkin then
+							for _, sub in next, child:GetChildren() do
+								if sub:IsA('MeshPart') then
+									return sub;
+								end;
+							end;
+						end;
+					end;
+				end;
+			end;
+			if SkinAssets then
+				local KnifeFolder = SkinAssets:FindFirstChild('KnifeMeshes') or SkinAssets:FindFirstChild('Knives');
+				if KnifeFolder then
+					for _, child in next, KnifeFolder:GetChildren() do
+						if child:IsA('MeshPart') then
+							local cleanName = child.Name:lower():gsub(' ', '');
+							if child.Name == skinName or cleanName == cleanSkin then
+								return child;
+							end;
+						elseif child:IsA('Folder') or child:IsA('Model') then
+							local cleanName = child.Name:lower():gsub(' ', '');
+							if child.Name == skinName or cleanName == cleanSkin then
+								for _, sub in next, child:GetChildren() do
+									if sub:IsA('MeshPart') then
+										return sub;
+									end;
+								end;
+							end;
+						end;
+					end;
+				end;
+			end;
+			return nil;
+		end;
+		local MeshesFolder = SkinModules:FindFirstChild('Meshes');
+		if not MeshesFolder then return nil end;
+		local folderNames = { skinName, skinName:gsub(' ', ''), skinName:gsub(' ', '_') };
+		for _, folderName in next, folderNames do
+			local skinFolder = MeshesFolder:FindFirstChild(folderName);
+			if skinFolder then
+				if meshRef then
+					for _, child in next, skinFolder:GetChildren() do
+						if child:IsA('MeshPart') then
+							local cleanChild = child.Name:lower():gsub(' ', ''):gsub('-', '');
+							local cleanRef = meshRef:lower():gsub(' ', ''):gsub('-', '');
+							if child.Name == meshRef or cleanChild == cleanRef then
+								return child;
+							end;
+						end;
+					end;
+				end;
+				for _, child in next, skinFolder:GetChildren() do
+					if child:IsA('MeshPart') then
+						return child;
+					end;
+				end;
+			end;
+		end;
+		if SkinAssets then
+			local GunMeshes = SkinAssets:FindFirstChild('GunMeshes');
+			if GunMeshes then
+				for _, folderName in next, folderNames do
+					local skinFolder = GunMeshes:FindFirstChild(folderName);
+					if skinFolder then
+						for _, child in next, skinFolder:GetChildren() do
+							if child:IsA('MeshPart') then
+								return child;
+							end;
+						end;
+					end;
+				end;
+			end;
+		end;
+		return nil;
+	end;
+
+	local function GetShootSound(weaponName, skinName)
+		if not SkinAssets then return nil end;
+		local GunShootSounds = SkinAssets:FindFirstChild('GunShootSounds');
+		if not GunShootSounds then return nil end;
+		local WeaponFolder = GunShootSounds:FindFirstChild(weaponName);
+		if not WeaponFolder then return nil end;
+		local SoundValue = WeaponFolder:FindFirstChild(skinName);
+		if SoundValue and SoundValue:IsA('StringValue') then
+			return SoundValue.Value;
+		end;
+		return nil;
+	end;
+
+	local function RemoveSkinFromTool(Tool)
+		if not Tool or not AppliedSkins[Tool] then return end;
+		CleanKnife(Tool);
+		local original = AppliedSkins[Tool];
+		if original.Connections then
+			for _, connection in next, original.Connections do
+				if connection and connection.Connected then
+					connection:Disconnect();
+				end;
+			end;
+		end;
+		for _, child in next, original.ClonedChildren or {} do
+			if child and child.Parent then
+				child:Destroy();
+			end;
+		end;
+		if original.Default and original.Default.Parent then
+			for _, child in next, original.Default:GetChildren() do
+				if child.Name == '\0' then
+					child:Destroy();
+				end;
+			end;
+			original.Default.Transparency = original.OriginalTransparency or 0;
+			original.Default.TextureID = original.OriginalTextureID or '';
+		end;
+		if original.ShootSound and original.OriginalShootSoundId then
+			original.ShootSound.SoundId = original.OriginalShootSoundId;
+		end;
+		local Handle = Tool:FindFirstChild('Handle');
+		if Handle then
+			Handle:SetAttribute('SkinName', original.OriginalSkinName or '');
+		end;
+		AppliedSkins[Tool] = nil;
+	end;
+
+	local function ApplySkinToTool(Tool, SkinName)
+		if not Tool then return end;
+		if AppliedSkins[Tool] and AppliedSkins[Tool].SkinName == SkinName then return end;
+		local Handle = Tool:FindFirstChild('Handle');
+		if not Handle then return end;
+		local default = Tool:FindFirstChild('Default');
+		if not default or not default:IsA('MeshPart') then
+			default = Handle:FindFirstChildOfClass('MeshPart');
+			if not default then
+				for _, child in next, Tool:GetDescendants() do
+					if child:IsA('MeshPart') then
+						default = child;
+						break;
+					end;
+				end;
+			end;
+		end;
+		if not default then return end;
+		local ShootSound = nil;
+		for _, child in next, Tool:GetDescendants() do
+			if child:IsA('Sound') and (child.Name == 'Shoot' or child.Name == 'ShootSound') then
+				ShootSound = child;
+				break;
+			end;
+		end;
+		if AppliedSkins[Tool] then
+			RemoveSkinFromTool(Tool);
+		end;
+		AppliedSkins[Tool] = {
+			SkinName = SkinName,
+			OriginalTextureID = default.TextureID,
+			OriginalTransparency = default.Transparency,
+			OriginalSkinName = Handle:GetAttribute('SkinName') or '',
+			Default = default,
+			ShootSound = ShootSound,
+			OriginalShootSoundId = ShootSound and ShootSound.SoundId or nil,
+			ClonedChildren = {},
+			Connections = {},
+		};
+		Handle:SetAttribute('SkinName', SkinName);
+		local attrConn = Handle:GetAttributeChangedSignal('SkinName'):Connect(function()
+			if Handle:GetAttribute('SkinName') ~= SkinName then
+				Handle:SetAttribute('SkinName', SkinName);
+			end;
+		end);
+		table.insert(AppliedSkins[Tool].Connections, attrConn);
+		local isKnife = Tool.Name:lower():find('knife') ~= nil or Tool.Name == '[Knife]';
+		local weaponName = Tool.Name:lower():sub(2, -2);
+		local skinInfo = GetSkinInfo(Tool.Name, SkinName);
+		local existingFake = default:FindFirstChildOfClass('MeshPart');
+		if existingFake then
+			existingFake:Destroy();
+		end;
+		local mesh = nil;
+		if isKnife then
+			mesh = FindSourceMesh(SkinName, nil, true);
+		else
+			if SkinModules then
+				local MeshesFolder = SkinModules:FindFirstChild('Meshes');
+				if MeshesFolder then
+					local skinFolder = MeshesFolder:FindFirstChild(SkinName)
+						or MeshesFolder:FindFirstChild(SkinName:gsub(' ', ''))
+						or MeshesFolder:FindFirstChild(SkinName:gsub(' ', '_'))
+						or MeshesFolder:FindFirstChild(SkinName:gsub('-', ' '))
+						or MeshesFolder:FindFirstChild(SkinName:gsub('-', ''));
+					if skinFolder then
+						if skinFolder:IsA('MeshPart') then
+							mesh = skinFolder;
+						else
+							mesh = skinFolder:GetChildren();
+						end;
+					end;
+				end;
+				if not mesh then
+					local GunModels = SkinModules:FindFirstChild('GunModels');
+					if GunModels then
+						local model = GunModels:FindFirstChild(SkinName)
+						or GunModels:FindFirstChild('[' .. SkinName .. ']')
+						or GunModels:FindFirstChild(SkinName:gsub('-', ' '))
+						or GunModels:FindFirstChild(SkinName:gsub('-', ''));
+						if model then
+							if model:IsA('MeshPart') then
+								mesh = model;
+							elseif model:IsA('Model') then
+								mesh = model:FindFirstChildOfClass('MeshPart');
+							end;
+						end;
+					end;
+				end;
+			end;
+		end;
+		if mesh then
+			local newMesh = nil;
+			if typeof(mesh) == 'Instance' and mesh:IsA('MeshPart') then
+				newMesh = mesh;
+			elseif type(mesh) == 'table' then
+				for _, child in next, mesh do
+					if typeof(child) == 'Instance' and child:IsA('MeshPart') then
+						local lowered = child.Name:lower();
+						if lowered:find('rpg') and weaponName == 'rpg' then
+							newMesh = child; break;
+						elseif lowered:find('aug') and weaponName == 'aug' then
+							newMesh = child; break;
+						elseif lowered:find('tac') and weaponName == 'tacticalshotgun' then
+							newMesh = child; break;
+						elseif lowered:find('rev') and weaponName == 'revolver' then
+							newMesh = child; break;
+						elseif (lowered:find('db') or lowered:find('double')) and (weaponName == 'double-barrel sg' or weaponName == 'double-barrelsg') then
+							newMesh = child; break;
+						elseif lowered:find('knife') and isKnife then
+							newMesh = child; break;
+						elseif lowered:find('rifle') and weaponName == 'rifle' then
+							newMesh = child; break;
+						elseif lowered:find('flame') and weaponName == 'flamethrower' then
+							newMesh = child; break;
+						end;
+					end;
+				end;
+			end;
+			if newMesh and not isKnife then
+				local newFake = newMesh:Clone();
+				newFake.Anchored = false;
+				newFake.CanCollide = false;
+				newFake.CFrame = default.CFrame;
+				local skinCFrame = (skinInfo and skinInfo.CFrame and typeof(skinInfo.CFrame) == 'CFrame') and skinInfo.CFrame or CFrame.new();
+				local weld = Instance.new('Weld');
+				weld.Part0 = newFake;
+				weld.Part1 = default;
+				weld.C0 = skinCFrame:Inverse();
+				weld.Name = '\0';
+				weld.Parent = newFake;
+				newFake.Name = '\0';
+				newFake.Parent = Tool;
+				default.Transparency = 1;
+			end;
+		else
+			if skinInfo then
+				local textureValue = skinInfo.TextureID;
+				if textureValue then
+					if typeof(textureValue) == 'Instance' and textureValue:IsA('MeshPart') then
+						local clone = textureValue:Clone();
+						clone.Anchored = false;
+						clone.CanCollide = false;
+						clone.CFrame = default.CFrame;
+						clone.Name = '\0';
+						clone.Parent = Tool;
+						local skinCFrame = (skinInfo.CFrame and typeof(skinInfo.CFrame) == 'CFrame') and skinInfo.CFrame or CFrame.new();
+						local weld = Instance.new('Weld');
+						weld.Part0 = clone;
+						weld.Part1 = default;
+						weld.C0 = skinCFrame:Inverse();
+						weld.Name = '\0';
+						weld.Parent = clone;
+						default.Transparency = 1;
+					elseif type(textureValue) == 'string' then
+						default.TextureID = textureValue;
+						default.Transparency = 0;
+					end;
+				end;
+			end;
+		end;
+		for _, child in next, Handle:GetChildren() do
+			if #child.Name == 0 then
+				child:Destroy();
+			end;
+		end;
+		if SkinAssets then
+			local GunHandleParticle = SkinAssets:FindFirstChild('GunHandleParticle');
+			if GunHandleParticle then
+				local particleFolder = GunHandleParticle:FindFirstChild(SkinName)
+					or GunHandleParticle:FindFirstChild(SkinName:gsub('-', ' '))
+					or GunHandleParticle:FindFirstChild(SkinName:gsub('-', ''));
+				if particleFolder then
+					local emitter = particleFolder:FindFirstChildOfClass('ParticleEmitter');
+					if emitter then
+						local clonedParticle = emitter:Clone();
+						clonedParticle.Parent = Handle;
+						clonedParticle.Name = '\0';
+						table.insert(AppliedSkins[Tool].ClonedChildren, clonedParticle);
+					end;
+				end;
+			end;
+		end;
+		if isKnife and SkinAssets then
+			local SkinScripts = SkinAssets:FindFirstChild('SkinScripts');
+			if SkinScripts then
+				for _, folder in next, SkinScripts:GetChildren() do
+					if folder.Name:lower():gsub(' ', '') == SkinName:lower():gsub(' ', '') then
+						local sound = folder:FindFirstChildOfClass('Sound');
+						if sound then
+							local cloned = sound:Clone();
+							cloned.Name = '\0';
+							cloned.Parent = Handle;
+							cloned:Play();
+							game.Debris:AddItem(cloned, 3);
+						end;
+						for _, obj in next, folder:GetDescendants() do
+							if obj:IsA('Sound') or obj:IsA('StringValue') then
+								local objLower = obj.Name:lower():gsub(' ', '');
+								if objLower == 'equipsfx' or objLower == 'sfx' or objLower == 'equip' or objLower == 'tantoequip' then
+									AppliedSkins[Tool].KnifeEquipSound = obj:IsA('Sound') and obj.SoundId or obj.Value;
+								elseif objLower == 'attacksfx' or objLower == 'attack' then
+									AppliedSkins[Tool].KnifeAttackSound = obj:IsA('Sound') and obj.SoundId or obj.Value;
+								end;
+							end;
+						end;
+						break;
+					end;
+				end;
+			end;
+			local SkinScriptsStorage = SkinAssets:FindFirstChild('SkinScriptsStorage');
+			if SkinScriptsStorage then
+				for _, folder in next, SkinScriptsStorage:GetChildren() do
+					if folder.Name:lower():gsub(' ', '') == SkinName:lower():gsub(' ', '') then
+						for _, anim in next, folder:GetDescendants() do
+							if anim:IsA('Animation') then
+								local animLower = anim.Name:lower():gsub(' ', '');
+								if animLower == 'knife' or animLower == 'equipknife' or animLower == 'knifeequip' or animLower == 'tantoequip' then
+									AppliedSkins[Tool].KnifeEquipAnim = anim;
+									break;
+								end;
+							end;
+						end;
+						break;
+					end;
+				end;
+			end;
+			local KnifeSkinAnimation = SkinAssets:FindFirstChild('KnifeSkinAnimation');
+			if KnifeSkinAnimation then
+				for _, folder in next, KnifeSkinAnimation:GetChildren() do
+					if folder.Name:lower():gsub(' ', '') == SkinName:lower():gsub(' ', '') then
+						for _, anim in next, folder:GetDescendants() do
+							if anim:IsA('Animation') then
+								AppliedSkins[Tool].KnifeAttackAnim = anim;
+								break;
+							end;
+						end;
+						break;
+					end;
+				end;
+			end;
+		end;
+		if isKnife and SkinName:lower():gsub(' ', '') == 'goldenagetanto' then
+			if not AppliedSkins[Tool].KnifeEquipAnim then
+				local anim = Instance.new('Animation');
+				anim.AnimationId = 'rbxassetid://13473404819';
+				AppliedSkins[Tool].KnifeEquipAnim = anim;
+			else
+				AppliedSkins[Tool].KnifeEquipAnim.AnimationId = 'rbxassetid://13473404819';
+			end;
+		end;
+		if isKnife and (SkinName:lower():gsub(' ', '') == 'gpoknife' or SkinName:lower():gsub(' ', '') == 'gpoknifeprestige') then
+			if not AppliedSkins[Tool].KnifeEquipAnim then
+				local anim = Instance.new('Animation');
+				anim.AnimationId = 'rbxassetid://102007904524177';
+				AppliedSkins[Tool].KnifeEquipAnim = anim;
+			else
+				AppliedSkins[Tool].KnifeEquipAnim.AnimationId = 'rbxassetid://102007904524177';
+			end;
+		end;
+		local soundId = GetShootSound(Tool.Name, SkinName);
+		if soundId and AppliedSkins[Tool].ShootSound then
+			AppliedSkins[Tool].ShootSound.SoundId = soundId;
+		end;
+	end;
+
+	local function ProcessTool(Tool)
+		if ToolRegistry[Tool] then return end;
+		ToolRegistry[Tool] = true;
+		local SkinChangerCfg = GetSkinChangerCfg();
+		if not SkinChangerCfg['Enabled'] then return end;
+		local Skins = SkinChangerCfg['Skins'];
+		local ConfiguredSkin = Skins[Tool.Name];
+		if not ConfiguredSkin then
+			local stripped = Tool.Name:gsub('%[', ''):gsub('%]', '');
+			ConfiguredSkin = Skins['[' .. stripped .. ']'];
+		end;
+		if not ConfiguredSkin or ConfiguredSkin == '' or ConfiguredSkin == 'None' then return end;
+		local isKnife = Tool.Name:lower():find('knife') ~= nil or Tool.Name == '[Knife]';
+		if isKnife and IsKnifeSkin(ConfiguredSkin) then
+			ApplySkinToTool(Tool, ConfiguredSkin);
+			local equipConn;
+			equipConn = Tool.Equipped:Connect(function()
+				if not AppliedSkins[Tool] then
+					if equipConn then equipConn:Disconnect() end;
+					return;
+				end;
+				local char = Tool.Parent;
+				if char ~= LocalPlayer.Character then return end;
+				ApplyKnife(char, Tool, ConfiguredSkin);
+			end);
+			if not AppliedSkins[Tool].Connections then
+				AppliedSkins[Tool].Connections = {};
+			end;
+			table.insert(AppliedSkins[Tool].Connections, equipConn);
+			if LocalPlayer.Character and Tool.Parent == LocalPlayer.Character then
+				ApplyKnife(LocalPlayer.Character, Tool, ConfiguredSkin);
+			end;
+			if AppliedSkins[Tool] and (AppliedSkins[Tool].KnifeAttackAnim or AppliedSkins[Tool].KnifeAttackSound) then
+				local attackConnection;
+				attackConnection = Tool.Activated:Connect(function()
+					local skinData = AppliedSkins[Tool];
+					if not skinData then
+						if attackConnection then attackConnection:Disconnect() end;
+						return;
+					end;
+					if skinData.KnifeAttackSound then
+						local sound = Instance.new('Sound');
+						sound.SoundId = skinData.KnifeAttackSound;
+						sound.Volume = 1;
+						sound.Parent = Tool:FindFirstChild('Handle') or Tool;
+						sound:Play();
+						game.Debris:AddItem(sound, 3);
+					end;
+					if skinData.KnifeAttackAnim then
+						local Character = LocalPlayer.Character;
+						if Character then
+							local Humanoid = Character:FindFirstChildOfClass('Humanoid');
+							if Humanoid then
+								local Animator = Humanoid:FindFirstChildOfClass('Animator');
+								if not Animator then
+									Animator = Instance.new('Animator');
+									Animator.Parent = Humanoid;
+								end;
+								local anim = Instance.new('Animation');
+								anim.AnimationId = skinData.KnifeAttackAnim.AnimationId;
+								local track = Animator:LoadAnimation(anim);
+								track.Priority = Enum.AnimationPriority.Action;
+								track:Play();
+								anim:Destroy();
+							end;
+						end;
+					end;
+				end);
+				table.insert(AppliedSkins[Tool].Connections, attackConnection);
+			end;
+		else
+			ApplySkinToTool(Tool, ConfiguredSkin);
+			Tool.Equipped:Connect(function()
+				local char = Tool.Parent;
+				if char ~= LocalPlayer.Character then return end;
+				ApplySkinToTool(Tool, ConfiguredSkin);
+			end);
+			if LocalPlayer.Character and Tool.Parent == LocalPlayer.Character then
+				ApplySkinToTool(Tool, ConfiguredSkin);
+			end;
+		end;
+	end;
+
+	local function ProcessCharacter(Character)
+		if not Character then return end;
+		for _, Child in next, Character:GetChildren() do
+			if Child:IsA('Tool') then
+				ProcessTool(Child);
+			end;
+		end;
+		Character.ChildAdded:Connect(function(Child)
+			if Child:IsA('Tool') then
+				Wait(0.1);
+				ProcessTool(Child);
+			end;
+		end);
+	end;
+
+	local function ProcessBackpack(Backpack)
+		if not Backpack then return end;
+		for _, Tool in next, Backpack:GetChildren() do
+			if Tool:IsA('Tool') then
+				ProcessTool(Tool);
+			end;
+		end;
+		Backpack.ChildAdded:Connect(function(Tool)
+			if Tool:IsA('Tool') then
+				Wait(0.1);
+				ProcessTool(Tool);
+			end;
+		end);
+	end;
+
+	LoadSkinData();
+	local Character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait();
+	local Backpack = LocalPlayer:WaitForChild('Backpack', 5);
+	ProcessCharacter(Character);
+	if Backpack then ProcessBackpack(Backpack) end;
+	LocalPlayer.CharacterAdded:Connect(function(NewCharacter)
+		Wait(0.5);
+		ProcessCharacter(NewCharacter);
+		local NewBackpack = LocalPlayer:WaitForChild('Backpack', 5);
+		if NewBackpack then ProcessBackpack(NewBackpack) end;
+	 end);
+end;
+
+do
+	local ArmorBuying = false;
+	UserInputService.InputBegan:Connect(function(Input, GameProcessed)
+		if GameProcessed then return end;
+		local ArmorCfg = Config['Purchase Armor'];
+		if not ArmorCfg or not ArmorCfg['Enabled'] then return end;
+		local ArmorKey = Config['Keybinds']['Purchase Armor'];
+		if not ArmorKey then return end;
+		local Match = false;
+		Xpcall(function()
+			if Input.KeyCode == Enum.KeyCode[ArmorKey:upper()] then Match = true end;
+		end, ErrHandler);
+		if not Match then return end;
+		if ArmorBuying then return end;
+		local Character = LocalPlayer.Character;
+		if not Character then return end;
+		local HRP = Character:FindFirstChild('HumanoidRootPart');
+		if not HRP then return end;
+		local Ignored = CachedIgnored or Workspace:FindFirstChild('Ignored');
+		if not Ignored then return end;
+		local Shop = Ignored:FindFirstChild('Shop');
+		if not Shop then return end;
+		local ArmorShop = nil;
+		local LowestPrice = MathHuge;
+		for _, ShopPart in next, Shop:GetChildren() do
+			local ItemName = string.lower(ShopPart.Name);
+			if string.find(ItemName, 'armor') then
+				local PriceStr = string.match(ItemName, '%$(%d+)');
+				local Price = PriceStr and tonumber(PriceStr) or MathHuge;
+				if Price < LowestPrice then
+					local Head = ShopPart:FindFirstChild('Head');
+					local Detector = ShopPart:FindFirstChildOfClass('ClickDetector');
+					if Head and Detector then
+						ArmorShop = { Head = Head, Detector = Detector };
+						LowestPrice = Price;
+					end;
+				end;
+			end;
+		end;
+		if not ArmorShop then return end;
+		ArmorBuying = true;
+		Spawn(function()
+			local ShopPos = ArmorShop.Head.Position - Vector3New(0, 8.8, 0);
+			local Detector = ArmorShop.Detector;
+			for _ = 1, 60 do
+				if not HRP or not HRP.Parent then break end;
+				fireclickdetector(Detector);
+				local OldCF = HRP.CFrame;
+				HRP.CFrame = CFrameNew(ShopPos);
+				RunService.RenderStepped:Wait();
+				HRP.CFrame = OldCF;
+				RunService.Heartbeat:Wait();
+			end;
+			ArmorBuying = false;
+		end);
+	end);
+end;
+
+do
+	local KOConnection = nil;
+	local function SetupAntiStomp(Character)
+		if KOConnection then KOConnection:Disconnect(); KOConnection = nil end;
+		local BodyEffects = Character:WaitForChild('BodyEffects', 5);
+		if not BodyEffects then return end;
+		local KO = BodyEffects:WaitForChild('K.O', 5);
+		if not KO then return end;
+		KOConnection = KO.Changed:Connect(function(Knocked)
+			local AntiStompCfg = Config['Anti Stomp'];
+			if not AntiStompCfg or not AntiStompCfg['Enabled'] then return end;
+			if not Knocked then return end;
+			local HRP = Character:FindFirstChild('HumanoidRootPart');
+			if not HRP then return end;
+			HRP.CFrame = CFrameNew(0, -2147483647, 0);
+			HRP.Velocity = Vector3New(65536, 65534, 65536);
+			local Humanoid = Character:FindFirstChildOfClass('Humanoid');
+			if Humanoid then
+				for _ = 1, 10 do
+					Humanoid.Health = 0;
+					Wait();
+				end;
+			end;
+		end);
+	end;
+	if LocalPlayer.Character then Spawn(SetupAntiStomp, LocalPlayer.Character) end;
+	LocalPlayer.CharacterAdded:Connect(SetupAntiStomp);
+end;
+
+do -- recoil
+	local function GetMiscGunCfg() return Config['Gun Modifications']['Misc Gun Modifications'] end;
+	local CurrentCamera = Workspace.CurrentCamera;
+	local SavedCFrame = CurrentCamera.CFrame;
+	local RestorePending = false;
+
+	local function QueueRestore()
+		if RestorePending then return end;
+		RestorePending = true;
+		Defer(function()
+			if RestorePending then
+				CurrentCamera.CFrame = SavedCFrame;
+				RestorePending = false;
+			end;
+		end);
+	end;
+
+	RunService.RenderStepped:Connect(function()
+		CurrentCamera = Workspace.CurrentCamera;
+		if not RestorePending then
+			SavedCFrame = CurrentCamera.CFrame;
+		end;
+	end);
+
+	local MainRemote = ReplicatedStorage:FindFirstChild('MainEvent');
+	if MainRemote and MainRemote:IsA('RemoteEvent') then
+		MainRemote.OnClientEvent:Connect(function(Packet)
+			if Packet == 'ShootingRecoil' and GetMiscGunCfg()['No Recoil'] then
+				QueueRestore();
+			end;
+		end);
+	end;
+
+	local function HookGunShot(Character)
+		local BodyEffects = Character:WaitForChild('BodyEffects', 5);
+		if not BodyEffects then return end;
+		local GunShotChanges = BodyEffects:FindFirstChild('GunShotChanges');
+		if not GunShotChanges then return end;
+		GunShotChanges.Changed:Connect(function()
+			if GetMiscGunCfg()['No Recoil'] then
+				QueueRestore();
+			end;
+		end);
+	end;
+
+	if LocalPlayer.Character then Spawn(HookGunShot, LocalPlayer.Character) end;
+	LocalPlayer.CharacterAdded:Connect(function(Char) Spawn(HookGunShot, Char) end);
+end;
