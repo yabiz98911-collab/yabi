@@ -1,0 +1,1392 @@
+-- XFC TRIGGERBOT - STEALTH EDITION v1.0
+-- Professional Trigger Bot with Advanced Protection
+-- Optimized for South Bronx: The Trenches
+
+-- ============================================
+-- SILENT MODE
+-- ============================================
+
+local SilentMode = {
+    enabled = true,
+    log = function(self, message)
+        if not self.enabled then
+            print(message)
+        end
+    end
+}
+
+-- ============================================
+-- KEY SYSTEM
+-- ============================================
+
+local KeySystem = {
+    validKeys = {
+        ["marcella"] = {tier = "free", expires = nil},
+        ["marcella1"] = {tier = "admin", expires = nil},
+        ["marcellaxd"] = {tier = "premium", expires = nil}
+    },
+    authenticated = false,
+    maxAttempts = 3,
+    currentAttempts = 0,
+    userTier = "none",
+    sessionToken = nil,
+    displayKey = "marcella"
+}
+
+local function generateSessionToken()
+    local chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+    local token = ""
+    for i = 1, 32 do
+        local rand = math.random(1, #chars)
+        token = token .. chars:sub(rand, rand)
+    end
+    return token
+end
+
+local function verifyKey(inputKey)
+    KeySystem.currentAttempts = KeySystem.currentAttempts + 1
+
+    if KeySystem.validKeys[inputKey] then
+        KeySystem.authenticated = true
+        KeySystem.userTier = KeySystem.validKeys[inputKey].tier
+        KeySystem.sessionToken = generateSessionToken()
+        return true
+    end
+
+    if KeySystem.currentAttempts >= KeySystem.maxAttempts then
+        wait(2)
+        game.Players.LocalPlayer:Kick("\n\nXFC Security System\nAccess Denied\n\nToo many failed attempts")
+        return false
+    end
+
+    return false
+end
+
+-- ============================================
+-- SOUTH BRONX ANTI-CHEAT BYPASS
+-- ============================================
+
+local SouthBronxBypass = {
+    initialized = false,
+
+    bypassRemoteDetection2023 = function()
+        pcall(function()
+            local mt = getrawmetatable(game)
+            local oldNamecall = mt.__namecall
+            setreadonly(mt, false)
+
+            mt.__namecall = newcclosure(function(self, ...)
+                local method = getnamecallmethod()
+                local args = {...}
+
+                if method == "FireServer" or method == "InvokeServer" then
+                    local remoteName = tostring(self):lower()
+
+                    if remoteName:find("log") or remoteName:find("report") or 
+                       remoteName:find("anticheat") or remoteName:find("flag") then
+                        return nil
+                    end
+                end
+
+                return oldNamecall(self, ...)
+            end)
+
+            setreadonly(mt, true)
+        end)
+    end,
+
+    bypassLuauDetection2024 = function()
+        pcall(function()
+            if getgc then
+                local oldGetgc = getgc
+                getgc = function(...)
+                    local results = oldGetgc(...)
+                    local filtered = {}
+
+                    for _, obj in pairs(results) do
+                        local objType = type(obj)
+                        if objType ~= "function" then
+                            table.insert(filtered, obj)
+                        end
+                    end
+
+                    return filtered
+                end
+            end
+
+            if debug and debug.getinfo then
+                local oldGetinfo = debug.getinfo
+                debug.getinfo = function(...)
+                    local info = oldGetinfo(...)
+                    if info and info.source then
+                        if info.source:find("@") then
+                            info.source = "=[C]"
+                        end
+                    end
+                    return info
+                end
+            end
+        end)
+    end,
+
+    bypassPatternDetection2025 = function()
+        pcall(function()
+            local player = game.Players.LocalPlayer
+
+            if player.Character and player.Character:FindFirstChild("Humanoid") then
+                local humanoid = player.Character.Humanoid
+                local hrp = player.Character:FindFirstChild("HumanoidRootPart")
+
+                if hrp then
+                    local mt = getrawmetatable(game)
+                    local oldIndex = mt.__index
+                    local oldNewIndex = mt.__newindex
+
+                    setreadonly(mt, false)
+
+                    mt.__index = newcclosure(function(t, k)
+                        if t == hrp and k == "Velocity" then
+                            local vel = oldIndex(t, k)
+                            if vel.Magnitude > 50 then
+                                return Vector3.new(0, 0, 0)
+                            end
+                            return vel
+                        end
+                        return oldIndex(t, k)
+                    end)
+
+                    mt.__newindex = newcclosure(function(t, k, v)
+                        if t == hrp and k == "Velocity" then
+                            if v.Magnitude > 50 then
+                                v = v.Unit * 50
+                            end
+                        end
+                        return oldNewIndex(t, k, v)
+                    end)
+
+                    setreadonly(mt, true)
+                end
+            end
+        end)
+    end,
+
+    bypassMemoryScan2025 = function()
+        pcall(function()
+            if getreg then
+                local oldGetreg = getreg
+                getreg = function()
+                    return {}
+                end
+            end
+
+            if getgenv then
+                local oldGetgenv = getgenv
+                getgenv = function()
+                    return setmetatable({}, {
+                        __index = function() return nil end,
+                        __newindex = function() end
+                    })
+                end
+            end
+        end)
+    end,
+
+    antiKick = function()
+        pcall(function()
+            local mt = getrawmetatable(game)
+            local namecall = mt.__namecall
+
+            setreadonly(mt, false)
+            mt.__namecall = newcclosure(function(self, ...)
+                local method = getnamecallmethod()
+
+                if method == "Kick" then
+                    return nil
+                end
+
+                return namecall(self, ...)
+            end)
+            setreadonly(mt, true)
+        end)
+    end,
+
+    initialize = function(self)
+        if self.initialized then return end
+
+        spawn(function()
+            self.bypassRemoteDetection2023()
+            wait(0.15)
+            self.bypassLuauDetection2024()
+            wait(0.15)
+            self.bypassPatternDetection2025()
+            wait(0.15)
+            self.bypassMemoryScan2025()
+            wait(0.15)
+            self.antiKick()
+
+            self.initialized = true
+        end)
+    end
+}
+
+-- ============================================
+-- CUSTOM UI CREATION
+-- ============================================
+
+local function createParticleEffect(parent)
+    local particles = {}
+
+    for i = 1, 15 do
+        local particle = Instance.new("Frame")
+        particle.Name = "Particle_" .. i
+        particle.Parent = parent
+
+        local grayValue = math.random(120, 200)
+        particle.BackgroundColor3 = Color3.fromRGB(grayValue, grayValue, grayValue)
+        particle.BorderSizePixel = 0
+        particle.Size = UDim2.new(0, math.random(2, 3), 0, math.random(2, 3))
+        particle.Position = UDim2.new(
+            math.random(0, 100) / 100,
+            0,
+            math.random(0, 100) / 100,
+            0
+        )
+        particle.BackgroundTransparency = math.random(50, 85) / 100
+        particle.ZIndex = 10
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(1, 0)
+        corner.Parent = particle
+
+        table.insert(particles, particle)
+
+        spawn(function()
+            while particle.Parent do
+                local randomX = math.random(-40, 40)
+                local randomY = math.random(-40, 40)
+
+                particle:TweenPosition(
+                    UDim2.new(
+                        particle.Position.X.Scale + randomX/1000,
+                        0,
+                        particle.Position.Y.Scale + randomY/1000,
+                        0
+                    ),
+                    Enum.EasingDirection.InOut,
+                    Enum.EasingStyle.Sine,
+                    math.random(25, 35) / 10,
+                    false
+                )
+
+                wait(math.random(25, 35) / 10)
+            end
+        end)
+    end
+
+    return particles
+end
+
+local function showKeyUI()
+    local ScreenGui = Instance.new("ScreenGui")
+    local MainFrame = Instance.new("Frame")
+    local BackgroundBlur = Instance.new("Frame")
+    local TopBar = Instance.new("Frame")
+    local Title = Instance.new("TextLabel")
+    local SubTitle = Instance.new("TextLabel")
+    local KeyDisplayLabel = Instance.new("TextLabel")
+    local KeyContainer = Instance.new("Frame")
+    local KeyBox = Instance.new("TextBox")
+    local KeyIcon = Instance.new("TextLabel")
+    local SubmitButton = Instance.new("TextButton")
+    local SubmitButtonGradient = Instance.new("UIGradient")
+    local StatusLabel = Instance.new("TextLabel")
+    local AttemptIndicator = Instance.new("Frame")
+    local CloseButton = Instance.new("TextButton")
+    local BottomInfo = Instance.new("TextLabel")
+
+    ScreenGui.Name = "XFC_KeySystem"
+    ScreenGui.Parent = game.CoreGui
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.ResetOnSpawn = false
+
+    BackgroundBlur.Name = "BackgroundBlur"
+    BackgroundBlur.Parent = ScreenGui
+    BackgroundBlur.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    BackgroundBlur.BackgroundTransparency = 0.3
+    BackgroundBlur.BorderSizePixel = 0
+    BackgroundBlur.Size = UDim2.new(1, 0, 1, 0)
+    BackgroundBlur.ZIndex = 1
+
+    MainFrame.Name = "MainFrame"
+    MainFrame.Parent = ScreenGui
+    MainFrame.BackgroundColor3 = Color3.fromRGB(18, 18, 18)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Position = UDim2.new(0.5, -220, 0.5, -200)
+    MainFrame.Size = UDim2.new(0, 440, 0, 400)
+    MainFrame.ClipsDescendants = true
+    MainFrame.ZIndex = 2
+
+    local MainCorner = Instance.new("UICorner")
+    MainCorner.CornerRadius = UDim.new(0, 16)
+    MainCorner.Parent = MainFrame
+
+    TopBar.Name = "TopBar"
+    TopBar.Parent = MainFrame
+    TopBar.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+    TopBar.BorderSizePixel = 0
+    TopBar.Size = UDim2.new(1, 0, 0, 70)
+    TopBar.ZIndex = 3
+
+    local TopBarGradient = Instance.new("UIGradient")
+    TopBarGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(35, 35, 35)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(22, 22, 22))
+    }
+    TopBarGradient.Rotation = 90
+    TopBarGradient.Parent = TopBar
+
+    local TopBarCorner = Instance.new("UICorner")
+    TopBarCorner.CornerRadius = UDim.new(0, 16)
+    TopBarCorner.Parent = TopBar
+
+    Title.Name = "Title"
+    Title.Parent = TopBar
+    Title.BackgroundTransparency = 1
+    Title.Position = UDim2.new(0, 20, 0, 10)
+    Title.Size = UDim2.new(1, -40, 0, 28)
+    Title.Font = Enum.Font.GothamBold
+    Title.Text = "XFC TRIGGERBOT SYSTEM"
+    Title.TextColor3 = Color3.fromRGB(240, 240, 240)
+    Title.TextSize = 18
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.ZIndex = 4
+
+    SubTitle.Name = "SubTitle"
+    SubTitle.Parent = TopBar
+    SubTitle.BackgroundTransparency = 1
+    SubTitle.Position = UDim2.new(0, 20, 0, 38)
+    SubTitle.Size = UDim2.new(1, -40, 0, 20)
+    SubTitle.Font = Enum.Font.Gotham
+    SubTitle.Text = "Stealth Edition v1.0 - Enter your access key"
+    SubTitle.TextColor3 = Color3.fromRGB(160, 160, 160)
+    SubTitle.TextSize = 13
+    SubTitle.TextXAlignment = Enum.TextXAlignment.Left
+    SubTitle.ZIndex = 4
+
+    KeyDisplayLabel.Name = "KeyDisplayLabel"
+    KeyDisplayLabel.Parent = MainFrame
+    KeyDisplayLabel.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    KeyDisplayLabel.BorderSizePixel = 0
+    KeyDisplayLabel.Position = UDim2.new(0.08, 0, 0.2, 0)
+    KeyDisplayLabel.Size = UDim2.new(0.84, 0, 0, 45)
+    KeyDisplayLabel.Font = Enum.Font.GothamBold
+    KeyDisplayLabel.Text = "FREE KEY: " .. KeySystem.displayKey
+    KeyDisplayLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    KeyDisplayLabel.TextSize = 15
+    KeyDisplayLabel.ZIndex = 3
+
+    local KeyDisplayCorner = Instance.new("UICorner")
+    KeyDisplayCorner.CornerRadius = UDim.new(0, 10)
+    KeyDisplayCorner.Parent = KeyDisplayLabel
+
+    KeyContainer.Name = "KeyContainer"
+    KeyContainer.Parent = MainFrame
+    KeyContainer.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+    KeyContainer.BorderSizePixel = 0
+    KeyContainer.Position = UDim2.new(0.08, 0, 0.35, 0)
+    KeyContainer.Size = UDim2.new(0.84, 0, 0, 55)
+    KeyContainer.ZIndex = 3
+
+    local KeyContainerCorner = Instance.new("UICorner")
+    KeyContainerCorner.CornerRadius = UDim.new(0, 10)
+    KeyContainerCorner.Parent = KeyContainer
+
+    KeyIcon.Name = "KeyIcon"
+    KeyIcon.Parent = KeyContainer
+    KeyIcon.BackgroundTransparency = 1
+    KeyIcon.Position = UDim2.new(0, 15, 0, 0)
+    KeyIcon.Size = UDim2.new(0, 30, 1, 0)
+    KeyIcon.Font = Enum.Font.GothamBold
+    KeyIcon.Text = "🔑"
+    KeyIcon.TextColor3 = Color3.fromRGB(180, 180, 180)
+    KeyIcon.TextSize = 20
+    KeyIcon.ZIndex = 4
+
+    KeyBox.Name = "KeyBox"
+    KeyBox.Parent = KeyContainer
+    KeyBox.BackgroundTransparency = 1
+    KeyBox.Position = UDim2.new(0, 55, 0, 0)
+    KeyBox.Size = UDim2.new(1, -70, 1, 0)
+    KeyBox.Font = Enum.Font.GothamMedium
+    KeyBox.PlaceholderText = "marcella"
+    KeyBox.Text = ""
+    KeyBox.TextColor3 = Color3.fromRGB(240, 240, 240)
+    KeyBox.TextSize = 15
+    KeyBox.TextXAlignment = Enum.TextXAlignment.Left
+    KeyBox.ClearTextOnFocus = false
+    KeyBox.ZIndex = 4
+
+    SubmitButton.Name = "SubmitButton"
+    SubmitButton.Parent = MainFrame
+    SubmitButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    SubmitButton.BorderSizePixel = 0
+    SubmitButton.Position = UDim2.new(0.08, 0, 0.54, 0)
+    SubmitButton.Size = UDim2.new(0.84, 0, 0, 50)
+    SubmitButton.Font = Enum.Font.GothamBold
+    SubmitButton.Text = "VERIFY ACCESS"
+    SubmitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    SubmitButton.TextSize = 16
+    SubmitButton.ZIndex = 3
+
+    local SubmitCorner = Instance.new("UICorner")
+    SubmitCorner.CornerRadius = UDim.new(0, 10)
+    SubmitCorner.Parent = SubmitButton
+
+    SubmitButtonGradient.Color = ColorSequence.new{
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(100, 100, 100)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(60, 60, 60))
+    }
+    SubmitButtonGradient.Rotation = 45
+    SubmitButtonGradient.Parent = SubmitButton
+
+    StatusLabel.Name = "StatusLabel"
+    StatusLabel.Parent = MainFrame
+    StatusLabel.BackgroundTransparency = 1
+    StatusLabel.Position = UDim2.new(0, 0, 0.73, 0)
+    StatusLabel.Size = UDim2.new(1, 0, 0, 25)
+    StatusLabel.Font = Enum.Font.Gotham
+    StatusLabel.Text = "Waiting for key input..."
+    StatusLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+    StatusLabel.TextSize = 13
+    StatusLabel.ZIndex = 3
+
+    AttemptIndicator.Name = "AttemptIndicator"
+    AttemptIndicator.Parent = MainFrame
+    AttemptIndicator.BackgroundTransparency = 1
+    AttemptIndicator.Position = UDim2.new(0.08, 0, 0.82, 0)
+    AttemptIndicator.Size = UDim2.new(0.84, 0, 0, 20)
+    AttemptIndicator.ZIndex = 3
+
+    local function updateAttemptIndicators()
+        for i = 1, KeySystem.maxAttempts do
+            local indicator = Instance.new("Frame")
+            indicator.Name = "Attempt_" .. i
+            indicator.Parent = AttemptIndicator
+            indicator.BorderSizePixel = 0
+            indicator.Size = UDim2.new(0.3, 0, 1, 0)
+            indicator.Position = UDim2.new((i-1) * 0.35, 0, 0, 0)
+            indicator.ZIndex = 4
+
+            if i <= KeySystem.currentAttempts then
+                indicator.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+            else
+                indicator.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+            end
+
+            local indCorner = Instance.new("UICorner")
+            indCorner.CornerRadius = UDim.new(0, 6)
+            indCorner.Parent = indicator
+        end
+    end
+
+    updateAttemptIndicators()
+
+    BottomInfo.Name = "BottomInfo"
+    BottomInfo.Parent = MainFrame
+    BottomInfo.BackgroundTransparency = 1
+    BottomInfo.Position = UDim2.new(0, 0, 0.92, 0)
+    BottomInfo.Size = UDim2.new(1, 0, 0, 20)
+    BottomInfo.Font = Enum.Font.Gotham
+    BottomInfo.Text = "XFC TriggerBot - Secure Access"
+    BottomInfo.TextColor3 = Color3.fromRGB(90, 90, 90)
+    BottomInfo.TextSize = 11
+    BottomInfo.ZIndex = 3
+
+    CloseButton.Name = "CloseButton"
+    CloseButton.Parent = MainFrame
+    CloseButton.BackgroundColor3 = Color3.fromRGB(140, 140, 140)
+    CloseButton.BorderSizePixel = 0
+    CloseButton.Position = UDim2.new(0.93, 0, 0.04, 0)
+    CloseButton.Size = UDim2.new(0, 28, 0, 28)
+    CloseButton.Font = Enum.Font.GothamBold
+    CloseButton.Text = "X"
+    CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    CloseButton.TextSize = 14
+    CloseButton.ZIndex = 5
+
+    local CloseCorner = Instance.new("UICorner")
+    CloseCorner.CornerRadius = UDim.new(0, 8)
+    CloseCorner.Parent = CloseButton
+
+    local particles = createParticleEffect(MainFrame)
+
+    MainFrame.Position = UDim2.new(0.5, -220, -0.5, 0)
+    MainFrame:TweenPosition(
+        UDim2.new(0.5, -220, 0.5, -200),
+        Enum.EasingDirection.Out,
+        Enum.EasingStyle.Back,
+        0.6,
+        false
+    )
+
+    BackgroundBlur.BackgroundTransparency = 1
+    game:GetService("TweenService"):Create(
+        BackgroundBlur,
+        TweenInfo.new(0.4, Enum.EasingStyle.Sine),
+        {BackgroundTransparency = 0.3}
+    ):Play()
+
+    -- EVENTS
+
+    KeyContainer.MouseEnter:Connect(function()
+        game:GetService("TweenService"):Create(
+            KeyContainer,
+            TweenInfo.new(0.2, Enum.EasingStyle.Sine),
+            {BackgroundColor3 = Color3.fromRGB(35, 35, 35)}
+        ):Play()
+    end)
+
+    KeyContainer.MouseLeave:Connect(function()
+        game:GetService("TweenService"):Create(
+            KeyContainer,
+            TweenInfo.new(0.2, Enum.EasingStyle.Sine),
+            {BackgroundColor3 = Color3.fromRGB(28, 28, 28)}
+        ):Play()
+    end)
+
+    SubmitButton.MouseEnter:Connect(function()
+        game:GetService("TweenService"):Create(
+            SubmitButton,
+            TweenInfo.new(0.2, Enum.EasingStyle.Sine),
+            {Size = UDim2.new(0.86, 0, 0, 52)}
+        ):Play()
+
+        game:GetService("TweenService"):Create(
+            SubmitButtonGradient,
+            TweenInfo.new(0.3, Enum.EasingStyle.Sine),
+            {Rotation = 90}
+        ):Play()
+    end)
+
+    SubmitButton.MouseLeave:Connect(function()
+        game:GetService("TweenService"):Create(
+            SubmitButton,
+            TweenInfo.new(0.2, Enum.EasingStyle.Sine),
+            {Size = UDim2.new(0.84, 0, 0, 50)}
+        ):Play()
+
+        game:GetService("TweenService"):Create(
+            SubmitButtonGradient,
+            TweenInfo.new(0.3, Enum.EasingStyle.Sine),
+            {Rotation = 45}
+        ):Play()
+    end)
+
+    CloseButton.MouseEnter:Connect(function()
+        game:GetService("TweenService"):Create(
+            CloseButton,
+            TweenInfo.new(0.15, Enum.EasingStyle.Sine),
+            {
+                Size = UDim2.new(0, 32, 0, 32),
+                BackgroundColor3 = Color3.fromRGB(180, 180, 180)
+            }
+        ):Play()
+    end)
+
+    CloseButton.MouseLeave:Connect(function()
+        game:GetService("TweenService"):Create(
+            CloseButton,
+            TweenInfo.new(0.15, Enum.EasingStyle.Sine),
+            {
+                Size = UDim2.new(0, 28, 0, 28),
+                BackgroundColor3 = Color3.fromRGB(140, 140, 140)
+            }
+        ):Play()
+    end)
+
+    SubmitButton.MouseButton1Click:Connect(function()
+        local inputKey = KeyBox.Text
+
+        SubmitButton:TweenSize(
+            UDim2.new(0.82, 0, 0, 48),
+            Enum.EasingDirection.Out,
+            Enum.EasingStyle.Sine,
+            0.1,
+            true
+        )
+
+        StatusLabel.Text = "Verifying access..."
+        StatusLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+
+        wait(0.8)
+
+        if verifyKey(inputKey) then
+            StatusLabel.Text = "Access granted! Loading system..."
+            StatusLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+
+            SubmitButton.BackgroundColor3 = Color3.fromRGB(140, 140, 140)
+            SubmitButton.Text = "ACCESS GRANTED"
+
+            KeyContainer.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+
+            for i = 1, 3 do
+                game:GetService("TweenService"):Create(
+                    MainFrame,
+                    TweenInfo.new(0.15, Enum.EasingStyle.Sine),
+                    {BackgroundColor3 = Color3.fromRGB(35, 35, 35)}
+                ):Play()
+                wait(0.15)
+                game:GetService("TweenService"):Create(
+                    MainFrame,
+                    TweenInfo.new(0.15, Enum.EasingStyle.Sine),
+                    {BackgroundColor3 = Color3.fromRGB(18, 18, 18)}
+                ):Play()
+                wait(0.15)
+            end
+
+            wait(1)
+
+            MainFrame:TweenPosition(
+                UDim2.new(0.5, -220, -0.5, 0),
+                Enum.EasingDirection.In,
+                Enum.EasingStyle.Back,
+                0.4,
+                false
+            )
+
+            game:GetService("TweenService"):Create(
+                BackgroundBlur,
+                TweenInfo.new(0.3, Enum.EasingStyle.Sine),
+                {BackgroundTransparency = 1}
+            ):Play()
+
+            wait(0.5)
+            ScreenGui:Destroy()
+            loadMainScript()
+
+        else
+            StatusLabel.Text = "Invalid key! Attempts: " .. KeySystem.currentAttempts .. "/" .. KeySystem.maxAttempts
+            StatusLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+
+            SubmitButton.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+            KeyContainer.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            KeyBox.Text = ""
+
+            for i = 1, 4 do
+                MainFrame:TweenPosition(
+                    UDim2.new(0.5, -230, 0.5, -200),
+                    Enum.EasingDirection.Out,
+                    Enum.EasingStyle.Elastic,
+                    0.1,
+                    false
+                )
+                wait(0.1)
+                MainFrame:TweenPosition(
+                    UDim2.new(0.5, -210, 0.5, -200),
+                    Enum.EasingDirection.Out,
+                    Enum.EasingStyle.Elastic,
+                    0.1,
+                    false
+                )
+                wait(0.1)
+            end
+
+            MainFrame:TweenPosition(
+                UDim2.new(0.5, -220, 0.5, -200),
+                Enum.EasingDirection.Out,
+                Enum.EasingStyle.Sine,
+                0.2,
+                false
+            )
+
+            for _, child in pairs(AttemptIndicator:GetChildren()) do
+                child:Destroy()
+            end
+            updateAttemptIndicators()
+
+            wait(1.5)
+            SubmitButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+            KeyContainer.BackgroundColor3 = Color3.fromRGB(28, 28, 28)
+            StatusLabel.Text = "Waiting for key input..."
+            StatusLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+        end
+    end)
+
+    CloseButton.MouseButton1Click:Connect(function()
+        MainFrame:TweenPosition(
+            UDim2.new(0.5, -220, 1.5, 0),
+            Enum.EasingDirection.In,
+            Enum.EasingStyle.Back,
+            0.4,
+            false
+        )
+
+        game:GetService("TweenService"):Create(
+            BackgroundBlur,
+            TweenInfo.new(0.3, Enum.EasingStyle.Sine),
+            {BackgroundTransparency = 1}
+        ):Play()
+
+        wait(0.5)
+        ScreenGui:Destroy()
+    end)
+end
+
+-- ============================================
+-- TRIGGERBOT MAIN SCRIPT
+-- ============================================
+
+function loadMainScript()
+    SouthBronxBypass:initialize()
+
+    local TweenService = game:GetService("TweenService")
+    local Players = game:GetService("Players")
+    local RunService = game:GetService("RunService")
+    local LocalPlayer = Players.LocalPlayer
+    local Mouse = LocalPlayer:GetMouse()
+
+    -- CONFIG
+    local config = {
+        enabled = false,
+        delay = 0,
+        ignoreDeadPlayers = true,
+        teamCheck = false
+    }
+
+    -- ============================================
+    -- CREATE CUSTOM UI
+    -- ============================================
+
+    local function createUI()
+        local ScreenGui = Instance.new("ScreenGui")
+        local MainFrame = Instance.new("Frame")
+        local TopBar = Instance.new("Frame")
+        local Title = Instance.new("TextLabel")
+        local CloseButton = Instance.new("TextButton")
+        local MinimizeButton = Instance.new("TextButton")
+        
+        -- Toggle Section
+        local ToggleSection = Instance.new("Frame")
+        local ToggleLabel = Instance.new("TextLabel")
+        local ToggleButton = Instance.new("TextButton")
+        local ToggleIndicator = Instance.new("Frame")
+        
+        -- Delay Section
+        local DelaySection = Instance.new("Frame")
+        local DelayLabel = Instance.new("TextLabel")
+        local DelaySlider = Instance.new("Frame")
+        local DelayFill = Instance.new("Frame")
+        local DelayButton = Instance.new("TextButton")
+        local DelayValue = Instance.new("TextLabel")
+        
+        -- Dead Check Section
+        local DeadSection = Instance.new("Frame")
+        local DeadLabel = Instance.new("TextLabel")
+        local DeadButton = Instance.new("TextButton")
+        local DeadIndicator = Instance.new("Frame")
+        
+        -- Team Check Section
+        local TeamSection = Instance.new("Frame")
+        local TeamLabel = Instance.new("TextLabel")
+        local TeamButton = Instance.new("TextButton")
+        local TeamIndicator = Instance.new("Frame")
+        
+        -- Status Section
+        local StatusSection = Instance.new("Frame")
+        local StatusLabel = Instance.new("TextLabel")
+        local StatusValue = Instance.new("TextLabel")
+
+        ScreenGui.Name = "XFC_TriggerBot"
+        ScreenGui.Parent = game.CoreGui
+        ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+        ScreenGui.ResetOnSpawn = false
+
+        MainFrame.Name = "MainFrame"
+        MainFrame.Parent = ScreenGui
+        MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+        MainFrame.BorderSizePixel = 0
+        MainFrame.Position = UDim2.new(0.5, -200, 0.5, -175)
+        MainFrame.Size = UDim2.new(0, 400, 0, 350)
+        MainFrame.ClipsDescendants = true
+        MainFrame.Active = true
+        MainFrame.Draggable = true
+
+        local MainCorner = Instance.new("UICorner")
+        MainCorner.CornerRadius = UDim.new(0, 12)
+        MainCorner.Parent = MainFrame
+
+        -- Shadow Effect
+        local Shadow = Instance.new("Frame")
+        Shadow.Name = "Shadow"
+        Shadow.Parent = MainFrame
+        Shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        Shadow.BackgroundTransparency = 0.6
+        Shadow.BorderSizePixel = 0
+        Shadow.Position = UDim2.new(0, -6, 0, -6)
+        Shadow.Size = UDim2.new(1, 12, 1, 12)
+        Shadow.ZIndex = 0
+
+        local ShadowCorner = Instance.new("UICorner")
+        ShadowCorner.CornerRadius = UDim.new(0, 12)
+        ShadowCorner.Parent = Shadow
+
+        TopBar.Name = "TopBar"
+        TopBar.Parent = MainFrame
+        TopBar.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        TopBar.BorderSizePixel = 0
+        TopBar.Size = UDim2.new(1, 0, 0, 50)
+
+        local TopBarGradient = Instance.new("UIGradient")
+        TopBarGradient.Color = ColorSequence.new{
+            ColorSequenceKeypoint.new(0, Color3.fromRGB(40, 40, 40)),
+            ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 25, 25))
+        }
+        TopBarGradient.Rotation = 90
+        TopBarGradient.Parent = TopBar
+
+        local TopBarCorner = Instance.new("UICorner")
+        TopBarCorner.CornerRadius = UDim.new(0, 12)
+        TopBarCorner.Parent = TopBar
+
+        Title.Name = "Title"
+        Title.Parent = TopBar
+        Title.BackgroundTransparency = 1
+        Title.Position = UDim2.new(0, 15, 0, 0)
+        Title.Size = UDim2.new(0.7, 0, 1, 0)
+        Title.Font = Enum.Font.GothamBold
+        Title.Text = "⚡ XFC TRIGGERBOT"
+        Title.TextColor3 = Color3.fromRGB(240, 240, 240)
+        Title.TextSize = 16
+        Title.TextXAlignment = Enum.TextXAlignment.Left
+
+        MinimizeButton.Name = "MinimizeButton"
+        MinimizeButton.Parent = TopBar
+        MinimizeButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+        MinimizeButton.BorderSizePixel = 0
+        MinimizeButton.Position = UDim2.new(1, -70, 0.5, -12)
+        MinimizeButton.Size = UDim2.new(0, 24, 0, 24)
+        MinimizeButton.Font = Enum.Font.GothamBold
+        MinimizeButton.Text = "_"
+        MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        MinimizeButton.TextSize = 16
+
+        local MinCorner = Instance.new("UICorner")
+        MinCorner.CornerRadius = UDim.new(0, 6)
+        MinCorner.Parent = MinimizeButton
+
+        CloseButton.Name = "CloseButton"
+        CloseButton.Parent = TopBar
+        CloseButton.BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+        CloseButton.BorderSizePixel = 0
+        CloseButton.Position = UDim2.new(1, -38, 0.5, -12)
+        CloseButton.Size = UDim2.new(0, 24, 0, 24)
+        CloseButton.Font = Enum.Font.GothamBold
+        CloseButton.Text = "X"
+        CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        CloseButton.TextSize = 14
+
+        local CloseCorner = Instance.new("UICorner")
+        CloseCorner.CornerRadius = UDim.new(0, 6)
+        CloseCorner.Parent = CloseButton
+
+        -- Toggle Section
+        ToggleSection.Name = "ToggleSection"
+        ToggleSection.Parent = MainFrame
+        ToggleSection.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        ToggleSection.BorderSizePixel = 0
+        ToggleSection.Position = UDim2.new(0, 20, 0, 70)
+        ToggleSection.Size = UDim2.new(1, -40, 0, 50)
+
+        local ToggleCorner = Instance.new("UICorner")
+        ToggleCorner.CornerRadius = UDim.new(0, 10)
+        ToggleCorner.Parent = ToggleSection
+
+        ToggleLabel.Name = "ToggleLabel"
+        ToggleLabel.Parent = ToggleSection
+        ToggleLabel.BackgroundTransparency = 1
+        ToggleLabel.Position = UDim2.new(0, 15, 0, 0)
+        ToggleLabel.Size = UDim2.new(0.6, 0, 1, 0)
+        ToggleLabel.Font = Enum.Font.GothamBold
+        ToggleLabel.Text = "TriggerBot Status"
+        ToggleLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+        ToggleLabel.TextSize = 14
+        ToggleLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+        ToggleButton.Name = "ToggleButton"
+        ToggleButton.Parent = ToggleSection
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        ToggleButton.BorderSizePixel = 0
+        ToggleButton.Position = UDim2.new(1, -70, 0.5, -12)
+        ToggleButton.Size = UDim2.new(0, 50, 0, 24)
+        ToggleButton.Text = ""
+
+        local ToggleButtonCorner = Instance.new("UICorner")
+        ToggleButtonCorner.CornerRadius = UDim.new(1, 0)
+        ToggleButtonCorner.Parent = ToggleButton
+
+        ToggleIndicator.Name = "ToggleIndicator"
+        ToggleIndicator.Parent = ToggleButton
+        ToggleIndicator.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        ToggleIndicator.BorderSizePixel = 0
+        ToggleIndicator.Position = UDim2.new(0, 2, 0.5, -10)
+        ToggleIndicator.Size = UDim2.new(0, 20, 0, 20)
+
+        local IndicatorCorner = Instance.new("UICorner")
+        IndicatorCorner.CornerRadius = UDim.new(1, 0)
+        IndicatorCorner.Parent = ToggleIndicator
+
+        -- Delay Section
+        DelaySection.Name = "DelaySection"
+        DelaySection.Parent = MainFrame
+        DelaySection.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        DelaySection.BorderSizePixel = 0
+        DelaySection.Position = UDim2.new(0, 20, 0, 135)
+        DelaySection.Size = UDim2.new(1, -40, 0, 60)
+
+        local DelayCorner = Instance.new("UICorner")
+        DelayCorner.CornerRadius = UDim.new(0, 10)
+        DelayCorner.Parent = DelaySection
+
+        DelayLabel.Name = "DelayLabel"
+        DelayLabel.Parent = DelaySection
+        DelayLabel.BackgroundTransparency = 1
+        DelayLabel.Position = UDim2.new(0, 15, 0, 5)
+        DelayLabel.Size = UDim2.new(1, -30, 0, 20)
+        DelayLabel.Font = Enum.Font.GothamBold
+        DelayLabel.Text = "Click Delay"
+        DelayLabel.TextColor3 = Color3.fromRGB(220, 220, 220)
+        DelayLabel.TextSize = 14
+        DelayLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+        DelayValue.Name = "DelayValue"
+        DelayValue.Parent = DelaySection
+        DelayValue.BackgroundTransparency = 1
+        DelayValue.Position = UDim2.new(1, -60, 0, 5)
+        DelayValue.Size = UDim2.new(0, 50, 0, 20)
+        DelayValue.Font = Enum.Font.GothamBold
+        DelayValue.Text = "0ms"
+        DelayValue.TextColor3 = Color3.fromRGB(180, 180, 180)
+        DelayValue.TextSize = 13
+        DelayValue.TextXAlignment = Enum.TextXAlignment.Right
+
+        DelaySlider.Name = "DelaySlider"
+        DelaySlider.Parent = DelaySection
+        DelaySlider.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+        DelaySlider.BorderSizePixel = 0
+        DelaySlider.Position = UDim2.new(0, 15, 0, 35)
+        DelaySlider.Size = UDim2.new(1, -30, 0, 8)
+
+        local SliderCorner = Instance.new("UICorner")
+        SliderCorner.CornerRadius = UDim.new(1, 0)
+        SliderCorner.Parent = DelaySlider
+
+        DelayFill.Name = "DelayFill"
+        DelayFill.Parent = DelaySlider
+        DelayFill.BackgroundColor3 = Color3.fromRGB(140, 140, 140)
+        DelayFill.BorderSizePixel = 0
+        DelayFill.Size = UDim2.new(0, 0, 1, 0)
+
+        local FillCorner = Instance.new("UICorner")
+        FillCorner.CornerRadius = UDim.new(1, 0)
+        FillCorner.Parent = DelayFill
+
+        DelayButton.Name = "DelayButton"
+        DelayButton.Parent = DelaySlider
+        DelayButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+        DelayButton.BorderSizePixel = 0
+        DelayButton.Position = UDim2.new(0, -6, 0.5, -6)
+        DelayButton.Size = UDim2.new(0, 20, 0, 20)
+        DelayButton.Text = ""
+
+        local ButtonCorner = Instance.new("UICorner")
+        ButtonCorner.CornerRadius = UDim.new(1, 0)
+        ButtonCorner.Parent = DelayButton
+
+        -- Dead Check Section
+        DeadSection.Name = "DeadSection"
+        DeadSection.Parent = MainFrame
+        DeadSection.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        DeadSection.BorderSizePixel = 0
+        DeadSection.Position = UDim2.new(0, 20, 0, 210)
+        DeadSection.Size = UDim2.new(1, -40, 0, 40)
+
+        local DeadCorner = Instance.new("UICorner")
+        DeadCorner.CornerRadius = UDim.new(0, 10)
+        DeadCorner.Parent = DeadSection
+
+        DeadLabel.Name = "DeadLabel"
+        DeadLabel.Parent = DeadSection
+        DeadLabel.BackgroundTransparency = 1
+        DeadLabel.Position = UDim2.new(0, 15, 0, 0)
+        DeadLabel.Size = UDim2.new(0.7, 0, 1, 0)
+        DeadLabel.Font = Enum.Font.Gotham
+        DeadLabel.Text = "Ignore Dead Players"
+        DeadLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+        DeadLabel.TextSize = 13
+        DeadLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+        DeadButton.Name = "DeadButton"
+        DeadButton.Parent = DeadSection
+        DeadButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        DeadButton.BorderSizePixel = 0
+        DeadButton.Position = UDim2.new(1, -50, 0.5, -10)
+        DeadButton.Size = UDim2.new(0, 40, 0, 20)
+        DeadButton.Text = ""
+
+        local DeadButtonCorner = Instance.new("UICorner")
+        DeadButtonCorner.CornerRadius = UDim.new(1, 0)
+        DeadButtonCorner.Parent = DeadButton
+
+        DeadIndicator.Name = "DeadIndicator"
+        DeadIndicator.Parent = DeadButton
+        DeadIndicator.BackgroundColor3 = Color3.fromRGB(140, 140, 140)
+        DeadIndicator.BorderSizePixel = 0
+        DeadIndicator.Position = UDim2.new(1, -18, 0.5, -8)
+        DeadIndicator.Size = UDim2.new(0, 16, 0, 16)
+
+        local DeadIndCorner = Instance.new("UICorner")
+        DeadIndCorner.CornerRadius = UDim.new(1, 0)
+        DeadIndCorner.Parent = DeadIndicator
+
+        -- Team Check Section
+        TeamSection.Name = "TeamSection"
+        TeamSection.Parent = MainFrame
+        TeamSection.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        TeamSection.BorderSizePixel = 0
+        TeamSection.Position = UDim2.new(0, 20, 0, 260)
+        TeamSection.Size = UDim2.new(1, -40, 0, 40)
+
+        local TeamCorner = Instance.new("UICorner")
+        TeamCorner.CornerRadius = UDim.new(0, 10)
+        TeamCorner.Parent = TeamSection
+
+        TeamLabel.Name = "TeamLabel"
+        TeamLabel.Parent = TeamSection
+        TeamLabel.BackgroundTransparency = 1
+        TeamLabel.Position = UDim2.new(0, 15, 0, 0)
+        TeamLabel.Size = UDim2.new(0.7, 0, 1, 0)
+        TeamLabel.Font = Enum.Font.Gotham
+        TeamLabel.Text = "Team Check"
+        TeamLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+        TeamLabel.TextSize = 13
+        TeamLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+        TeamButton.Name = "TeamButton"
+        TeamButton.Parent = TeamSection
+        TeamButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+        TeamButton.BorderSizePixel = 0
+        TeamButton.Position = UDim2.new(1, -50, 0.5, -10)
+        TeamButton.Size = UDim2.new(0, 40, 0, 20)
+        TeamButton.Text = ""
+
+        local TeamButtonCorner = Instance.new("UICorner")
+        TeamButtonCorner.CornerRadius = UDim.new(1, 0)
+        TeamButtonCorner.Parent = TeamButton
+
+        TeamIndicator.Name = "TeamIndicator"
+        TeamIndicator.Parent = TeamButton
+        TeamIndicator.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        TeamIndicator.BorderSizePixel = 0
+        TeamIndicator.Position = UDim2.new(0, 2, 0.5, -8)
+        TeamIndicator.Size = UDim2.new(0, 16, 0, 16)
+
+        local TeamIndCorner = Instance.new("UICorner")
+        TeamIndCorner.CornerRadius = UDim.new(1, 0)
+        TeamIndCorner.Parent = TeamIndicator
+
+        -- Status Section
+        StatusSection.Name = "StatusSection"
+        StatusSection.Parent = MainFrame
+        StatusSection.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        StatusSection.BorderSizePixel = 0
+        StatusSection.Position = UDim2.new(0, 20, 1, -40)
+        StatusSection.Size = UDim2.new(1, -40, 0, 30)
+
+        local StatusCorner = Instance.new("UICorner")
+        StatusCorner.CornerRadius = UDim.new(0, 8)
+        StatusCorner.Parent = StatusSection
+
+        StatusLabel.Name = "StatusLabel"
+        StatusLabel.Parent = StatusSection
+        StatusLabel.BackgroundTransparency = 1
+        StatusLabel.Position = UDim2.new(0, 10, 0, 0)
+        StatusLabel.Size = UDim2.new(0.4, 0, 1, 0)
+        StatusLabel.Font = Enum.Font.Gotham
+        StatusLabel.Text = "Status:"
+        StatusLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+        StatusLabel.TextSize = 11
+        StatusLabel.TextXAlignment = Enum.TextXAlignment.Left
+
+        StatusValue.Name = "StatusValue"
+        StatusValue.Parent = StatusSection
+        StatusValue.BackgroundTransparency = 1
+        StatusValue.Position = UDim2.new(0.4, 0, 0, 0)
+        StatusValue.Size = UDim2.new(0.6, -10, 1, 0)
+        StatusValue.Font = Enum.Font.GothamBold
+        StatusValue.Text = "INACTIVE"
+        StatusValue.TextColor3 = Color3.fromRGB(120, 120, 120)
+        StatusValue.TextSize = 11
+        StatusValue.TextXAlignment = Enum.TextXAlignment.Right
+
+        -- ============================================
+        -- UI EVENTS & ANIMATIONS
+        -- ============================================
+
+        -- Toggle Button
+        ToggleButton.MouseEnter:Connect(function()
+            TweenService:Create(ToggleSection, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)}):Play()
+        end)
+
+        ToggleButton.MouseLeave:Connect(function()
+            TweenService:Create(ToggleSection, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}):Play()
+        end)
+
+        ToggleButton.MouseButton1Click:Connect(function()
+            config.enabled = not config.enabled
+
+            if config.enabled then
+                TweenService:Create(ToggleIndicator, TweenInfo.new(0.3), {
+                    Position = UDim2.new(1, -22, 0.5, -10),
+                    BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+                }):Play()
+                TweenService:Create(ToggleButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(100, 100, 100)}):Play()
+                StatusValue.Text = "ACTIVE"
+                StatusValue.TextColor3 = Color3.fromRGB(220, 220, 220)
+            else
+                TweenService:Create(ToggleIndicator, TweenInfo.new(0.3), {
+                    Position = UDim2.new(0, 2, 0.5, -10),
+                    BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+                }):Play()
+                TweenService:Create(ToggleButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}):Play()
+                StatusValue.Text = "INACTIVE"
+                StatusValue.TextColor3 = Color3.fromRGB(120, 120, 120)
+            end
+        end)
+
+        -- Delay Slider
+        local dragging = false
+
+        DelayButton.MouseButton1Down:Connect(function()
+            dragging = true
+        end)
+
+        game:GetService("UserInputService").InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragging = false
+            end
+        end)
+
+        RunService.RenderStepped:Connect(function()
+            if dragging then
+                local mousePos = game:GetService("UserInputService"):GetMouseLocation()
+                local sliderPos = DelaySlider.AbsolutePosition
+                local sliderSize = DelaySlider.AbsoluteSize
+                
+                local relativePos = math.clamp(mousePos.X - sliderPos.X, 0, sliderSize.X)
+                local percentage = relativePos / sliderSize.X
+                
+                config.delay = math.floor(percentage * 2000) / 1000 -- 0 to 2ms
+                
+                DelayButton.Position = UDim2.new(percentage, -6, 0.5, -6)
+                DelayFill.Size = UDim2.new(percentage, 0, 1, 0)
+                DelayValue.Text = string.format("%.1fms", config.delay)
+            end
+        end)
+
+        DelaySlider.MouseEnter:Connect(function()
+            TweenService:Create(DelayButton, TweenInfo.new(0.2), {Size = UDim2.new(0, 24, 0, 24)}):Play()
+        end)
+
+        DelaySlider.MouseLeave:Connect(function()
+            if not dragging then
+                TweenService:Create(DelayButton, TweenInfo.new(0.2), {Size = UDim2.new(0, 20, 0, 20)}):Play()
+            end
+        end)
+
+        -- Dead Check Button
+        DeadButton.MouseEnter:Connect(function()
+            TweenService:Create(DeadSection, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)}):Play()
+        end)
+
+        DeadButton.MouseLeave:Connect(function()
+            TweenService:Create(DeadSection, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}):Play()
+        end)
+
+        DeadButton.MouseButton1Click:Connect(function()
+            config.ignoreDeadPlayers = not config.ignoreDeadPlayers
+
+            if config.ignoreDeadPlayers then
+                TweenService:Create(DeadIndicator, TweenInfo.new(0.3), {
+                    Position = UDim2.new(1, -18, 0.5, -8),
+                    BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+                }):Play()
+                TweenService:Create(DeadButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(100, 100, 100)}):Play()
+            else
+                TweenService:Create(DeadIndicator, TweenInfo.new(0.3), {
+                    Position = UDim2.new(0, 2, 0.5, -8),
+                    BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+                }):Play()
+                TweenService:Create(DeadButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}):Play()
+            end
+        end)
+
+        -- Team Check Button
+        TeamButton.MouseEnter:Connect(function()
+            TweenService:Create(TeamSection, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(30, 30, 30)}):Play()
+        end)
+
+        TeamButton.MouseLeave:Connect(function()
+            TweenService:Create(TeamSection, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(25, 25, 25)}):Play()
+        end)
+
+        TeamButton.MouseButton1Click:Connect(function()
+            config.teamCheck = not config.teamCheck
+
+            if config.teamCheck then
+                TweenService:Create(TeamIndicator, TweenInfo.new(0.3), {
+                    Position = UDim2.new(1, -18, 0.5, -8),
+                    BackgroundColor3 = Color3.fromRGB(220, 220, 220)
+                }):Play()
+                TweenService:Create(TeamButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(100, 100, 100)}):Play()
+            else
+                TweenService:Create(TeamIndicator, TweenInfo.new(0.3), {
+                    Position = UDim2.new(0, 2, 0.5, -8),
+                    BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+                }):Play()
+                TweenService:Create(TeamButton, TweenInfo.new(0.3), {BackgroundColor3 = Color3.fromRGB(60, 60, 60)}):Play()
+            end
+        end)
+
+        -- Close Button
+        CloseButton.MouseEnter:Connect(function()
+            TweenService:Create(CloseButton, TweenInfo.new(0.15), {
+                Size = UDim2.new(0, 28, 0, 28),
+                BackgroundColor3 = Color3.fromRGB(160, 160, 160)
+            }):Play()
+        end)
+
+        CloseButton.MouseLeave:Connect(function()
+            TweenService:Create(CloseButton, TweenInfo.new(0.15), {
+                Size = UDim2.new(0, 24, 0, 24),
+                BackgroundColor3 = Color3.fromRGB(120, 120, 120)
+            }):Play()
+        end)
+
+        CloseButton.MouseButton1Click:Connect(function()
+            TweenService:Create(MainFrame, TweenInfo.new(0.3), {
+                Size = UDim2.new(0, 0, 0, 0),
+                Position = UDim2.new(0.5, 0, 0.5, 0)
+            }):Play()
+            wait(0.3)
+            ScreenGui:Destroy()
+        end)
+
+        -- Minimize Button
+        local minimized = false
+        MinimizeButton.MouseEnter:Connect(function()
+            TweenService:Create(MinimizeButton, TweenInfo.new(0.15), {
+                Size = UDim2.new(0, 28, 0, 28),
+                BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+            }):Play()
+        end)
+
+        MinimizeButton.MouseLeave:Connect(function()
+            TweenService:Create(MinimizeButton, TweenInfo.new(0.15), {
+                Size = UDim2.new(0, 24, 0, 24),
+                BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+            }):Play()
+        end)
+
+        MinimizeButton.MouseButton1Click:Connect(function()
+            minimized = not minimized
+            if minimized then
+                TweenService:Create(MainFrame, TweenInfo.new(0.3), {Size = UDim2.new(0, 400, 0, 50)}):Play()
+            else
+                TweenService:Create(MainFrame, TweenInfo.new(0.3), {Size = UDim2.new(0, 400, 0, 350)}):Play()
+            end
+        end)
+
+        -- Entrance Animation
+        MainFrame.Size = UDim2.new(0, 0, 0, 0)
+        MainFrame.Position = UDim2.new(0.5, 0, 0.5, 0)
+        
+        TweenService:Create(MainFrame, TweenInfo.new(0.5, Enum.EasingStyle.Back), {
+            Size = UDim2.new(0, 400, 0, 350),
+            Position = UDim2.new(0.5, -200, 0.5, -175)
+        }):Play()
+    end
+
+    -- ============================================
+    -- TRIGGERBOT LOGIC
+    -- ============================================
+
+    local function isPlayerDead(player)
+        if not player.Character then return true end
+        local humanoid = player.Character:FindFirstChild("Humanoid")
+        if not humanoid then return true end
+        return humanoid.Health <= 0
+    end
+
+    local function isOnSameTeam(player)
+        if not LocalPlayer.Team or not player.Team then return false end
+        return LocalPlayer.Team == player.Team
+    end
+
+    local function getPlayerFromPart(part)
+        local character = part:FindFirstAncestorOfClass("Model")
+        if character then
+            local player = Players:GetPlayerFromCharacter(character)
+            return player
+        end
+        return nil
+    end
+
+    local lastShot = 0
+    local shooting = false
+
+    RunService.RenderStepped:Connect(function()
+        if not config.enabled or shooting then return end
+
+        local target = Mouse.Target
+        if not target then return end
+
+        local player = getPlayerFromPart(target)
+        if not player or player == LocalPlayer then return end
+
+        -- Team Check
+        if config.teamCheck and isOnSameTeam(player) then return end
+
+        -- Dead Check
+        if config.ignoreDeadPlayers and isPlayerDead(player) then return end
+
+        -- Check if hovering over player character
+        if player.Character and target:IsDescendantOf(player.Character) then
+            local currentTime = tick()
+            if currentTime - lastShot >= config.delay / 1000 then
+                shooting = true
+                lastShot = currentTime
+
+                -- Click
+                mouse1press()
+                wait(0.01)
+                mouse1release()
+
+                shooting = false
+            end
+        end
+    end)
+
+    createUI()
+
+    game.StarterGui:SetCore("SendNotification", {
+        Title = "XFC TriggerBot";
+        Text = "Loaded successfully! Key: " .. KeySystem.displayKey;
+        Duration = 5;
+    })
+end
+
+-- ============================================
+-- START
+-- ============================================
+
+showKeyUI()
