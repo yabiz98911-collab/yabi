@@ -6,19 +6,19 @@ shared.Accuracy = {
     },
     ['Keybinds'] = {
         ['Target Lock'] = {
-            ['Key'] = 'E',
+            ['Key'] = 'C',
             ['Mode'] = 'Toggle',
         },
         ['Trigger Bot'] = {
-            ['Key'] = 'T',
+            ['Key'] = 'C',
             ['Mode'] = 'Toggle',
         },
-        ['Speed'] = 'Q',
+        ['Speed'] = 'C',
         ['ESP'] = '',
-        ['Super Jump'] = 'V',  -- Super jump toggle key
+        ['Super Jump'] = 'C',  -- Super jump toggle key
     },
     ['FOV'] = {
-        ['Enabled'] = false,
+        ['Enabled'] = true,
         ['Visible'] = true,
         ['Size'] = Vector2.new(2000, 2000),
         ['Thickness'] = 2,
@@ -66,7 +66,7 @@ shared.Accuracy = {
     },
     ['Speed'] = {
         ['Enabled'] = true,
-        ['Multiplier'] = 40,
+        ['Multiplier'] = 200,
         ['Anti Fling'] = false,
     },
     ['Hitbox Expander'] = {
@@ -88,7 +88,7 @@ shared.Accuracy = {
     },
 	    ['Infinite Range'] = {
         ['Enabled'] = true,
-        ['Key'] = 'N',          -- Press N to toggle
+        ['Key'] = 'C',          -- Press N to toggle
         ['Max Range'] = 77777,   -- studs (5000+ = basically infinite)
     },
 	    ['Rapid Fire'] = {
