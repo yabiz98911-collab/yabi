@@ -2,7 +2,7 @@ shared.Accuracy = {
     ['Settings'] = {
         ['Target Aim'] = true,
         ['Knock Check'] = true,
-        ['Visible Check'] = false,
+        ['Visible Check'] = true,
     },
     ['Keybinds'] = {
         ['Target Lock'] = {
@@ -27,7 +27,7 @@ shared.Accuracy = {
     ['Silent Aim'] = {
         ['Enabled'] = true,
         ['Hit Part'] = 'Head',
-        ['Use Prediction'] = false,
+        ['Use Prediction'] = true,
         ['Prediction'] = {
             ['X'] = 0,
             ['Y'] = 0,
@@ -35,7 +35,7 @@ shared.Accuracy = {
         },
     },
     ['Camera Lock'] = {
-        ['Enabled'] = false,
+        ['Enabled'] = true,
         ['Hit Part'] = 'Closest Part',
         ['Smoothing'] = 40,
         ['Use Prediction'] = true,
