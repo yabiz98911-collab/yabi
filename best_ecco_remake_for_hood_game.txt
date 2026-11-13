@@ -45,7 +45,7 @@ shared.Accuracy = {
         ['Enabled'] = true,
         ['Delay'] = 0.10,
         ['Specific Weapons'] = {
-            ['Enabled'] = false,
+            ['Enabled'] = true,
             ['Weapons'] = {
                 '[Double-Barrel SG]',
                 '[Revolver]',
